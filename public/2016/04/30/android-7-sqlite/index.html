@@ -1,0 +1,756 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="之前在一个项目中使用到了sqlite数据库。说实话，在此之前真的没有用过，感觉在一般情况下，客户并没有要求要使用sqlite数据库，或者我也没有觉得要使用sqlite数据库的地方。不过，前一段时间，有一个需要是，在用户没有登录的情况下，可以将商品添加到购物车，然后在登陆之后，自动把之前没有登录时添加到购物车的物品自动添加到购物车中。这种情况下，我就想到了用sqlite保存数据，然后在用户登录的时候">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重拾Android之路(七) sqlite">
+<meta property="og:url" content="http://example.com/2016/04/30/android-7-sqlite/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="之前在一个项目中使用到了sqlite数据库。说实话，在此之前真的没有用过，感觉在一般情况下，客户并没有要求要使用sqlite数据库，或者我也没有觉得要使用sqlite数据库的地方。不过，前一段时间，有一个需要是，在用户没有登录的情况下，可以将商品添加到购物车，然后在登陆之后，自动把之前没有登录时添加到购物车的物品自动添加到购物车中。这种情况下，我就想到了用sqlite保存数据，然后在用户登录的时候">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-04-30T15:23:55.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.094Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>重拾Android之路(七) sqlite - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="重拾Android之路(七) sqlite"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2016-04-30 23:23" pubdate>
+          2016年4月30日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          21k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          174 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">重拾Android之路(七) sqlite</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>之前在一个项目中使用到了sqlite数据库。说实话，在此之前真的没有用过，感觉在一般情况下，客户并没有要求要使用sqlite数据库，或者我也没有觉得要使用sqlite数据库的地方。不过，前一段时间，有一个需要是，在用户没有登录的情况下，可以将商品添加到购物车，然后在登陆之后，自动把之前没有登录时添加到购物车的物品自动添加到购物车中。这种情况下，我就想到了用sqlite保存数据，然后在用户登录的时候，再从数据库中拿出来，上传到服务器端，并且刷新购物车。</p>
+<span id="more"></span>
+<p>由于之前的项目是真实项目，已经交付，无法显示代码，所以，今天我把之前用到的内容，在这里回顾一下，顺便复习sqlite数据库的知识。其中不会涉及任何真实案例，望请谅解。</p>
+<h1 id="SQLite"><a href="#SQLite" class="headerlink" title="SQLite"></a>SQLite</h1><h2 id="sqlite的基本sql语句"><a href="#sqlite的基本sql语句" class="headerlink" title="sqlite的基本sql语句"></a>sqlite的基本sql语句</h2><blockquote>
+<p>对于sqlite，最大的特点就是他可以允许我们存入数据而不需要关系数据的类型</p>
+</blockquote>
+<p>例如：</p>
+<ol>
+<li>我们可以在Interget类型中存放字符串，boolean值等等各种各样的数据，但是有一中情况是例外的，就是如果一个<br>字段被<pre>INTEGER PRIMARY KEY</pre>修饰的时候，只能存储64位整数。</li>
+<li>当sqlite解析数据库语句的时候，会自动忽略 CREATE TABLE 语句中跟在字段名后面的数据类型信息</li>
+<li>sqlite可以解析大部分的sql语句<blockquote>
+<p>select * from 表名 where 条件子句 group by 分组字句 having … order by 排序子句 (顺序一定不能错)</p>
+</blockquote>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> person<br><br><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> person <span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> id <span class="hljs-keyword">desc</span><br><br><span class="hljs-keyword">select</span> <span class="hljs-type">name</span> <span class="hljs-keyword">from</span> person <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> <span class="hljs-type">name</span> <span class="hljs-keyword">having</span> count(*)&gt;<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure></li>
+<li>分页SQL与mysql类似，下面SQL语句获取5条记录，跳过前面3条记录<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> Account <span class="hljs-keyword">limit</span> <span class="hljs-number">5</span> <span class="hljs-keyword">offset</span> <span class="hljs-number">3</span> <br></code></pre></td></tr></table></figure></li>
+<li>插入语句<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> person(<span class="hljs-type">name</span>, age) <span class="hljs-keyword">values</span>(‘小明’,<span class="hljs-number">3</span>)<br></code></pre></td></tr></table></figure></li>
+<li>更新语句<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">update person <span class="hljs-built_in">set</span> <span class="hljs-attribute">name</span>=‘小明‘ where <span class="hljs-attribute">id</span>=10<br></code></pre></td></tr></table></figure></li>
+<li>删除语句<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs applescript">delete <span class="hljs-keyword">from</span> person  <span class="hljs-keyword">where</span> <span class="hljs-built_in">id</span>=<span class="hljs-number">10</span><br></code></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="数据库版本管理"><a href="#数据库版本管理" class="headerlink" title="数据库版本管理"></a>数据库版本管理</h2><p>我们可以通过SqliteOpenHelper对数据库进行版本管理。<br>我们在编写数据库应用软件时，需要考虑这样的问题：因为我们开发的软件可能会安装在很多用户的手机上，如果应用使用到了SQLite数据库，我们必须在用户初次使用软件时创建出应用使用到的数据库表结构及添加一些初始化记录，另外在软件升级的时候，也需要对数据表结构进行更新。那么，我们如何才能实现在用户初次使用或升级软件时自动在用户的手机上创建出应用需要的数据库表呢？总不能让我们在每个需要安装此软件的手机上通过手工方式创建数据库表吧？因为这种需求是每个数据库应用都要面临的，所以在Android系统，为我们提供了一个名为SQLiteOpenHelper的抽象类，必须继承它才能使用，它是通过对数据库版本进行管理来实现前面提出的需求。 </p>
+<p>为了实现对数据库版本进行管理，SQLiteOpenHelper类提供了两个重要的方法，分别是<br>onCreate(SQLiteDatabase db)和onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)。前者用于初次使用软件时生成数据库表，后者用于升级软件时更新数据库表结构。当调用SQLiteOpenHelper的getWritableDatabase()或者getReadableDatabase()方法获取用于操作数据库的SQLiteDatabase实例的时候，如果数据库不存在，Android系统会自动生成一个数据库，接着调用onCreate()方法，onCreate()方法在初次生成数据库时才会被调用，在onCreate()方法里可以生成数据库表结构及添加一些应用使用到的初始化数据。onUpgrade()方法在数据库的版本发生变化时会被调用，一般在软件升级时才需改变版本号，而数据库的版本是由程序员控制的，假设数据库现在的版本是1，由于业务的变更，修改了数据库表结构，这时候就需要升级软件，升级软件时希望更新用户手机里的数据库表结构，为了实现这一目的，可以把原来的数据库版本设置为2(有同学问设置为3行不行？当然可以，如果你愿意，设置为100也行)，并且在onUpgrade()方法里面实现表结构的更新。当软件的版本升级次数比较多，这时在onUpgrade()方法里面可以根据原版号和目标版本号进行判断，然后作出相应的表结构及数据更新。</p>
+<blockquote>
+<p>getWritableDatabase()和getReadableDatabase()方法都可以获取一个用于操作数据库的SQLiteDatabase实例。但getWritableDatabase() 方法以读写方式打开数据库，一旦数据库的磁盘空间满了，数据库就只能读而不能写，倘若使用getWritableDatabase()打开数据库就会出错。getReadableDatabase()方法先以读写方式打开数据库，如果数据库的磁盘空间满了，就会打开失败，当打开失败后会继续尝试以只读方式打开数据库。</p>
+</blockquote>
+<p>实例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DatabaseHelper</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">SQLiteOpenHelper</span> &#123;  <br>  <br>        <span class="hljs-comment">//类没有实例化,是不能用作父类构造器的参数,必须声明为静态  </span><br>  <br>         <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;count&quot;</span>; <span class="hljs-comment">//数据库名称  </span><br>  <br>         <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">version</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; <span class="hljs-comment">//数据库版本  </span><br>  <br>         <span class="hljs-keyword">public</span> <span class="hljs-title function_">DatabaseHelper</span><span class="hljs-params">(Context context)</span> &#123;  <br>  <br>              <span class="hljs-comment">//第三个参数CursorFactory指定在执行查询时获得一个游标实例的工厂类,设置为null,代表使用系统默认的工厂类  </span><br>  <br>                <span class="hljs-built_in">super</span>(context, name, <span class="hljs-literal">null</span>, version);  <br>  <br>         &#125;  <br>  <br>        <span class="hljs-meta">@Override</span>  <br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onCreate</span><span class="hljs-params">(SQLiteDatabase db)</span> &#123;  <br>  <br>              db.execSQL(<span class="hljs-string">&quot;CREATE TABLE IF NOT EXISTS person (personid integer primary key autoincrement, name varchar(20), age INTEGER)&quot;</span>);     <br>  <br>         &#125;  <br>  <br>        <span class="hljs-meta">@Override</span>   <br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onUpgrade</span><span class="hljs-params">(SQLiteDatabase db, <span class="hljs-type">int</span> oldVersion, <span class="hljs-type">int</span> newVersion)</span> &#123;  <br>  <br>               db.execSQL(<span class="hljs-string">&quot;ALTER TABLE person ADD phone VARCHAR(12)&quot;</span>); <span class="hljs-comment">//往表中增加一列  </span><br>  <br>         &#125;  <br>&#125;  <br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>当数据库表结构发生更新时，应该避免用户存放于数据库中的数据丢失</p>
+</blockquote>
+<h3 id="操作数据库"><a href="#操作数据库" class="headerlink" title="操作数据库"></a>操作数据库</h3><p>使用SqliteDataBase操作sqlite数据库<br>Android提供了一个名为SQLiteDatabase的类，该类封装了一些操作数据库的API，使用该类可以完成对数据进行添加(Create)、查询(Retrieve)、更新(Update)和删除(Delete)操作（这些操作简称为CRUD）。对SQLiteDatabase的学习，我们应该重点掌握execSQL()和rawQuery()方法。 execSQL()方法可以执行insert、delete、update和CREATE TABLE之类有更改行为的SQL语句； rawQuery()方法用于执行select语句</p>
+<p>execSQL()方法的使用：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs abnf">SQLiteDatabase db <span class="hljs-operator">=</span> ....<span class="hljs-comment">;  </span><br>  <br>db.execSQL(<span class="hljs-string">&quot;insert into person(name, age) values(&#x27;炸死特&#x27;, 4)&quot;</span>)<span class="hljs-comment">;  </span><br>  <br>db.close()<span class="hljs-comment">;  </span><br></code></pre></td></tr></table></figure>
+<p>执行上面SQL语句会往person表中添加进一条记录，在实际应用中， 语句中的“炸死特”这些参数值会由用户输入界面提供，如果把用户输入的内容原样组拼到上面的insert语句， 当用户输入的内容含有单引号时，组拼出来的SQL语句就会存在语法错误。要解决这个问题需要对单引号进行转义，也就是把单引号转换成两个单引号。有些时候用户往往还会输入像“ &amp; ”这些特殊SQL符号，为保证组拼好的SQL语句语法正确，必须对SQL语句中的这些特殊SQL符号都进行转义，显然，对每条SQL语句都做这样的处理工作是比较烦琐的。 SQLiteDatabase类提供了一个重载后的execSQL(String sql, Object[] bindArgs)方法，使用这个方法可以解决前面提到的问题，因为这个方法支持使用占位符参数(?)<br>例如：</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs stata">SQLiteDatabase <span class="hljs-keyword">db</span> = ....;  <br>  <br><span class="hljs-keyword">db</span>.execSQL(<span class="hljs-string">&quot;insert into person(name, age) values(?,?)&quot;</span>, new Object[]&#123;<span class="hljs-string">&quot;炸死特&quot;</span>, 4&#125;);   <br>  <br><span class="hljs-keyword">db</span>.<span class="hljs-keyword">close</span>();<br></code></pre></td></tr></table></figure>
+<p>execSQL(String sql, Object[] bindArgs)方法的第一个参数为SQL语句，第二个参数为SQL语句中占位符参数的值，参数值在数组中的顺序要和占位符的位置对应</p>
+<p>SQLiteDatabase的rawQuery() 用于执行select语句，使用例子如下</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">SQLiteDatabase db = ....;  <br>  <br>Cursor cursor = db.raw<span class="hljs-constructor">Query(“<span class="hljs-params">select</span> <span class="hljs-operator">*</span> <span class="hljs-params">from</span> <span class="hljs-params">person</span>”, <span class="hljs-params">null</span>)</span>;  <br>  <br><span class="hljs-keyword">while</span> (cursor.move<span class="hljs-constructor">ToNext()</span>) &#123;  <br>  <br>  <span class="hljs-built_in">int</span> personid = cursor.get<span class="hljs-constructor">Int(0)</span>; <span class="hljs-comment">//获取第一列的值,第一列的索引从0开始  </span><br>  <br>  String name = cursor.get<span class="hljs-constructor">String(1)</span>;<span class="hljs-comment">//获取第二列的值  </span><br>  <br>  <span class="hljs-built_in">int</span> age = cursor.get<span class="hljs-constructor">Int(2)</span>;<span class="hljs-comment">//获取第三列的值  </span><br>  <br>&#125;  <br>  <br>cursor.close<span class="hljs-literal">()</span>;  <br>  <br>db.close<span class="hljs-literal">()</span>;  <br></code></pre></td></tr></table></figure>
+<p>rawQuery()方法的第一个参数为select语句；第二个参数为select语句中占位符参数的值，如果select语句没有使用占位符，该参数可以设置为null。带占位符参数的select语句使用例子如下</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs arduino">Cursor cursor = db.<span class="hljs-built_in">rawQuery</span>(<span class="hljs-string">&quot;select * from person where name like ? and age=?&quot;</span>, <span class="hljs-keyword">new</span> <span class="hljs-type">String</span>[]&#123;<span class="hljs-string">&quot;%炸死特%&quot;</span>, <span class="hljs-string">&quot;4&quot;</span>&#125;);  <br></code></pre></td></tr></table></figure>
+<p>Cursor是结果集游标，用于对结果集进行随机访问，如果大家熟悉jdbc， 其实Cursor与JDBC中的ResultSet作用很相似。使用moveToNext()方法可以将游标从当前行移动到下一行，如果已经移过了结果集的最后一行，返回结果为false，否则为true。另外Cursor 还有常用的moveToPrevious()方法（用于将游标从当前行移动到上一行，如果已经移过了结果集的第一行，返回值为false，否则为true ）、moveToFirst()方法（用于将游标移动到结果集的第一行，如果结果集为空，返回值为false，否则为true ）和moveToLast()方法（用于将游标移动到结果集的最后一行，如果结果集为空，返回值为false，否则为true ） 。</p>
+<p>除了前面给大家介绍的execSQL()和rawQuery()方法， SQLiteDatabase还专门提供了对应于添加、删除、更新、查询的操作方法： insert()、delete()、update()和query() 。这些方法实际上是给那些不太了解SQL语法的菜鸟使用的，对于熟悉SQL语法的程序员而言，直接使用execSQL()和rawQuery()方法执行SQL语句就能完成数据的添加、删除、更新、查询操作。</p>
+<p>Insert()方法用于添加数据，各个字段的数据使用ContentValues进行存放。 ContentValues类似于MAP，相对于MAP，它提供了存取数据对应的put(String key, Xxx value)和getAsXxx(String key)方法，  key为字段名称，value为字段值，Xxx指的是各种常用的数据类型，如：String、Integer等。</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs maxima">SQLiteDatabase db = databaseHelper.getWritableDatabase();  <br>  <br>ContentValues <span class="hljs-built_in">values</span> = <span class="hljs-built_in">new</span> ContentValues();  <br>  <br><span class="hljs-built_in">values</span>.<span class="hljs-built_in">put</span>(<span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-string">&quot;炸死特&quot;</span>);  <br>  <br><span class="hljs-built_in">values</span>.<span class="hljs-built_in">put</span>(<span class="hljs-string">&quot;age&quot;</span>, <span class="hljs-number">4</span>);  <br>  <br>long rowid = db.insert(“person”, null, <span class="hljs-built_in">values</span>);//返回新添记录的行号，与主键id无关 <br></code></pre></td></tr></table></figure>
+<p>不管第三个参数是否包含数据，执行Insert()方法必然会添加一条记录，如果第三个参数为空，会添加一条除主键之外其他字段值为Null的记录。Insert()方法内部实际上通过构造insert SQL语句完成数据的添加，Insert()方法的第二个参数用于指定空值字段的名称，相信大家对该参数会感到疑惑，该参数的作用是什么？</p>
+<p>是这样的：如果第三个参数values 为Null或者元素个数为0， 由于Insert()方法要求必须添加一条除了主键之外其它字段为Null值的记录，为了满足SQL语法的需要， insert语句必须给定一个字段名，如：insert into person(name) values(NULL)，倘若不给定字段名 ， insert语句就成了这样： insert into person() values()，显然这不满足标准SQL的语法。对于字段名，建议使用主键之外的字段，如果使用了INTEGER类型的主键字段，执行类似insert into person(personid) values(NULL)的insert语句后，该主键字段值也不会为NULL。如果第三个参数values 不为Null并且元素的个数大于0 ，可以把第二个参数设置为null</p>
+<p>delete()方法的使用</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs stata">SQLiteDatabase <span class="hljs-keyword">db</span> = databaseHelper.getWritableDatabase();  <br>  <br><span class="hljs-keyword">db</span>.delete(<span class="hljs-string">&quot;person&quot;</span>, <span class="hljs-string">&quot;personid&lt;?&quot;</span>, new String[]&#123;<span class="hljs-string">&quot;2&quot;</span>&#125;);  <br>  <br><span class="hljs-keyword">db</span>.<span class="hljs-keyword">close</span>(); <br></code></pre></td></tr></table></figure>
+<p>上面代码用于从person表中删除personid小于2的记录</p>
+<p>update()方法使用</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs maxima">SQLiteDatabase db = databaseHelper.getWritableDatabase();  <br>  <br>ContentValues <span class="hljs-built_in">values</span> = <span class="hljs-built_in">new</span> ContentValues();  <br>  <br><span class="hljs-built_in">values</span>.<span class="hljs-built_in">put</span>(“name”, “炸死特”);//<span class="hljs-built_in">key</span>为字段名，value为值  <br>  <br>db.update(<span class="hljs-string">&quot;person&quot;</span>, <span class="hljs-built_in">values</span>, <span class="hljs-string">&quot;personid=?&quot;</span>, <span class="hljs-built_in">new</span> String[]&#123;<span class="hljs-string">&quot;1&quot;</span>&#125;);   <br>  <br>db.<span class="hljs-built_in">close</span>();  <br></code></pre></td></tr></table></figure>
+<p>上面代码用于把person表中personid等于1的记录的name字段的值改为“炸死特”</p>
+<p>query()方法</p>
+<p>实际上是把select语句拆分成了若干个组成部分，然后作为方法的输入参数</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs arduino">SQLiteDatabase db = databaseHelper.<span class="hljs-built_in">getWritableDatabase</span>();  <br>  <br>Cursor cursor = db.<span class="hljs-built_in">query</span>(<span class="hljs-string">&quot;person&quot;</span>, <span class="hljs-keyword">new</span> <span class="hljs-type">String</span>[]&#123;<span class="hljs-string">&quot;personid,name,age&quot;</span>&#125;, <span class="hljs-string">&quot;name like ?&quot;</span>, <span class="hljs-keyword">new</span> <span class="hljs-type">String</span>[]&#123;<span class="hljs-string">&quot;%炸死特%&quot;</span>&#125;, null, null, <span class="hljs-string">&quot;personid desc&quot;</span>, <span class="hljs-string">&quot;1,2&quot;</span>);  <br>  <br><span class="hljs-keyword">while</span> (cursor.<span class="hljs-built_in">moveToNext</span>()) &#123;  <br>  <br>         <span class="hljs-type">int</span> personid = cursor.<span class="hljs-built_in">getInt</span>(<span class="hljs-number">0</span>); <span class="hljs-comment">//获取第一列的值,第一列的索引从0开始  </span><br>  <br>          <span class="hljs-type">String</span> name = cursor.<span class="hljs-built_in">getString</span>(<span class="hljs-number">1</span>);<span class="hljs-comment">//获取第二列的值  </span><br>  <br>          <span class="hljs-type">int</span> age = cursor.<span class="hljs-built_in">getInt</span>(<span class="hljs-number">2</span>);<span class="hljs-comment">//获取第三列的值  </span><br>  <br>&#125;  <br>  <br>cursor.<span class="hljs-built_in">close</span>();  <br>  <br>db.<span class="hljs-built_in">close</span>();  <br></code></pre></td></tr></table></figure>
+<p>上面代码用于从person表中查找name字段含有“炸死特”的记录，匹配的记录按personid降序排序，对排序后的结果略过第一条记录，只获取2条记录。</p>
+<p>query(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit)方法各参数的含义：</p>
+<p>table：表名。相当于select语句from关键字后面的部分。如果是多表联合查询，可以用逗号将两个表名分开。</p>
+<p>columns：要查询出来的列名。相当于select语句select关键字后面的部分。</p>
+<p>selection：查询条件子句，相当于select语句where关键字后面的部分，在条件子句允许使用占位符“?”</p>
+<p>selectionArgs：对应于selection语句中占位符的值，值在数组中的位置与占位符在语句中的位置必须一致，否则就会有异常。</p>
+<p>groupBy：相当于select语句group by关键字后面的部分</p>
+<p>having：相当于select语句having关键字后面的部分</p>
+<p>orderBy：相当于select语句order by关键字后面的部分，如：personid desc, age asc;</p>
+<p>limit：指定偏移量和获取的记录数，相当于select语句limit关键字后面的部分</p>
+<h3 id="例子："><a href="#例子：" class="headerlink" title="例子："></a>例子：</h3><p>数据库操作帮助类</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">class</span> <span class="hljs-title class_">RestaurantHelper</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">SQLiteOpenHelper</span> &#123;  <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> final <span class="hljs-title class_">String</span> <span class="hljs-variable constant_">DATABASE_NAME</span>=<span class="hljs-string">&quot;lunchlist.db&quot;</span>;<span class="hljs-comment">//数据库名称  </span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> final int <span class="hljs-variable constant_">SCHEMA_VERSION</span>=<span class="hljs-number">2</span>;<span class="hljs-comment">//版本号,则是升级之后的,升级方法请看onUpgrade方法里面的判断  </span><br>      <br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">RestaurantHelper</span>(<span class="hljs-title class_">Context</span> context) &#123;<span class="hljs-comment">//构造函数,接收上下文作为参数,直接调用的父类的构造函数  </span><br>        <span class="hljs-variable language_">super</span>(context, <span class="hljs-variable constant_">DATABASE_NAME</span>, <span class="hljs-literal">null</span>, <span class="hljs-variable constant_">SCHEMA_VERSION</span>);  <br>    &#125;  <br>      <br>    <span class="hljs-meta">@Override</span>  <br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">onCreate</span>(<span class="hljs-params">SQLiteDatabase db</span>) &#123;<span class="hljs-comment">//创建的是一个午餐订餐的列表,id,菜名,地址等等  </span><br>        db.<span class="hljs-title function_">execSQL</span>(<span class="hljs-string">&quot;CREATE TABLE restaurants (_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, address TEXT, type TEXT, notes TEXT, phone TEXT);&quot;</span>);  <br>    &#125;  <br>  <br>    <span class="hljs-meta">@Override</span>  <br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">onUpgrade</span>(<span class="hljs-params">SQLiteDatabase db, int oldVersion, int newVersion</span>) &#123;  <br>        <span class="hljs-keyword">if</span> (oldVersion==<span class="hljs-number">1</span> &amp;&amp; newVersion==<span class="hljs-number">2</span>) &#123;<span class="hljs-comment">//升级判断,如果再升级就要再加两个判断,从1到3,从2到3  </span><br>            db.<span class="hljs-title function_">execSQL</span>(<span class="hljs-string">&quot;ALTER TABLE restaurants ADD phone TEXT;&quot;</span>);  <br>        &#125;  <br>    &#125;  <br>  <br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">Cursor</span> <span class="hljs-title function_">getAll</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> where, <span class="hljs-built_in">String</span> orderBy</span>) &#123;<span class="hljs-comment">//返回表中的数据,where是调用时候传进来的搜索内容,orderby是设置中传进来的列表排序类型  </span><br>        <span class="hljs-title class_">StringBuilder</span> buf=<span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuilder</span>(<span class="hljs-string">&quot;SELECT _id, name, address, type, notes, phone FROM restaurants&quot;</span>);  <br>          <br>        <span class="hljs-keyword">if</span> (where!=<span class="hljs-literal">null</span>) &#123;  <br>            buf.<span class="hljs-title function_">append</span>(<span class="hljs-string">&quot; WHERE &quot;</span>);  <br>            buf.<span class="hljs-title function_">append</span>(where);  <br>        &#125;  <br>          <br>        <span class="hljs-keyword">if</span> (orderBy!=<span class="hljs-literal">null</span>) &#123;  <br>            buf.<span class="hljs-title function_">append</span>(<span class="hljs-string">&quot; ORDER BY &quot;</span>);  <br>            buf.<span class="hljs-title function_">append</span>(orderBy);  <br>        &#125;  <br>          <br>        <span class="hljs-keyword">return</span>(<span class="hljs-title function_">getReadableDatabase</span>().<span class="hljs-title function_">rawQuery</span>(buf.<span class="hljs-title function_">toString</span>(), <span class="hljs-literal">null</span>));  <br>    &#125;  <br>      <br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">Cursor</span> <span class="hljs-title function_">getById</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> id</span>) &#123;<span class="hljs-comment">//根据点击事件获取id,查询数据库  </span><br>        <span class="hljs-title class_">String</span>[] args=&#123;id&#125;;  <br>  <br>        <span class="hljs-keyword">return</span>(<span class="hljs-title function_">getReadableDatabase</span>()  <br>                        .<span class="hljs-title function_">rawQuery</span>(<span class="hljs-string">&quot;SELECT _id, name, address, type, notes, phone FROM restaurants WHERE _ID=?&quot;</span>,  <br>                                            args));  <br>    &#125;  <br>      <br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">insert</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> name, <span class="hljs-built_in">String</span> address, <span class="hljs-built_in">String</span> <span class="hljs-keyword">type</span>, <span class="hljs-built_in">String</span> notes, <span class="hljs-built_in">String</span> phone</span>) &#123;  <br>        <span class="hljs-title class_">ContentValues</span> cv=<span class="hljs-keyword">new</span> <span class="hljs-title class_">ContentValues</span>();  <br>                      <br>        cv.<span class="hljs-title function_">put</span>(<span class="hljs-string">&quot;name&quot;</span>, name);  <br>        cv.<span class="hljs-title function_">put</span>(<span class="hljs-string">&quot;address&quot;</span>, address);  <br>        cv.<span class="hljs-title function_">put</span>(<span class="hljs-string">&quot;type&quot;</span>, <span class="hljs-keyword">type</span>);  <br>        cv.<span class="hljs-title function_">put</span>(<span class="hljs-string">&quot;notes&quot;</span>, notes);  <br>        cv.<span class="hljs-title function_">put</span>(<span class="hljs-string">&quot;phone&quot;</span>, phone);  <br>          <br>        <span class="hljs-title function_">getWritableDatabase</span>().<span class="hljs-title function_">insert</span>(<span class="hljs-string">&quot;restaurants&quot;</span>, <span class="hljs-string">&quot;name&quot;</span>, cv);  <br>    &#125;  <br>      <br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">update</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> id, <span class="hljs-built_in">String</span> name, <span class="hljs-built_in">String</span> address,  </span><br><span class="hljs-params">                                         <span class="hljs-built_in">String</span> <span class="hljs-keyword">type</span>, <span class="hljs-built_in">String</span> notes, <span class="hljs-built_in">String</span> phone</span>) &#123;  <br>        <span class="hljs-title class_">ContentValues</span> cv=<span class="hljs-keyword">new</span> <span class="hljs-title class_">ContentValues</span>();  <br>        <span class="hljs-title class_">String</span>[] args=&#123;id&#125;;  <br>          <br>        cv.<span class="hljs-title function_">put</span>(<span class="hljs-string">&quot;name&quot;</span>, name);  <br>        cv.<span class="hljs-title function_">put</span>(<span class="hljs-string">&quot;address&quot;</span>, address);  <br>        cv.<span class="hljs-title function_">put</span>(<span class="hljs-string">&quot;type&quot;</span>, <span class="hljs-keyword">type</span>);  <br>        cv.<span class="hljs-title function_">put</span>(<span class="hljs-string">&quot;notes&quot;</span>, notes);  <br>        cv.<span class="hljs-title function_">put</span>(<span class="hljs-string">&quot;phone&quot;</span>, phone);  <br>          <br>        <span class="hljs-title function_">getWritableDatabase</span>().<span class="hljs-title function_">update</span>(<span class="hljs-string">&quot;restaurants&quot;</span>, cv, <span class="hljs-string">&quot;_ID=?&quot;</span>,  <br>                                                                 args);  <br>    &#125;  <br>      <br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">String</span> <span class="hljs-title function_">getName</span>(<span class="hljs-params">Cursor c</span>) &#123;  <br>        <span class="hljs-keyword">return</span>(c.<span class="hljs-title function_">getString</span>(<span class="hljs-number">1</span>));  <br>    &#125;  <br>      <br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">String</span> <span class="hljs-title function_">getAddress</span>(<span class="hljs-params">Cursor c</span>) &#123;  <br>        <span class="hljs-keyword">return</span>(c.<span class="hljs-title function_">getString</span>(<span class="hljs-number">2</span>));  <br>    &#125;  <br>      <br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">String</span> <span class="hljs-title function_">getType</span>(<span class="hljs-params">Cursor c</span>) &#123;  <br>        <span class="hljs-keyword">return</span>(c.<span class="hljs-title function_">getString</span>(<span class="hljs-number">3</span>));  <br>    &#125;  <br>      <br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">String</span> <span class="hljs-title function_">getNotes</span>(<span class="hljs-params">Cursor c</span>) &#123;  <br>        <span class="hljs-keyword">return</span>(c.<span class="hljs-title function_">getString</span>(<span class="hljs-number">4</span>));  <br>    &#125;  <br>      <br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">String</span> <span class="hljs-title function_">getPhone</span>(<span class="hljs-params">Cursor c</span>) &#123;  <br>        <span class="hljs-keyword">return</span>(c.<span class="hljs-title function_">getString</span>(<span class="hljs-number">5</span>));  <br>    &#125;  <br>&#125; <br></code></pre></td></tr></table></figure>
+<p>简单的一个查询操作</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> LunchList extends ListActivity &#123;  <br> Cursor model=null;<span class="hljs-comment">//用来存储查询的数据  </span><br> RestaurantAdapter adapter=null;<span class="hljs-comment">//上面自定义的数据库帮助类  </span><br> public void on<span class="hljs-constructor">Create(Bundle <span class="hljs-params">savedInstanceState</span>)</span> &#123;  <br>   super.on<span class="hljs-constructor">Create(<span class="hljs-params">savedInstanceState</span>)</span>;  <br>   set<span class="hljs-constructor">ContentView(R.<span class="hljs-params">layout</span>.<span class="hljs-params">main</span>)</span>;  <br>  <br>   helper=<span class="hljs-keyword">new</span> <span class="hljs-constructor">RestaurantHelper(<span class="hljs-params">this</span>)</span>;<span class="hljs-comment">//参数是上下文  </span><br>  <br>   init<span class="hljs-constructor">List()</span>;<span class="hljs-comment">//初始化listview列表,省略了很多,大体能明白使用数据库流程就行啦  </span><br>  <br>&#125;  <br>  <br><span class="hljs-keyword">private</span> void init<span class="hljs-constructor">List()</span> &#123;  <br>  <span class="hljs-keyword">if</span> (model!=null) &#123;  <br>   stop<span class="hljs-constructor">ManagingCursor(<span class="hljs-params">model</span>)</span>;  <br>   model.close<span class="hljs-literal">()</span>;  <br>  &#125;  <br>    <br>  String where=null;  <br>  <br>  <span class="hljs-keyword">if</span> (<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Intent</span>.</span><span class="hljs-module"><span class="hljs-identifier">ACTION_SEARCH</span>.</span></span>equals(get<span class="hljs-constructor">Intent()</span>.get<span class="hljs-constructor">Action()</span>)) &#123;<span class="hljs-comment">//如果有查询指令则根据查询内容从数据库获取表中所有满足条件数据  </span><br>   where=<span class="hljs-string">&quot;name LIKE \&quot;%&quot;</span>+get<span class="hljs-constructor">Intent()</span>.get<span class="hljs-constructor">StringExtra(SearchManager.QUERY)</span>+<span class="hljs-string">&quot;%\&quot;&quot;</span>;  <br>  &#125;  <br>  model=helper.get<span class="hljs-constructor">All(<span class="hljs-params">where</span>, <span class="hljs-params">prefs</span>.<span class="hljs-params">getString</span>(<span class="hljs-string">&quot;sort_order&quot;</span>, <span class="hljs-string">&quot;name&quot;</span>)</span>);<span class="hljs-comment">//调用帮助类中的方法获取数据  </span><br>  start<span class="hljs-constructor">ManagingCursor(<span class="hljs-params">model</span>)</span>;  <br>  adapter=<span class="hljs-keyword">new</span> <span class="hljs-constructor">RestaurantAdapter(<span class="hljs-params">model</span>)</span>;<span class="hljs-comment">//设置adapter  </span><br>  set<span class="hljs-constructor">ListAdapter(<span class="hljs-params">adapter</span>)</span>;<span class="hljs-comment">//在列表中显示出来  </span><br> &#125; <br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在开发中，如果我们使用个SQlite比较少，那么自己写一个比较简单的实现就可以完成我们的需求。但是如果内容比较多，比较复杂，还是建议使用第三方框架，这里说的就是greenDao;</p>
+</blockquote>
+<h1 id="GreenDao"><a href="#GreenDao" class="headerlink" title="GreenDao"></a>GreenDao</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p> GreenDAO是一个开源的安卓ORM框架，能够使SQLite数据库的开发再次变得有趣。它减轻开发人员处理低级数据库需求，同时节省开发时间。 SQLite是一个令人敬畏的内嵌的关系数据库，编写SQL和解析查询结果是相当乏味和耗时的任务。通过将Java对象映射到数据库表（称为ORM，“对象&#x2F;关系映射”），GreenDAO可以将它们从这些映射中释放出来，这样，您可以使用简单的面向对象的API来存储，更新，删除和查询数据库</p>
+<blockquote>
+<p>简单来说：GreenDAO 是一个将对象映射到 SQLite 数据库中的轻量且快速的 ORM 解决方案</p>
+</blockquote>
+<h2 id="ORM介绍"><a href="#ORM介绍" class="headerlink" title="ORM介绍"></a>ORM介绍</h2><p> 对象-关系映射（OBJECT&#x2F;RELATIONALMAPPING，简称ORM），是随着面向对象的软件开发方法发展而产生的。用来把对象模型表示的对象映射到基于SQL的关系模型数据库结构中去。这样，我们在具体的操作实体对象的时候，就不需要再去和复杂的 SQL 语句打交道，只需简单的操作实体对象的属性和方法。ORM 技术是在对象和关系之间提供了一条桥梁，前台的对象型数据和数据库中的关系型的数据通过这个桥梁来相互转化</p>
+<blockquote>
+<p>简单来说:就是JavaBean和我们的数据库进行一个关系映射，一个实例对象对应数据库的一条记录，每个对象的属性则对应着数据库表的字段</p>
+</blockquote>
+<h2 id="添加依赖"><a href="#添加依赖" class="headerlink" title="添加依赖"></a>添加依赖</h2><p> 在项目根依赖中<br> <figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs gradle"> <span class="hljs-comment">// Top-level build file where you can add configuration options common to all sub-projects/modules.</span><br><br><span class="hljs-keyword">buildscript</span> &#123;<br>    <br>    <span class="hljs-keyword">repositories</span> &#123;<br>        google()<br>        jcenter()<br>        mavenCentral()<br>    &#125;<br>    <span class="hljs-keyword">dependencies</span> &#123;<br>        <span class="hljs-keyword">classpath</span> <span class="hljs-string">&#x27;com.android.tools.build:gradle:3.0.0&#x27;</span><br>        <span class="hljs-keyword">classpath</span> <span class="hljs-string">&#x27;org.greenrobot:greendao-gradle-plugin:3.2.2&#x27;</span><br><br>        <span class="hljs-comment">// <span class="hljs-doctag">NOTE:</span> Do not place your application dependencies here; they belong</span><br>        <span class="hljs-comment">// in the individual module build.gradle files</span><br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">allprojects</span> &#123;<br>    <span class="hljs-keyword">repositories</span> &#123;<br>        google()<br>        jcenter()<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">task</span> clean(type: <span class="hljs-keyword">Delete</span>) &#123;<br>    <span class="hljs-keyword">delete</span> rootProject.buildDir<br>&#125;<br></code></pre></td></tr></table></figure><br>在项目依赖中</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">apply</span> plugin: <span class="hljs-string">&#x27;com.android.application&#x27;</span><br>apply plugin: <span class="hljs-string">&#x27;org.greenrobot.greendao&#x27;</span><br><br>android &#123;<br>    <span class="hljs-attribute">compileSdkVersion</span> <span class="hljs-number">26</span><br>    defaultConfig &#123;<br>        <span class="hljs-attribute">applicationId</span> <span class="hljs-string">&quot;com.paulniu.greendao2&quot;</span><br>        minSdkVersion <span class="hljs-number">15</span><br>        targetSdkVersion <span class="hljs-number">26</span><br>        versionCode <span class="hljs-number">1</span><br>        versionName <span class="hljs-string">&quot;1.0&quot;</span><br>        testInstrumentationRunner <span class="hljs-string">&quot;android.support.test.runner.AndroidJUnitRunner&quot;</span><br>    &#125;<br>    buildTypes &#123;<br>        <span class="hljs-section">release</span> &#123;<br>            <span class="hljs-attribute">minifyEnabled</span> <span class="hljs-literal">false</span><br>            proguardFiles getDefaultProguardFile(<span class="hljs-string">&#x27;proguard-android.txt&#x27;</span>), <span class="hljs-string">&#x27;proguard-rules.pro&#x27;</span><br>        &#125;<br>    &#125;<br>&#125;<br>greendao &#123;<br>    <span class="hljs-attribute">schemaVersion</span> <span class="hljs-number">1</span><br>    daoPackage <span class="hljs-string">&#x27;com.paulniu.greendaodemo.dao&#x27;</span><br>    targetGenDir <span class="hljs-string">&#x27;src/main/java&#x27;</span><br>&#125;<br>dependencies &#123;<br>    <span class="hljs-attribute">implementation</span> fileTree(dir: <span class="hljs-string">&#x27;libs&#x27;</span>, include: [<span class="hljs-string">&#x27;*.jar&#x27;</span>])<br>    implementation <span class="hljs-string">&#x27;com.android.support:appcompat-v7:26.1.0&#x27;</span><br>    implementation <span class="hljs-string">&#x27;com.android.support.constraint:constraint-layout:1.0.2&#x27;</span><br>    testImplementation <span class="hljs-string">&#x27;junit:junit:4.12&#x27;</span><br>    androidTestImplementation <span class="hljs-string">&#x27;com.android.support.test:runner:1.0.1&#x27;</span><br>    androidTestImplementation <span class="hljs-string">&#x27;com.android.support.test.espresso:espresso-core:3.0.1&#x27;</span><br>    compile <span class="hljs-string">&#x27;org.greenrobot:greendao:3.2.2&#x27;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：GreenDao 3.0采用注解的方式来定义实体类，通过gradle插件生成相应的代码。您可以使用greenDAO Gradle插件，无需任何其他配置,但至少要设置schema的版本</p>
+</blockquote>
+<p>greenDao配置元素支持多种配置选项</p>
+<ol>
+<li>schemaVersion：指定数据库schema版本号，迁移等操作会用到；</li>
+<li>daoPackage：通过gradle插件生成的数据库相关文件的包名，默认为你的entity所在的包名；</li>
+<li>targetGenDir：自定义生成数据库文件的目录，可以将生成的文件放到我们的java目录中，而不是build中，这样就不用额外的设置资源目录了<figure class="highlight sml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sml">greendao &#123;<br>    schemaVersion <span class="hljs-number">1</span><br>    daoPackage <span class="hljs-symbol">&#x27;com</span>.paulniu.greendaodemo.dao&#x27;<br>    targetGenDir <span class="hljs-symbol">&#x27;src</span>/main/java&#x27;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h3><p>通过GreenDao3注解的语法来定义我们的一个数据库实体类及其数据库操作方法</p>
+<ol>
+<li>我们先生成一个实体类<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs haxe"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bean</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">String</span> name;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">String</span> password;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li>通过添加注解为我们的Bean实体类生成对应的数据库操作方法<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs haxe">@Entity<br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bean</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> Long _id;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">String</span> source;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">String</span> url;<br>&#125;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>这里是几个注解的含义，有些没有用到</p>
+</blockquote>
+</li>
+</ol>
+<ul>
+<li>@Entity：将我们的java普通类变为一个能够被greenDAO识别的数据库类型的实体类;</li>
+<li>@nameInDb：在数据库中的名字，如不写则为实体中类名；</li>
+<li>@Id：选择一个long &#x2F; Long属性作为实体ID。 在数据库方面，它是主键。 参数autoincrement是设置ID值自增；</li>
+<li>@NotNull：使该属性在数据库端成为“NOT NULL”列。 通常使用@NotNull标记原始类型（long，int，short，byte）是有意义的；</li>
+<li>@Transient：表明这个字段不会被写入数据库，只是作为一个普通的java类字段，用来临时存储数据的，不会被持久化。</li>
+</ul>
+<ol start="3">
+<li>通过点击AndroidStudio中的MakeProject，便发现GreenDao为我们的Meizi实体类生成了对应的Getter、Setter方法以及俩个构造函数，同时在我们配置的com.ping.greendao.gen包下生成了三个对应类文件DaoMaster、DaoSession和MeiziDao，之后所有相关的数据库操作都依靠这三个文件了<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs typescript"> * <span class="hljs-title class_">Created</span> by niupule on <span class="hljs-number">2017</span>/<span class="hljs-number">12</span>/<span class="hljs-number">30.</span><br> */<br><span class="hljs-meta">@Entity</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Bean</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-title class_">String</span> name;<br>    <span class="hljs-keyword">private</span> <span class="hljs-title class_">String</span> password;<br>    <span class="hljs-meta">@Generated</span>(hash = <span class="hljs-number">1463487377</span>)<br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">Bean</span>(<span class="hljs-title class_">String</span> name, <span class="hljs-title class_">String</span> password) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = name;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">password</span> = password;<br>    &#125;<br>    <span class="hljs-meta">@Generated</span>(hash = <span class="hljs-number">80546095</span>)<br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">Bean</span>() &#123;<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">String</span> <span class="hljs-title function_">getName</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">setName</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> name</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = name;<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">String</span> <span class="hljs-title function_">getPassword</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">password</span>;<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">setPassword</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> password</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">password</span> = password;<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+这里同样会生成三个文件</li>
+</ol>
+<ul>
+<li>DaoMaster：使用greenDAO的切入点。DaoMaster保存数据库对象（SQLiteDatabase）并管理特定模式的DAO类（而不是对象）。 它具有静态方法来创建表或将它们删除。 其内部类OpenHelper和DevOpenHelper是在SQLite数据库中创建模式的SQLiteOpenHelper实现。一个DaoMaster就代表着一个数据库的连接。</li>
+<li>DaoSession：管理特定模式的所有可用DAO对象，您可以使用其中一个getter方法获取。 DaoSession还为实体提供了一些通用的持久性方法，如插入，加载，更新，刷新和删除。 DaoSession可以让我们使用一些Entity的基本操作和获取Dao操作类，DaoSession可以创建多个，每一个都是属于同一个数据库连接的。</li>
+<li>XxxDAO：数据访问对象（DAO）持续存在并查询实体。 对于每个实体，GreenDAO生成一个DAO。 它比DaoSession有更多的持久化方法，例如：count，loadAll和insertInTx。</li>
+</ul>
+<h3 id="GreenDaoManager"><a href="#GreenDaoManager" class="headerlink" title="GreenDaoManager"></a>GreenDaoManager</h3><p>添加一个GreenDaoManager的文件，用于创建数据库，创建表</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">DaoManager</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> final String TAG = <span class="hljs-string">&quot;DaoManager&quot;</span>;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> final String DB_NAME = <span class="hljs-string">&quot;MyBean&quot;</span>;<br><br>    <span class="hljs-keyword">private</span> Context context;<br><br>    <span class="hljs-comment">//再多线程中被共享的要使用volatile</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">static</span> DaoManager daoManager = <span class="hljs-keyword">new</span> DaoManager();<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> DaoMaster daoMaster;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> DaoMaster.DevOpenHelper helper;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> DaoSession session;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 单例获取daomanager对象</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> DaoManager <span class="hljs-title">getInstance</span>()</span> &#123;<br>        <span class="hljs-keyword">return</span> daoManager;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 初始化上下文context</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initContext</span>(<span class="hljs-params">Context context</span>)</span> &#123;<br>        <span class="hljs-keyword">this</span>.context = context;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 获得数据连接，如果没有连接，则创建连接</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> DaoMaster <span class="hljs-title">getDaoMaster</span>()</span> &#123;<br>        <span class="hljs-keyword">if</span> (daoMaster == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">if</span> (helper == <span class="hljs-literal">null</span>) &#123;<br>                helper = <span class="hljs-keyword">new</span> DaoMaster.DevOpenHelper(context, DB_NAME, <span class="hljs-literal">null</span>);<br>            &#125;<br>            daoMaster = <span class="hljs-keyword">new</span> DaoMaster(helper.getWritableDatabase());<br>        &#125;<br>        <span class="hljs-keyword">return</span> daoMaster;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 完成对数据库的增删改查只需要一个接口</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> DaoSession <span class="hljs-title">getDaoSession</span>()</span> &#123;<br>        <span class="hljs-keyword">if</span> (session == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">if</span> (daoMaster == <span class="hljs-literal">null</span>) &#123;<br>                daoMaster = getDaoMaster();<br>            &#125;<br>            session = daoMaster.newSession();<br>        &#125;<br>        <span class="hljs-keyword">return</span> session;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 设置打开日志，默认是关闭的</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setDebug</span>()</span> &#123;<br>        QueryBuilder.LOG_SQL = <span class="hljs-literal">true</span>;<br>        QueryBuilder.LOG_VALUES = <span class="hljs-literal">true</span>;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 关闭所有数据库操作</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">closeConnection</span>()</span> &#123;<br>        closeHelper();<br>        closeDaoSession();<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">closeHelper</span>()</span> &#123;<br>        <span class="hljs-keyword">if</span> (helper != <span class="hljs-literal">null</span>) &#123;<br>            helper.close();<br>            helper = <span class="hljs-literal">null</span>;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">closeDaoSession</span>()</span> &#123;<br>        <span class="hljs-keyword">if</span> (session != <span class="hljs-literal">null</span>) &#123;<br>            session.clear();<br>            session = <span class="hljs-literal">null</span>;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="编写XxxDaoUtil，用于完成对某一张数据表的具体操作——ORM操作"><a href="#编写XxxDaoUtil，用于完成对某一张数据表的具体操作——ORM操作" class="headerlink" title="编写XxxDaoUtil，用于完成对某一张数据表的具体操作——ORM操作"></a>编写XxxDaoUtil，用于完成对某一张数据表的具体操作——ORM操作</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Created by niupule on 2017/12/30.</span><br><span class="hljs-comment"> */</span><br><br>public <span class="hljs-keyword">class</span> BeanUtil &#123;<br><br>    <span class="hljs-keyword">private</span> static final String TAG = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">BeanUtil</span>.</span></span><span class="hljs-keyword">class</span>.get<span class="hljs-constructor">SimpleName()</span>;<br><br>    <span class="hljs-keyword">private</span> DaoManager manager;<br><br>    public <span class="hljs-constructor">BeanUtil(Context <span class="hljs-params">context</span>)</span>&#123;<br>        manager = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DaoManager</span>.</span></span>get<span class="hljs-constructor">Instance()</span>;<br>        manager.init<span class="hljs-constructor">Context(<span class="hljs-params">context</span>)</span>;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 插入，如果没有表，先创建表</span><br><span class="hljs-comment">     */</span><br>    public boolean insert<span class="hljs-constructor">Meizi(Bean <span class="hljs-params">meizi</span>)</span>&#123;<br>        return manager.get<span class="hljs-constructor">DaoSession()</span>.get<span class="hljs-constructor">BeanDao()</span>.insert(meizi)<span class="hljs-operator"> == </span>-<span class="hljs-number">1</span> ? <span class="hljs-literal">false</span>:<span class="hljs-literal">true</span>;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 插入多条数据，需要在多线程中完成</span><br><span class="hljs-comment">     */</span><br>    public boolean insert<span class="hljs-constructor">MultMeizi(<span class="hljs-params">final</span> List&lt;Bean&gt; <span class="hljs-params">meizis</span>)</span>&#123;<br>        boolean tag = <span class="hljs-literal">false</span>;<br>        <span class="hljs-keyword">try</span> &#123;<br>            manager.get<span class="hljs-constructor">DaoSession()</span>.run<span class="hljs-constructor">InTx(<span class="hljs-params">new</span> Runnable()</span> &#123;<br>                @Override<br>                public void run<span class="hljs-literal">()</span> &#123;<br>                    <span class="hljs-keyword">for</span>(Bean m: meizis)&#123;<br>                        manager.get<span class="hljs-constructor">DaoSession()</span>.insert<span class="hljs-constructor">OrReplace(<span class="hljs-params">m</span>)</span>;<br>                    &#125;<br>                &#125;<br>            &#125;);<br>            tag = <span class="hljs-literal">true</span>;<br>        &#125;catch (Exception e)&#123;<br>            e.print<span class="hljs-constructor">StackTrace()</span>;<br>        &#125;<br>        return tag;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 修改一条数据</span><br><span class="hljs-comment">     */</span><br>    public boolean update<span class="hljs-constructor">Meizi(Bean <span class="hljs-params">meizi</span>)</span>&#123;<br>        boolean tag = <span class="hljs-literal">false</span>;<br>        <span class="hljs-keyword">try</span> &#123;<br>            manager.get<span class="hljs-constructor">DaoSession()</span>.update(meizi);<br>            tag = <span class="hljs-literal">true</span>;<br>        &#125;catch (Exception e)&#123;<br>            e.print<span class="hljs-constructor">StackTrace()</span>;<br>        &#125;<br>        return tag;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 删除一条记录</span><br><span class="hljs-comment">     */</span><br>    public boolean delete<span class="hljs-constructor">Meizi(Bean <span class="hljs-params">meizi</span>)</span>&#123;<br>        boolean tag = <span class="hljs-literal">false</span>;<br>        <span class="hljs-keyword">try</span> &#123;<br>            manager.get<span class="hljs-constructor">DaoSession()</span>.delete(meizi);<br>            tag = <span class="hljs-literal">true</span>;<br>        &#125;catch (Exception e)&#123;<br>            e.print<span class="hljs-constructor">StackTrace()</span>;<br>        &#125;<br>        return tag;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 删除所有记录</span><br><span class="hljs-comment">     */</span><br>    public boolean delete<span class="hljs-constructor">All()</span>&#123;<br>        boolean tag = <span class="hljs-literal">false</span>;<br>        <span class="hljs-keyword">try</span> &#123;<br>            manager.get<span class="hljs-constructor">DaoSession()</span>.delete<span class="hljs-constructor">All(Bean.<span class="hljs-params">class</span>)</span>;<br>            tag = <span class="hljs-literal">true</span>;<br>        &#125;catch (Exception e)&#123;<br>            e.print<span class="hljs-constructor">StackTrace()</span>;<br>        &#125;<br>        return tag;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 查询所有记录</span><br><span class="hljs-comment">     */</span><br>    public List&lt;Bean&gt; query<span class="hljs-constructor">All()</span>&#123;<br>        return manager.get<span class="hljs-constructor">DaoSession()</span>.load<span class="hljs-constructor">All(Bean.<span class="hljs-params">class</span>)</span>;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 按照name查询</span><br><span class="hljs-comment">     */</span><br>    public Bean query<span class="hljs-constructor">MeiziById(String <span class="hljs-params">name</span>)</span>&#123;<br>        return manager.get<span class="hljs-constructor">DaoSession()</span>.load(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Bean</span>.</span></span><span class="hljs-keyword">class</span>,name);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 使用native sql语句查询</span><br><span class="hljs-comment">     */</span><br>    public List&lt;Bean&gt; query<span class="hljs-constructor">MeiziByNativeSql(String <span class="hljs-params">sql</span>, String []<span class="hljs-params">conditions</span>)</span>&#123;<br>        return manager.get<span class="hljs-constructor">DaoSession()</span>.query<span class="hljs-constructor">Raw(Bean.<span class="hljs-params">class</span>,<span class="hljs-params">sql</span>,<span class="hljs-params">conditions</span>)</span>;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 使用querybuilder查询</span><br><span class="hljs-comment">     */</span><br>    public List&lt;Bean&gt; query<span class="hljs-constructor">MeiziByQueryBuilder(String <span class="hljs-params">name</span>)</span>&#123;<br>        QueryBuilder&lt;Bean&gt; builder = manager.get<span class="hljs-constructor">DaoSession()</span>.get<span class="hljs-constructor">BeanDao()</span>.query<span class="hljs-constructor">Builder()</span>;<br>        return builder.where(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">BeanDao</span>.</span><span class="hljs-module"><span class="hljs-identifier">Properties</span>.</span><span class="hljs-module"><span class="hljs-identifier">Name</span>.</span></span>eq(name)).<span class="hljs-built_in">list</span><span class="hljs-literal">()</span>;<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="单个插入"><a href="#单个插入" class="headerlink" title="单个插入"></a>单个插入</h3><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs haxe"><span class="hljs-keyword">new</span> <span class="hljs-type">BeanUtil</span>(<span class="hljs-built_in">this</span>).insertMeizi(<span class="hljs-keyword">new</span> <span class="hljs-type">Bean</span>(<span class="hljs-string">&quot;张三&quot;</span>,<span class="hljs-string">&quot;123456&quot;</span>));<br></code></pre></td></tr></table></figure>
+<h3 id="批量插入操作"><a href="#批量插入操作" class="headerlink" title="批量插入操作"></a>批量插入操作</h3><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs haxe">List&lt;Bean&gt; beanlist = <span class="hljs-keyword">new</span> <span class="hljs-type">ArrayList</span>&lt;&gt;();<br> beanlist.add(<span class="hljs-keyword">new</span> <span class="hljs-type">Bean</span>( <span class="hljs-string">&quot;HuaWei&quot;</span>,<br>         <span class="hljs-string">&quot;http://7xi8d648096_n.jpg&quot;</span>));<br> beanlist.add(<span class="hljs-keyword">new</span> <span class="hljs-type">Bean</span>( <span class="hljs-string">&quot;Apple&quot;</span>,<br>         <span class="hljs-string">&quot;http://7xi8d648096_n.jpg&quot;</span>));<br> beanlist.add(<span class="hljs-keyword">new</span> <span class="hljs-type">Bean</span>( <span class="hljs-string">&quot;MIUI&quot;</span>,<br>         <span class="hljs-string">&quot;http://7xi8d648096_n.jpg&quot;</span>));<br> <span class="hljs-keyword">new</span> <span class="hljs-type">BeanUtil</span>(<span class="hljs-built_in">this</span>).insertMultMeizi(beanlist);<br></code></pre></td></tr></table></figure>
+<h3 id="单个更改操作：（其中原有的数据都不会保存，如果新建的对象有属性没有设置，则会为空，不为空的字段没有设置，则报错"><a href="#单个更改操作：（其中原有的数据都不会保存，如果新建的对象有属性没有设置，则会为空，不为空的字段没有设置，则报错" class="headerlink" title="单个更改操作：（其中原有的数据都不会保存，如果新建的对象有属性没有设置，则会为空，不为空的字段没有设置，则报错"></a>单个更改操作：（其中原有的数据都不会保存，如果新建的对象有属性没有设置，则会为空，不为空的字段没有设置，则报错</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">Bean bean = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Bean()</span>;<br>bean.set<span class="hljs-constructor">Name(<span class="hljs-string">&quot;张三&quot;</span>)</span>;<br>bean.set<span class="hljs-constructor">Password(<span class="hljs-string">&quot;http://baidu.jpg&quot;</span>)</span>;<br><span class="hljs-keyword">new</span> <span class="hljs-constructor">BeanUtil(<span class="hljs-params">this</span>)</span>.update<span class="hljs-constructor">Meizi(<span class="hljs-params">bean</span>)</span>;<br></code></pre></td></tr></table></figure>
+<h3 id="删除某条记录操作"><a href="#删除某条记录操作" class="headerlink" title="删除某条记录操作"></a>删除某条记录操作</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">Bean bean = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Bean()</span>;<br>bean.setname(<span class="hljs-string">&quot;张三&quot;</span>);<br><span class="hljs-keyword">new</span> <span class="hljs-constructor">BeanUtil(<span class="hljs-params">this</span>)</span>.delete<span class="hljs-constructor">Meizi(<span class="hljs-params">bean</span>)</span>;<br></code></pre></td></tr></table></figure>
+<h3 id="删除所有记录操作"><a href="#删除所有记录操作" class="headerlink" title="删除所有记录操作"></a>删除所有记录操作</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">new</span> <span class="hljs-constructor">BeanUtil(<span class="hljs-params">this</span>)</span>.delete<span class="hljs-constructor">All()</span>;<br></code></pre></td></tr></table></figure>
+<h3 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h3><ol>
+<li>查询所有记录<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>d(<span class="hljs-string">&quot;greenDao&quot;</span>,<span class="hljs-keyword">new</span> <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">BeanUtil</span>.</span></span>query<span class="hljs-constructor">All()</span>.size<span class="hljs-literal">()</span>+<span class="hljs-string">&quot;&quot;</span>);<br></code></pre></td></tr></table></figure></li>
+<li>使用native sql进行条件查询<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">String sql = <span class="hljs-string">&quot;where name like ?&quot;</span>;<br>    String<span class="hljs-literal">[]</span> condition = <span class="hljs-keyword">new</span> String<span class="hljs-literal">[]</span>&#123;<span class="hljs-string">&quot;张三&quot;</span>&#125;;<br>    List&lt;Bean&gt; <span class="hljs-built_in">list</span> = <span class="hljs-keyword">new</span> <span class="hljs-constructor">BeanUtil(<span class="hljs-params">this</span>)</span>.query<span class="hljs-constructor">MeiziByNativeSql(<span class="hljs-params">sql</span>, <span class="hljs-params">condition</span>)</span>;<br>    <span class="hljs-keyword">for</span> (Bean bean : <span class="hljs-built_in">list</span>) &#123;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>i(TAG, bean.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>);<br>    &#125;<br></code></pre></td></tr></table></figure></li>
+<li>使用queryBuilder查询<br>QueryBuilder能够让你在不涉及SQL语句的情况下查询实体。写SQL有几个缺点，首先是易错的，其次是要在运行时才知道有没有问题（假如属性名是pid，你写成了id，也要到运营时才会崩溃），QueryBuilder能够在编译时检查错误（如属性的引用是否错误）<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">List&lt;Bean&gt; <span class="hljs-built_in">list</span> = <span class="hljs-keyword">new</span> <span class="hljs-constructor">BeanUtil(<span class="hljs-params">this</span>)</span>.query<span class="hljs-constructor">MeiziByQueryBuilder(<span class="hljs-string">&quot;张三&quot;</span>)</span>;<br><span class="hljs-keyword">for</span> (Bean bean : <span class="hljs-built_in">list</span>) &#123;<br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>i(TAG, bean.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>);<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+<p>暂时先写这么多，后面在修改</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a target="_blank" rel="noopener" href="http://blog.csdn.net/bskfnvjtlyzmv867/article/details/71250101">GreenDao3.2.2的使用</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>重拾Android之路(七) sqlite</div>
+      <div>http://example.com/2016/04/30/android-7-sqlite/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2016年4月30日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2016/05/15/android-8-uiframework/" title="重拾android路(八) UI">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">重拾android路(八) UI</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2016/04/15/android-6-cache/" title="重拾android路(六) 缓存">
+                        <span class="hidden-mobile">重拾android路(六) 缓存</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

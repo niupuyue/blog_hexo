@@ -1,0 +1,647 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="最近的一段时间在找工作。其实并没有真正的开始找，因为，毕竟马上就要开始过年了，所以，不管是公司，还是我自己，都把中心放在了过年这个事情上。但是也有一些非常勤劳的工作者，在孜孜不倦的在自己的岗位上付出着，所以，我也陆续收到了一些关于面试的信息。真的感觉面试的内容真的超级多，如果你没有自己的明确定位，很容易就被带跑偏。这也就是我发现很多我之前的本专业的同学有一部分转行了，而且是和我们的计算机没有任何关">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kotlin 基础语法">
+<meta property="og:url" content="http://example.com/2018/02/08/kotlin-lession-01/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="最近的一段时间在找工作。其实并没有真正的开始找，因为，毕竟马上就要开始过年了，所以，不管是公司，还是我自己，都把中心放在了过年这个事情上。但是也有一些非常勤劳的工作者，在孜孜不倦的在自己的岗位上付出着，所以，我也陆续收到了一些关于面试的信息。真的感觉面试的内容真的超级多，如果你没有自己的明确定位，很容易就被带跑偏。这也就是我发现很多我之前的本专业的同学有一部分转行了，而且是和我们的计算机没有任何关">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-02-08T06:57:51.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.119Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="kotlin">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>kotlin 基础语法 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="kotlin 基础语法"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2018-02-08 14:57" pubdate>
+          2018年2月8日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          25 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">kotlin 基础语法</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>最近的一段时间在找工作。其实并没有真正的开始找，因为，毕竟马上就要开始过年了，所以，不管是公司，还是我自己，都把中心放在了过年这个事情上。但是也有一些非常勤劳的工作者，在孜孜不倦的在自己的岗位上付出着，所以，我也陆续收到了一些关于面试的信息。真的感觉面试的内容真的超级多，如果你没有自己的明确定位，很容易就被带跑偏。这也就是我发现很多我之前的本专业的同学有一部分转行了，而且是和我们的计算机没有任何关系的行业，原来是这么回事。</p>
+<span id="more"></span>
+<p>但是，我也从这些公司的要求中，找到了一些比较有意思，或者以后可能会成为业界趋势的一个征兆，所以，今天我就要来说一下，就是kotlin语言。说着这里可能大家会说，切，什么啊，这个东西很早就出来了，你现在才说。好吧，确实是很早就出来了，但是我想问一下，你们都公司有要求你们把所有的Android代码都是使用kotlin语言写的吗？我估计没有公司这么做。先不管这些名利的问题，我们就直说这个kotlin语言的特点。<br>网上说这个语言很好学，也有人说很难学的。这么跟大家说一下，如果你之前学过类似Typescript，CoffeeScript这些JS扩展语言的话，那么kotlin将会非常好学。但如果你之前只学过java，并且对java的掌握并没有那么的全面的时候，就会是比较难。难并不在于语法结构，逻辑概念，而在于因为和java有很多相似和不同的地方，很容易让人搞混，所以，我今天就结合着之前看过的一本书《kotlin for android developer》，这本书写的真的很不错。之前一直想在网上找到资源，无奈手残党。然后某CSDN的网站一个coder竟然要价15个积分，我连看都不看，直接拉黑，因为我知道如果一程序员没有开源共享的态度，那么他是不会在这条道路上走太久的。所以，今天我把我在网上找到的分享给大家,并且我自己也要总结一下。<br>连接:<a href="链接:https://pan.baidu.com/s/1qZPMJ1M">连接</a>密码：cr18</p>
+<blockquote>
+<p>郑重声明，本篇文章的翻译只作为学习参考之用，不能应用于各种商业用途，在参考学习完成之后，请自觉删除，所有和本文有关的纠纷，与本人无关，特此声明</p>
+</blockquote>
+<h1 id="kotlin"><a href="#kotlin" class="headerlink" title="kotlin"></a>kotlin</h1><h2 id="什么是kotlin"><a href="#什么是kotlin" class="headerlink" title="什么是kotlin"></a>什么是kotlin</h2><p>Kotlin，是由jetBrains开发的基于JVM的语言。Kotlin是使用java语言开发者的思维创建出来的，那么我们的Android使用Kotlin有什么样的优点：</p>
+<ol>
+<li>对于java开发者而言，Kotlin语言是非常直觉话的，并且容易学习</li>
+<li>它与我们日常使用的IDE完全吻合，as可以非常完美的编译，运行Kotlin语言</li>
+</ol>
+<p>那么其实这些都是我们自己总结的，那么其实官方也有为我们总结关于Kotlin的具体特点</p>
+<ol>
+<li>易表现：通过Kotlin可以很容易的避免模板代码因为因为大部分的典型情况都在语言中默认覆盖了，如下的例子：<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Article</span>&#123;<br>    <span class="hljs-keyword">private</span> long id;<br>    <span class="hljs-keyword">private</span> <span class="hljs-title class_">String</span> name;<br>    <span class="hljs-keyword">private</span> <span class="hljs-title class_">String</span> url;<br>    <span class="hljs-keyword">private</span> <span class="hljs-title class_">String</span> mbid;<br>     <br>    <span class="hljs-keyword">public</span> long <span class="hljs-title function_">getId</span>(<span class="hljs-params"></span>)&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">id</span>;<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">setId</span>(<span class="hljs-params">long id</span>)&#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">id</span> = id;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">String</span> <span class="hljs-title function_">getName</span>(<span class="hljs-params"></span>)&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">setName</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> name</span>)&#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = name;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">String</span> <span class="hljs-title function_">getUrl</span>(<span class="hljs-params"></span>)&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">url</span>;<br>    &#125;<br>    publiv <span class="hljs-built_in">void</span> <span class="hljs-title function_">setUrl</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> url</span>)&#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">url</span> = url;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">String</span> <span class="hljs-title function_">getMbid</span>(<span class="hljs-params"></span>)&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">mbid</span>;<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">setMbid</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> mbid</span>)&#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">mbid</span> = mbid;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+但是如果我们通过Kotlin语言来实现，代码就会减少很多<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">data <span class="hljs-keyword">class</span> <span class="hljs-symbol">Article</span>(<br>    <span class="hljs-symbol">var</span> <span class="hljs-symbol">id:<span class="hljs-symbol">Long</span>,</span><br><span class="hljs-symbol">    <span class="hljs-symbol">var</span></span> <span class="hljs-symbol">name:<span class="hljs-symbol">String</span>,</span><br><span class="hljs-symbol">    <span class="hljs-symbol">var</span></span> <span class="hljs-symbol">url:<span class="hljs-symbol">String</span>,</span><br><span class="hljs-symbol">    <span class="hljs-symbol">var</span></span> <span class="hljs-symbol">mbid:<span class="hljs-symbol">String</span></span><br>)<br></code></pre></td></tr></table></figure>
+这个类它就会自动生成所有的属性和他们的访问器，以及一些有用的方法，比如toString()方法</li>
+<li>空安全：java语言我们可以称之为防御性语言，如果我们不想遇到空指针异常，那么我们需要在使用它之前不停地判断他是否为空，如果为空则不能执行操作。Kotlin语言和其他的现代语言是相类似的，都是空安全的，因为我们需要通过一个安全调用操作符(用?标识)明确的来指定一个对象是否为空<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-comment">//这里是不能通过编译的，因为我们这规定了，notNullArticle不能为空</span><br><span class="hljs-built_in">var</span> notNullArticle:Article = <span class="hljs-literal">null</span><br><br><span class="hljs-comment">//可以编译，因为我们这里变量可以为空</span><br><span class="hljs-built_in">var</span> artist:Article? = <span class="hljs-literal">null</span><br><br><span class="hljs-comment">//无法编译，因为artist可能为空，那么如果是空，则不能调用方法</span><br>artist.<span class="hljs-keyword">print</span>()<br><br><span class="hljs-comment">//可以编译，这里只有当artist不为空的时候才可以执行响应的函数</span><br>artist?.<span class="hljs-keyword">print</span>()<br><br><span class="hljs-comment">//如果我们在使用之前就调用判断是否为空，那么我们这里可以直接使用</span><br><span class="hljs-keyword">if</span>(artist != <span class="hljs-literal">null</span>)&#123;<br>    artist.<span class="hljs-keyword">print</span>()<br>&#125;<br><br><span class="hljs-comment">//只有确保artis不为空的情况下才能调用print，否则不给调用</span><br>artist!!.<span class="hljs-keyword">print</span>()<br><br><span class="hljs-comment">//我们有时候可以使用Elvis来判断当前是否为空，然后如果为空需要赋予额一个值，我们也可以成为是三元运算符</span><br><span class="hljs-built_in">var</span> name = artist?.name ? : <span class="hljs-string">&quot;empty&quot;</span><br></code></pre></td></tr></table></figure></li>
+<li>拓展方法：我们可以给任何类添加方法，他比我们那些在项目中使用额工具类拥有更加良好的可读性，下面是书里面给举得例子<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> Fragment.<span class="hljs-title">Toast</span><span class="hljs-params">(message:<span class="hljs-type">CharSequeue</span>,duration:<span class="hljs-type">Int</span> = Toast.SHORT)</span></span>&#123;<br>    Toast.makeText(getActivity(),message,duration).show()<br>&#125;<br></code></pre></td></tr></table></figure>
+那么我们紧接着就可以调用这个方法<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs abnf">fragment.toast(<span class="hljs-string">&quot;你好&quot;</span>)<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure></li>
+<li>函数式支持：有时候我们做开发的时候总会遇到这样的情况：当我们添加点击事件的时候，总是不得不使用一个匿名函数作为接口回调，实现点击之后的操作。其实最终我们可以这样实现<figure class="highlight isbl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs isbl"><span class="hljs-variable">view.setOnclickListener</span>(<br>    <span class="hljs-function"><span class="hljs-title">toast</span>(<span class="hljs-string">&quot;hello world&quot;</span>)</span><br>)<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="android-studio"><a href="#android-studio" class="headerlink" title="android studio"></a>android studio</h2><p>android studio是被google公司承认的Android开发官方软件。Android studio3.0以前的版本不支持Kotlin，那么我们需要使用一些插件，来完成，如果使用额是Android studio3.0以后的版本，那么我们就可以直接使用了。<br>那么我们就按照书籍上的例子先去创建一个Android项目，并且为了能够正常</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/kotlin/">#kotlin</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>kotlin 基础语法</div>
+      <div>http://example.com/2018/02/08/kotlin-lession-01/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2018年2月8日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/02/10/android-19-buildprocess/" title="重拾android路(十八) Android构建流程">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">重拾android路(十八) Android构建流程</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/02/03/android-18-framework/" title="重拾android路(十七) Android部分框架介绍">
+                        <span class="hidden-mobile">重拾android路(十七) Android部分框架介绍</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,711 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="在Android开发中我们经常会听到这几个概念，内存，外部存储，内部存储，很多时候我们常常把这个概念弄混淆，所以这篇博客就在这里做一下总结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android奇技淫巧 13 Android内部存储和外部存储">
+<meta property="og:url" content="http://example.com/2019/08/13/android-tools-13/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在Android开发中我们经常会听到这几个概念，内存，外部存储，内部存储，很多时候我们常常把这个概念弄混淆，所以这篇博客就在这里做一下总结">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/tools/tools-storage-01.png">
+<meta property="og:image" content="http://example.com/assets/tools/tools-storage-02.png">
+<meta property="og:image" content="http://example.com/assets/tools/tools-storage-03.png">
+<meta property="og:image" content="http://example.com/assets/tools/tools-storage-04.png">
+<meta property="article:published_time" content="2019-08-13T09:33:10.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.112Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/tools/tools-storage-01.png">
+  
+  
+  
+  <title>android奇技淫巧 13 Android内部存储和外部存储 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="android奇技淫巧 13 Android内部存储和外部存储"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-08-13 17:33" pubdate>
+          2019年8月13日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          82 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">android奇技淫巧 13 Android内部存储和外部存储</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>在Android开发中我们经常会听到这几个概念，内存，外部存储，内部存储，很多时候我们常常把这个概念弄混淆，所以这篇博客就在这里做一下总结</p>
+<span id="more"></span>
+<p>内存(Menory),内部存储(InternalStorage),外部存储(ExternalStorage)，通过英文翻译很容易混淆<br>我们可以对Android手机存储空间做以下划分</p>
+<ol>
+<li>内存：RAM</li>
+<li>内部存储：内部ROM</li>
+<li>外部存储：外部ROM和SDCard</li>
+</ol>
+<p>其中最容易混淆的就是外部存储，如果说PC上也要区分内部存储和外部存储的话，那么自带硬盘就算是内部存储，U盘或者移动硬盘就属于外部存储，因此我们也很容易带着这样的理解去看待Android手机，认为机身固有的存储就是内部存储，而扩展的T卡就是外部存储。早期Android设备的内部存储确实是固定的，而外部存储确实可以向U盘一样移动。到那时后来的设备中，很多中高端手机将自己的机身存储扩展到了8G以上，他们将存储的概念分为”内部Internal”和”外部External”两部分，但是其实都在手机内部。所以不管Android手机是否有可移动的SDCard，他们总是有外部存储和内部存储。关键的是我们都可以通过相同的Api来访问可移动SDCard或者手机自带的存储。</p>
+<p><img src="/assets/tools/tools-storage-01.png" srcset="/img/loading.gif" lazyload></p>
+<p>使用Android studio打开手机目录，这里有三个文件夹需要我们注意，data，mnt和storage，data是指内部存储，mnt和storage指外部存储，下面我们来具体分析一下</p>
+<h1 id="内部存储"><a href="#内部存储" class="headerlink" title="内部存储"></a>内部存储</h1><p>内部存储位于系统中很特殊的位置，如果我们想将文件存储在内部存储中，那么文件默认只能放在我们的应用可以访问到，且一个应用创建的所有文件都在和应用包名相同的目录下。也就是说，应用创建内部存储的文件，与这个应用关联起来了。当一个应用被卸载的时候，内部存储中的文件也随之被删除。从技术上来讲如果我们在创建内部存储文件是将这个文件属性设置为可读，那么其他App能够访问自己应用的数据，其实他知道你这个应用的包名，如果这个文件属性为私有的，那么即使知道包名其他应用也无法访问。内部存储控件十分有限，因而显得很重要，另外他也是系统本身和系统应用程序主要的数据存储所在地，一旦内部存储耗尽，手机也将无法使用。<br>在内部存储中有两个重要的目录</p>
+<ol>
+<li>app文件夹：如果没有root，我们是无法打开该文件夹的。app文件夹内存放着我们所有安装app的APK文件，当我们调试一个app的时候，可以看到控制台输出的内容，有一项是uploading…就是上传我们的APK到这个文件夹</li>
+<li>data文件夹：这个文件夹里包含一些包名，打开这些包名，我们就会看到一些文件如<ul>
+<li>data&#x2F;data&#x2F;包名&#x2F;shared_prefs</li>
+<li>data&#x2F;data&#x2F;包名&#x2F;database</li>
+<li>data&#x2F;data&#x2F;包名&#x2F;files</li>
+<li>data&#x2F;data&#x2F;包名&#x2F;cache</li>
+</ul>
+</li>
+</ol>
+<p>我们在使用SharedPerference的时候，将数据90%存储到本地，其实就是存储到这个文件夹中的xml文件中，我们的app里面的数据库文件就存储在databases文件中，还有我们的普通数据存储在files中，缓存在cache文件夹中</p>
+<p><img src="/assets/tools/tools-storage-02.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/assets/tools/tools-storage-03.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="外部存储"><a href="#外部存储" class="headerlink" title="外部存储"></a>外部存储</h1><p>外部存储就是上面我们所说道的storage文件夹，也有可能是mnt文件夹，在storeage文件中有一个sdcard的文件夹，这个文件夹中的文件分为两类，一类是共有目录，还有一类是私有目录。其中共有目录分为9大类，比如DCIM，Download等这些系统为我们创建的文件夹，私有目录就是android这个文件夹，这个文件夹打开后面有一个data的文件夹，打开这个data文件夹里面包好了许多报名组成的文件夹</p>
+<p><img src="/assets/tools/tools-storage-04.png" srcset="/img/loading.gif" lazyload></p>
+<p>Android应用程序在运行的过程中需要向手机上保存数据，一般是把数据保存在SDCard中，大部分应用时直接在SDCard的根目录创建一个文件夹，将数据直接保存在该文件夹中，当应用被卸载的时候，这些数据还保留在SDCard，留下了垃圾数据</p>
+<p>开发中我们一般都是操作存储空间，Google官方建议我们App的数据应该存在外部存储设备的私有目录中该App包名下，这样当用户卸载App之后，相关数据也会一并删除，如果我们直接在&#x2F;storage&#x2F;sdcard目录下创建一个应用的文件夹，那么当删除应用时，该文件夹是不会被删除掉的。</p>
+<h1 id="大招"><a href="#大招" class="headerlink" title="大招"></a>大招</h1><p>说了这么多概念，其实就是想让大家都了解外部存储和内部存储的区别。那么我们怎么才能获取到自己想要的存储路径呢，如下，提供了一些基本常用的方法</p>
+<table>
+<thead>
+<tr>
+<th align="left">方法调用</th>
+<th align="left">路径位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">context.getFilesDir()</td>
+<td align="left">外部存储data&#x2F;data&#x2F;包名&#x2F;files目录</td>
+</tr>
+<tr>
+<td align="left">context.getCacheDir()</td>
+<td align="left">外部存储设备data&#x2F;data&#x2F;包名&#x2F;cache目录</td>
+</tr>
+<tr>
+<td align="left">context.getExternalStorageDirectory()</td>
+<td align="left">外部存储设备的根目录</td>
+</tr>
+<tr>
+<td align="left">context.getExternalStoragePublicDirectory</td>
+<td align="left">外部存储设备公有目录 (Environment.DIRECTORY_DCIM)</td>
+</tr>
+<tr>
+<td align="left">context.getExternalFilesDir()</td>
+<td align="left">外部存储私有目录 storage&#x2F;sdcard&#x2F;android&#x2F;data&#x2F;包名&#x2F;files</td>
+</tr>
+<tr>
+<td align="left">context.getExternalCacheDir()</td>
+<td align="left">外部存储私有目录 storage&#x2F;sdcard&#x2F;android&#x2F;data&#x2F;包名&#x2F;cache</td>
+</tr>
+</tbody></table>
+<p>通过Context.getExternalFilesDir()方法可以获取到SDCard&#x2F;Android&#x2F;data包名&#x2F;files目录，一般存放一些长时间保存的数据</p>
+<p>通过Context.getExternalCacheDir()方法可以获取SDCard&#x2F;Android&#x2F;data&#x2F;包名&#x2F;chache目录，一般存放一些历史缓存数据</p>
+<p>使用上面的方法，当应用被卸载的时候，SDCard&#x2F;Android&#x2F;data&#x2F;包名&#x2F;目录 下所有的文件都会被删除，不会留下垃圾信息。这两个部分的内容分别对应设置-&gt;应用-&gt;应用详情里面的  “清除数据”和”清除缓存”</p>
+<p>2021年08月03日20:15:24 更新 </p>
+<p>Android 11 将读取文件外部存储权限设置为</p>
+<h2 id="分享文件到第三方应用打开"><a href="#分享文件到第三方应用打开" class="headerlink" title="分享文件到第三方应用打开"></a>分享文件到第三方应用打开</h2><p>首先肯定是需要获取权限</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.permission.READ_PHONE_STATE&quot;</span> /&gt;</span> <span class="hljs-comment">&lt;!-- 外存储写权限，构建语法需要用到此权限 --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot;</span> /&gt;</span> <span class="hljs-comment">&lt;!-- 外存储读权限，构建语法需要用到此权限 --&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>创建一个工具类FileProviderUtils</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">object</span> FileProviderUtils &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 打开第三方应用</span><br><span class="hljs-comment">     */</span><br>    @JvmStatic<br>    <span class="hljs-keyword">fun</span> <span class="hljs-keyword">open</span><span class="hljs-constructor">File(<span class="hljs-params">context</span>: Context, <span class="hljs-params">file</span>: File)</span> &#123;<br>        <span class="hljs-keyword">val</span> intent = <span class="hljs-constructor">Intent(Intent.ACTION_VIEW)</span><br>        <span class="hljs-keyword">val</span> uri4File = <span class="hljs-keyword">if</span> (Build.VERSION.SDK_INT &gt; <span class="hljs-number">23</span>) &#123;<br>            <span class="hljs-comment">// 大于23</span><br>            <span class="hljs-keyword">val</span> uri = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileProvider</span>.</span></span>get<span class="hljs-constructor">UriForFile(<span class="hljs-params">context</span>, <span class="hljs-string">&quot;$&#123;context.packageName&#125;.fileProvider&quot;</span>, <span class="hljs-params">file</span>)</span><br>            intent.add<span class="hljs-constructor">Flags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)</span><br>            uri<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Uri</span>.</span></span>from<span class="hljs-constructor">File(<span class="hljs-params">file</span>)</span><br>        &#125;<br>        <span class="hljs-comment">//系统会检查当前所有已创建的Task中是否有该要启动的Activity的Task</span><br>        intent.add<span class="hljs-constructor">Flags(Intent.FLAG_ACTIVITY_NEW_TASK)</span><br>        intent.add<span class="hljs-constructor">Flags(Intent.FLAG_GRANT_READ_URI_PERMISSION <span class="hljs-params">or</span> Intent.FLAG_GRANT_WRITE_URI_PERMISSION)</span><br>        <span class="hljs-comment">// 若有，则在该Task上创建Activity；若没有则新建具有该Activity属性的Task，并在该新建的Task上创建Activity。</span><br>        intent.set<span class="hljs-constructor">DataAndType(<span class="hljs-params">uri4File</span>, <span class="hljs-params">getMimeTypeFromFile</span>(<span class="hljs-params">file</span>)</span>)<br>        context.start<span class="hljs-constructor">Activity(<span class="hljs-params">intent</span>)</span><br>    &#125;<br><br>    @JvmStatic<br>    <span class="hljs-keyword">fun</span> get<span class="hljs-constructor">MimeTypeFromFile(<span class="hljs-params">file</span>: File)</span>: String &#123;<br>        var <span class="hljs-keyword">type</span> = <span class="hljs-string">&quot;*/*&quot;</span><br>        <span class="hljs-keyword">val</span> fName = file.name<br>        <span class="hljs-comment">//获取后缀名前的分隔符&quot;.&quot;在fName中的位置。</span><br>        <span class="hljs-keyword">val</span> dotIndex = fName.last<span class="hljs-constructor">IndexOf(<span class="hljs-string">&quot;.&quot;</span>)</span><br>        <span class="hljs-keyword">if</span> (dotIndex &gt; <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-comment">//获取文件的后缀名</span><br>            <span class="hljs-keyword">val</span> <span class="hljs-keyword">end</span> = fName.substring(dotIndex, fName.length).<span class="hljs-keyword">to</span><span class="hljs-constructor">LowerCase(Locale.<span class="hljs-params">getDefault</span>()</span>)<br>            <span class="hljs-comment">//在MIME和文件类型的匹配表中找到对应的MIME类型。</span><br>            <span class="hljs-keyword">val</span> map: HashMap&lt;String, String&gt; = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">MyMimeMap</span>.</span></span>mimeMap<br>            <span class="hljs-keyword">if</span> (!<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">TextUtils</span>.</span></span>is<span class="hljs-constructor">Empty(<span class="hljs-params">end</span>)</span><span class="hljs-operator"> &amp;&amp; </span>map.keys.contains(<span class="hljs-keyword">end</span>)) &#123;<br>                <span class="hljs-keyword">type</span> = map<span class="hljs-literal">[<span class="hljs-identifier">end</span>]</span> ?: <span class="hljs-string">&quot;&quot;</span><br>            &#125;<br>        &#125;<br>        return <span class="hljs-keyword">type</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这里因为要适配打开不同的应用，所以直接写了一个公共mimeType的工具类</p>
+<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><code class="hljs prolog">object <span class="hljs-symbol">MyMimeMap</span> &#123;<br><br>    val mapSimple: <span class="hljs-symbol">HashMap</span>&lt;<span class="hljs-symbol">String</span>, <span class="hljs-symbol">String</span>&gt; = <span class="hljs-symbol">HashMap</span>()<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 常用&quot;文件扩展名—MIME类型&quot;匹配表。</span><br><span class="hljs-comment">     * 注意，此表并不全，也并不是唯一的，就像有人喜欢用浏览器打开TXT一样，你可以根据自己的爱好自定义。</span><br><span class="hljs-comment">     */</span><br>    val mimeMap: <span class="hljs-symbol">HashMap</span>&lt;<span class="hljs-symbol">String</span>, <span class="hljs-symbol">String</span>&gt;<br>        get() &#123;<br>            if (mapSimple.size === <span class="hljs-number">0</span>) &#123;<br>                mapSimple[<span class="hljs-string">&quot;.3gp&quot;</span>] = <span class="hljs-string">&quot;video/3gpp&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.apk&quot;</span>] = <span class="hljs-string">&quot;application/vnd.android.package-archive&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.asf&quot;</span>] = <span class="hljs-string">&quot;video/x-ms-asf&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.avi&quot;</span>] = <span class="hljs-string">&quot;video/x-msvideo&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.bin&quot;</span>] = <span class="hljs-string">&quot;application/octet-stream&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.bmp&quot;</span>] = <span class="hljs-string">&quot;image/bmp&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.c&quot;</span>] = <span class="hljs-string">&quot;text/plain&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.chm&quot;</span>] = <span class="hljs-string">&quot;application/x-chm&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.class&quot;</span>] = <span class="hljs-string">&quot;application/octet-stream&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.conf&quot;</span>] = <span class="hljs-string">&quot;text/plain&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.cpp&quot;</span>] = <span class="hljs-string">&quot;text/plain&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.doc&quot;</span>] = <span class="hljs-string">&quot;application/msword&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.docx&quot;</span>] = <span class="hljs-string">&quot;application/msword&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.exe&quot;</span>] = <span class="hljs-string">&quot;application/octet-stream&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.gif&quot;</span>] = <span class="hljs-string">&quot;image/gif&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.gtar&quot;</span>] = <span class="hljs-string">&quot;application/x-gtar&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.gz&quot;</span>] = <span class="hljs-string">&quot;application/x-gzip&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.h&quot;</span>] = <span class="hljs-string">&quot;text/plain&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.htm&quot;</span>] = <span class="hljs-string">&quot;text/html&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.html&quot;</span>] = <span class="hljs-string">&quot;text/html&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.jar&quot;</span>] = <span class="hljs-string">&quot;application/java-archive&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.java&quot;</span>] = <span class="hljs-string">&quot;text/plain&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.jpeg&quot;</span>] = <span class="hljs-string">&quot;image/jpeg&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.jpg&quot;</span>] = <span class="hljs-string">&quot;image/jpeg&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.js&quot;</span>] = <span class="hljs-string">&quot;application/x-javascript&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.log&quot;</span>] = <span class="hljs-string">&quot;text/plain&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.m3u&quot;</span>] = <span class="hljs-string">&quot;audio/x-mpegurl&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.m4a&quot;</span>] = <span class="hljs-string">&quot;audio/mp4a-latm&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.m4b&quot;</span>] = <span class="hljs-string">&quot;audio/mp4a-latm&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.m4p&quot;</span>] = <span class="hljs-string">&quot;audio/mp4a-latm&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.m4u&quot;</span>] = <span class="hljs-string">&quot;video/vnd.mpegurl&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.m4v&quot;</span>] = <span class="hljs-string">&quot;video/x-m4v&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.mov&quot;</span>] = <span class="hljs-string">&quot;video/quicktime&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.mp2&quot;</span>] = <span class="hljs-string">&quot;audio/x-mpeg&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.mp3&quot;</span>] = <span class="hljs-string">&quot;audio/x-mpeg&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.mp4&quot;</span>] = <span class="hljs-string">&quot;video/mp4&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.mpc&quot;</span>] = <span class="hljs-string">&quot;application/vnd.mpohun.certificate&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.mpe&quot;</span>] = <span class="hljs-string">&quot;video/mpeg&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.mpeg&quot;</span>] = <span class="hljs-string">&quot;video/mpeg&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.mpg&quot;</span>] = <span class="hljs-string">&quot;video/mpeg&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.mpg4&quot;</span>] = <span class="hljs-string">&quot;video/mp4&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.mpga&quot;</span>] = <span class="hljs-string">&quot;audio/mpeg&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.msg&quot;</span>] = <span class="hljs-string">&quot;application/vnd.ms-outlook&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.ogg&quot;</span>] = <span class="hljs-string">&quot;audio/ogg&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.pdf&quot;</span>] = <span class="hljs-string">&quot;application/pdf&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.png&quot;</span>] = <span class="hljs-string">&quot;image/png&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.pps&quot;</span>] = <span class="hljs-string">&quot;application/vnd.ms-powerpoint&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.ppt&quot;</span>] = <span class="hljs-string">&quot;application/vnd.ms-powerpoint&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.pptx&quot;</span>] = <span class="hljs-string">&quot;application/vnd.ms-powerpoint&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.prop&quot;</span>] = <span class="hljs-string">&quot;text/plain&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.rar&quot;</span>] = <span class="hljs-string">&quot;application/x-rar-compressed&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.rc&quot;</span>] = <span class="hljs-string">&quot;text/plain&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.rmvb&quot;</span>] = <span class="hljs-string">&quot;audio/x-pn-realaudio&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.rtf&quot;</span>] = <span class="hljs-string">&quot;application/rtf&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.sh&quot;</span>] = <span class="hljs-string">&quot;text/plain&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.tar&quot;</span>] = <span class="hljs-string">&quot;application/x-tar&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.tgz&quot;</span>] = <span class="hljs-string">&quot;application/x-compressed&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.txt&quot;</span>] = <span class="hljs-string">&quot;text/plain&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.wav&quot;</span>] = <span class="hljs-string">&quot;audio/x-wav&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.wma&quot;</span>] = <span class="hljs-string">&quot;audio/x-ms-wma&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.wmv&quot;</span>] = <span class="hljs-string">&quot;audio/x-ms-wmv&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.wps&quot;</span>] = <span class="hljs-string">&quot;application/vnd.ms-works&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.xml&quot;</span>] = <span class="hljs-string">&quot;text/plain&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.xls&quot;</span>] = <span class="hljs-string">&quot;application/vnd.ms-excel&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.xlsx&quot;</span>] = <span class="hljs-string">&quot;application/vnd.ms-excel&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.z&quot;</span>] = <span class="hljs-string">&quot;application/x-compress&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;.zip&quot;</span>] = <span class="hljs-string">&quot;application/zip&quot;</span><br>                mapSimple[<span class="hljs-string">&quot;&quot;</span>] = <span class="hljs-string">&quot;*/*&quot;</span><br>            &#125;<br>            return mapSimple<br>        &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>调用方法的时候直接传入文件的绝对路径即可。除了上面的配置之外，还需要在清单配置文件中设置FileProvier</p>
+<figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs dust"><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">provider</span></span></span><br><span class="hljs-tag"><span class="language-xml">            <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;androidx.core.content.FileProvider&quot;</span></span></span><br><span class="hljs-tag"><span class="language-xml">            <span class="hljs-attr">android:authorities</span>=<span class="hljs-string">&quot;$</span></span></span><span class="hljs-template-variable">&#123;applicationId&#125;</span><span class="language-xml"><span class="hljs-tag"><span class="hljs-string">.fileProvider&quot;</span></span></span><br><span class="hljs-tag"><span class="language-xml">            <span class="hljs-attr">android:exported</span>=<span class="hljs-string">&quot;false&quot;</span></span></span><br><span class="hljs-tag"><span class="language-xml">            <span class="hljs-attr">android:grantUriPermissions</span>=<span class="hljs-string">&quot;true&quot;</span>&gt;</span></span><br><span class="language-xml">            <span class="hljs-tag">&lt;<span class="hljs-name">meta-data</span></span></span><br><span class="hljs-tag"><span class="language-xml">                <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.support.FILE_PROVIDER_PATHS&quot;</span></span></span><br><span class="hljs-tag"><span class="language-xml">                <span class="hljs-attr">android:resource</span>=<span class="hljs-string">&quot;@xml/file_paths&quot;</span> /&gt;</span></span><br><span class="language-xml">        <span class="hljs-tag">&lt;/<span class="hljs-name">provider</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+<p>这里我们配置了一下file_paths，在file_paths中设置数据的路径位置，在res资源文件夹下新建xml文件夹，并创建file_paths.xml文件</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs abnf">&lt;paths&gt;<br>    &lt;root-path<br>        name<span class="hljs-operator">=</span><span class="hljs-string">&quot;root_path&quot;</span><br>        path<span class="hljs-operator">=</span><span class="hljs-string">&quot;&quot;</span> /&gt;<br><br>    &lt;files-path<br>        name<span class="hljs-operator">=</span><span class="hljs-string">&quot;files_path&quot;</span><br>        path<span class="hljs-operator">=</span><span class="hljs-string">&quot;.&quot;</span> /&gt;<br><br>    &lt;cache-path<br>        name<span class="hljs-operator">=</span><span class="hljs-string">&quot;cache_path&quot;</span><br>        path<span class="hljs-operator">=</span><span class="hljs-string">&quot;.&quot;</span> /&gt;<br><br>    &lt;external-path<br>        name<span class="hljs-operator">=</span><span class="hljs-string">&quot;external_path&quot;</span><br>        path<span class="hljs-operator">=</span><span class="hljs-string">&quot;.&quot;</span> /&gt;<br><br>    &lt;external-path<br>        name<span class="hljs-operator">=</span><span class="hljs-string">&quot;wrong_question&quot;</span><br>        path<span class="hljs-operator">=</span><span class="hljs-string">&quot;xizhi_wrong_question_files&quot;</span> /&gt;<br><br>    &lt;external-files-path<br>        name<span class="hljs-operator">=</span><span class="hljs-string">&quot;external_files_path&quot;</span><br>        path<span class="hljs-operator">=</span><span class="hljs-string">&quot;.&quot;</span> /&gt;<br><br>    &lt;external-cache-path<br>        name<span class="hljs-operator">=</span><span class="hljs-string">&quot;external_cache_path&quot;</span><br>        path<span class="hljs-operator">=</span><span class="hljs-string">&quot;.&quot;</span> /&gt;<br><br>    &lt;external-media-path<br>        name<span class="hljs-operator">=</span><span class="hljs-string">&quot;external_media_path&quot;</span><br>        path<span class="hljs-operator">=</span><span class="hljs-string">&quot;.&quot;</span> /&gt;<br>&lt;/paths&gt;<br></code></pre></td></tr></table></figure>
+
+<p>这里不同的标签代表不同的存储路径</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://developer.android.google.cn/about/versions/11/privacy/storage">Android11存储机制更新</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>android奇技淫巧 13 Android内部存储和外部存储</div>
+      <div>http://example.com/2019/08/13/android-tools-13/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年8月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/08/20/android-tools-14/" title="android奇技淫巧 14 Android7.0 桌面长按图标出现快捷方式">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">android奇技淫巧 14 Android7.0 桌面长按图标出现快捷方式</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/08/13/android-tools-12/" title="android奇技淫巧 12 Android布局优化 include+merge+viewStub">
+                        <span class="hidden-mobile">android奇技淫巧 12 Android布局优化 include+merge+viewStub</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

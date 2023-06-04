@@ -1,0 +1,691 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="android中ProgressBar的使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android奇技淫巧 20 ProgressBar的使用">
+<meta property="og:url" content="http://example.com/2019/10/14/android-tools-20/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="android中ProgressBar的使用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/tools/progressbar_01.png">
+<meta property="og:image" content="http://example.com/assets/tools/progressbar_02.png">
+<meta property="og:image" content="http://example.com/assets/tools/progressbar_03.png">
+<meta property="og:image" content="http://example.com/assets/tools/progressbar_04.png">
+<meta property="og:image" content="http://example.com/assets/tools/progressbar_05.png">
+<meta property="og:image" content="http://example.com/assets/tools/progressbar_06.png">
+<meta property="og:image" content="http://example.com/assets/tools/progressbar_07.png">
+<meta property="article:published_time" content="2019-10-14T13:55:10.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.115Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/tools/progressbar_01.png">
+  
+  
+  
+  <title>android奇技淫巧 20 ProgressBar的使用 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="android奇技淫巧 20 ProgressBar的使用"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-10-14 21:55" pubdate>
+          2019年10月14日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          78 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">android奇技淫巧 20 ProgressBar的使用</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>android中ProgressBar的使用</p>
+<span id="more"></span>
+
+<p>ProgressBar是Android下的进度条，也是为数不多的直接继承自View类的空间，直接子类有AbsSeekBar和ContentLoadingProgressBar，其中AbsSeekBar的子类有SeekBar和RatingBar</p>
+<h2 id="ProgressBar的注意"><a href="#ProgressBar的注意" class="headerlink" title="ProgressBar的注意"></a>ProgressBar的注意</h2><ol>
+<li>ProgressBar有两个进度，一个是android:progress,另一个是android:secondaryProgress.后者主要是用来为缓存需要所涉及的，例如我们在播放视频时会有一个缓存的进度条和一个播放进度条。</li>
+<li>ProgressBar分为确定的和不确定的，上面说的播放进度，缓存等就是确定的，相反，不确定的就是不清楚，不确定一个操作需要多长时间来完成，这个时候就需要用的不确定的ProgressBar。这个是由android:indeterminate来控制的，如果设置为true，那么ProgressBar就可能是圆形的滚动条或者水平滚动条，默认情况下，如果是水平进度条，那么就是确定的</li>
+</ol>
+<h3 id="ProgressBar的样式"><a href="#ProgressBar的样式" class="headerlink" title="ProgressBar的样式"></a>ProgressBar的样式</h3><ul>
+<li>Widget.ProgressBar.Horizontal</li>
+<li>Widget.ProgressBar.Small</li>
+<li>Widget.ProgressBar.Large</li>
+<li>Widget.ProgressBar.Inverse</li>
+<li>Widget.ProgressBar.Small.Inverse</li>
+<li>Widget.ProgressBar.Large.Inverse</li>
+</ul>
+<p>使用的时候可以这样</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">style</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;@android:style/Widget.ProgressBar.Small&quot;</span><br></code></pre></td></tr></table></figure>
+<p>同样我们可以使用系统的attr的方式</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">style</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;?android:attr/progressBarStyle&quot;</span><br><span class="hljs-attribute">style</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;?android:attr/progressBarStyleHorizontal&quot;</span><br><span class="hljs-attribute">style</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;?android:attr/progressBarStyleInverse&quot;</span><br><span class="hljs-attribute">style</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;?android:attr/progressBarStyleLarge&quot;</span><br><span class="hljs-attribute">style</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;?android:attr/progressBarStyleLargeInverse&quot;</span><br><span class="hljs-attribute">style</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;?android:attr/progressBarStyleSmall&quot;</span><br><span class="hljs-attribute">style</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;?android:attr/progressBarStyleSmallInverse&quot;</span><br><span class="hljs-attribute">style</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;?android:attr/progressBarStyleSmallTitle&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="常见的几种样式"><a href="#常见的几种样式" class="headerlink" title="常见的几种样式"></a>常见的几种样式</h2><p>在布局中设置</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">android:progress=<span class="hljs-string">&quot;50&quot;</span> <span class="hljs-regexp">//</span> 设置第一显示进度<br>android:secondaryProgress=<span class="hljs-string">&quot;80&quot;</span> <span class="hljs-regexp">//</span> 设置第二现实进度<br>androi:indeterminate=<span class="hljs-string">&quot;true&quot;</span> <span class="hljs-regexp">//</span> 设置是否精确显示，true表示不精确显示进度，false表示精确显示进度<br></code></pre></td></tr></table></figure>
+
+<p>使用Java代码设置</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">setProgress</span><span class="hljs-params">(int)</span></span> <span class="hljs-comment">// 设置第一进度</span><br><span class="hljs-function"><span class="hljs-title">setSecondaryProgress</span><span class="hljs-params">(int)</span></span> <span class="hljs-comment">// 设置第二进度</span><br><span class="hljs-function"><span class="hljs-title">getProgress</span><span class="hljs-params">()</span></span> <span class="hljs-comment">// 获取第一进度</span><br><span class="hljs-function"><span class="hljs-title">getSecondaryProgress</span><span class="hljs-params">()</span></span> <span class="hljs-comment">// 获取第二进度</span><br><span class="hljs-function"><span class="hljs-title">incrementProgressBy</span><span class="hljs-params">(int)</span></span> <span class="hljs-comment">// 增加或减少第一进度</span><br><span class="hljs-function"><span class="hljs-title">incrementSecondaryProgressBy</span><span class="hljs-params">(int)</span></span> <span class="hljs-comment">// 增加或减少第二进度</span><br><span class="hljs-function"><span class="hljs-title">getMax</span><span class="hljs-params">()</span></span> <span class="hljs-comment">// 获取最大进度</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="横向progressBarStyleHorizontal"><a href="#横向progressBarStyleHorizontal" class="headerlink" title="横向progressBarStyleHorizontal"></a>横向progressBarStyleHorizontal</h4><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;Progress<br>  <span class="hljs-attribute">style</span>=<span class="hljs-string">&quot;?android:attr/progressBarStyleHorizontal&quot;</span><br>  android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;240dp&quot;</span><br>  android:<span class="hljs-attribute">layout_hegith</span>=<span class="hljs-string">&quot;wrap_content&quot;</span><br>  android:<span class="hljs-attribute">layout_margin_top</span>=<span class="hljs-string">&quot;10dp&quot;</span><br>  android:<span class="hljs-attribute">max</span>=<span class="hljs-string">&quot;100&quot;</span><br>  android:<span class="hljs-attribute">progress</span>=<span class="hljs-string">&quot;50&quot;</span> /&gt;<br></code></pre></td></tr></table></figure>
+<p><img src="/assets/tools/progressbar_01.png" srcset="/img/loading.gif" lazyload alt="横向效果图"></p>
+<h4 id="横向Widget-ProgressBar-Horizontal"><a href="#横向Widget-ProgressBar-Horizontal" class="headerlink" title="横向Widget.ProgressBar.Horizontal"></a>横向Widget.ProgressBar.Horizontal</h4><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;ProgressBar <br>  <span class="hljs-attribute">style</span>=<span class="hljs-string">&quot;@android:style/Widget.ProgressBar.Horizontal&quot;</span><br>  android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;240&quot;</span><br>  android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span><br>  android:<span class="hljs-attribute">layout_gravity</span>=<span class="hljs-string">&quot;center_horizontal&quot;</span><br>  android:<span class="hljs-attribute">layout_marginTop</span>=<span class="hljs-string">&quot;10dp&quot;</span><br>  android:<span class="hljs-attribute">max</span>=<span class="hljs-string">&quot;100&quot;</span><br>  android:<span class="hljs-attribute">progress</span>=<span class="hljs-string">&quot;50&quot;</span> /&gt;<br></code></pre></td></tr></table></figure>
+<p><img src="/assets/tools/progressbar_02.png" srcset="/img/loading.gif" lazyload alt="横向效果图"></p>
+<h4 id="圆形progressBarStyleLarge"><a href="#圆形progressBarStyleLarge" class="headerlink" title="圆形progressBarStyleLarge"></a>圆形progressBarStyleLarge</h4><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;ProgressBar<br>  android:<span class="hljs-attribute">layout_gravity</span>=<span class="hljs-string">&quot;center_horizontal&quot;</span><br>  android:<span class="hljs-attribute">layout_marginTop</span>=<span class="hljs-string">&quot;10dp&quot;</span><br>  android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/progressBar1&quot;</span><br>  <span class="hljs-attribute">style</span>=<span class="hljs-string">&quot;?android:attr/progressBarStyleLarge&quot;</span><br>  android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span><br>  android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span> /&gt;<br></code></pre></td></tr></table></figure>
+<p><img src="/assets/tools/progressbar_03.png" srcset="/img/loading.gif" lazyload alt="圆形效果图"></p>
+<h4 id="圆形普通"><a href="#圆形普通" class="headerlink" title="圆形普通"></a>圆形普通</h4><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;ProgressBar<br>  android:<span class="hljs-attribute">layout_marginTop</span>=<span class="hljs-string">&quot;10dp&quot;</span><br>  android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/progressBar02&quot;</span><br>  android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span><br>  android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span> /&gt;<br></code></pre></td></tr></table></figure>
+<p><img src="/assets/tools/progressbar_04.png" srcset="/img/loading.gif" lazyload alt="圆形普通效果图"></p>
+<h4 id="圆形小型"><a href="#圆形小型" class="headerlink" title="圆形小型"></a>圆形小型</h4><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;ProgressBar<br>  android:<span class="hljs-attribute">layout_marginTop</span>=<span class="hljs-string">&quot;10dp&quot;</span><br>  android:<span class="hljs-attribute">layout_gravity</span>=<span class="hljs-string">&quot;center_horizontal&quot;</span><br>  android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/progressBar3&quot;</span><br>  android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span><br>  android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span><br>  <span class="hljs-attribute">style</span>=<span class="hljs-string">&quot;?android:attr/progressBarStyleSmall&quot;</span> /&gt;<br></code></pre></td></tr></table></figure>
+<p><img src="/assets/tools/progressbar_05.png" srcset="/img/loading.gif" lazyload alt="圆形小型效果图"></p>
+<h2 id="自定义进度条修改进度颜色"><a href="#自定义进度条修改进度颜色" class="headerlink" title="自定义进度条修改进度颜色"></a>自定义进度条修改进度颜色</h2><p>在布局文件中的style属性就是设置进度条样式的</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;ProgressBar<br>  <span class="hljs-attribute">style</span>=<span class="hljs-string">&quot;?android:attr/progressBarStyleHorizontal&quot;</span><br>  android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span><br>  android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span> /&gt;<br></code></pre></td></tr></table></figure>
+
+<p>实际上面的背景文件是位于@android:style&#x2F;Widget.ProgressBar.Horizontal,即上面的布局可以写成</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;ProgressBar<br>  <span class="hljs-attribute">style</span>=<span class="hljs-string">&quot;@android:style/Widget.ProgressBar.Horizontal&quot;</span><br>  android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span><br>  android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span> /&gt;<br></code></pre></td></tr></table></figure>
+<p>两种方式的写法效果是一样的<br>查看系统中的水平进度条风格文件</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">style</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;Widget.ProgressBar.Horizontal&quot;</span>&gt;</span><span class="language-xml"></span><br><span class="language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;indeterminateOnly&quot;</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;progressDrawable&quot;</span>&gt;</span>@drawable/progress_horizontal<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;indeterminateDrawable&quot;</span>&gt;</span>@drawable/progress_indeterminate_horizontal<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;minHeight&quot;</span>&gt;</span>20dip<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;maxHeight&quot;</span>&gt;</span>20dip<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;mirrorForRtl&quot;</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span></span><br><span class="language-xml"></span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>我们会发现在android:progressDrawable属性是设置进度条背景的</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-comment">&lt;!-- Copyright (C) 2008 The Android Open Source Project</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">     Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span><br><span class="hljs-comment">     you may not use this file except in compliance with the License.</span><br><span class="hljs-comment">     You may obtain a copy of the License at</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">          http://www.apache.org/licenses/LICENSE-2.0</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">     Unless required by applicable law or agreed to in writing, software</span><br><span class="hljs-comment">     distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span><br><span class="hljs-comment">     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span><br><span class="hljs-comment">     See the License for the specific language governing permissions and</span><br><span class="hljs-comment">     limitations under the License.</span><br><span class="hljs-comment">--&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">layer-list</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span>&gt;</span><br>    <br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@android:id/background&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">shape</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">corners</span> <span class="hljs-attr">android:radius</span>=<span class="hljs-string">&quot;5dip&quot;</span> /&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">gradient</span></span><br><span class="hljs-tag">                    <span class="hljs-attr">android:startColor</span>=<span class="hljs-string">&quot;#ff9d9e9d&quot;</span></span><br><span class="hljs-tag">                    <span class="hljs-attr">android:centerColor</span>=<span class="hljs-string">&quot;#ff5a5d5a&quot;</span></span><br><span class="hljs-tag">                    <span class="hljs-attr">android:centerY</span>=<span class="hljs-string">&quot;0.75&quot;</span></span><br><span class="hljs-tag">                    <span class="hljs-attr">android:endColor</span>=<span class="hljs-string">&quot;#ff747674&quot;</span></span><br><span class="hljs-tag">                    <span class="hljs-attr">android:angle</span>=<span class="hljs-string">&quot;270&quot;</span></span><br><span class="hljs-tag">            /&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">shape</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span><br>    <br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@android:id/secondaryProgress&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">clip</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">shape</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">corners</span> <span class="hljs-attr">android:radius</span>=<span class="hljs-string">&quot;5dip&quot;</span> /&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">gradient</span></span><br><span class="hljs-tag">                        <span class="hljs-attr">android:startColor</span>=<span class="hljs-string">&quot;#80ffd300&quot;</span></span><br><span class="hljs-tag">                        <span class="hljs-attr">android:centerColor</span>=<span class="hljs-string">&quot;#80ffb600&quot;</span></span><br><span class="hljs-tag">                        <span class="hljs-attr">android:centerY</span>=<span class="hljs-string">&quot;0.75&quot;</span></span><br><span class="hljs-tag">                        <span class="hljs-attr">android:endColor</span>=<span class="hljs-string">&quot;#a0ffcb00&quot;</span></span><br><span class="hljs-tag">                        <span class="hljs-attr">android:angle</span>=<span class="hljs-string">&quot;270&quot;</span></span><br><span class="hljs-tag">                /&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">shape</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">clip</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span><br>    <br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@android:id/progress&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">clip</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">shape</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">corners</span> <span class="hljs-attr">android:radius</span>=<span class="hljs-string">&quot;5dip&quot;</span> /&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">gradient</span></span><br><span class="hljs-tag">                        <span class="hljs-attr">android:startColor</span>=<span class="hljs-string">&quot;#ffffd300&quot;</span></span><br><span class="hljs-tag">                        <span class="hljs-attr">android:centerColor</span>=<span class="hljs-string">&quot;#ffffb600&quot;</span></span><br><span class="hljs-tag">                        <span class="hljs-attr">android:centerY</span>=<span class="hljs-string">&quot;0.75&quot;</span></span><br><span class="hljs-tag">                        <span class="hljs-attr">android:endColor</span>=<span class="hljs-string">&quot;#ffffcb00&quot;</span></span><br><span class="hljs-tag">                        <span class="hljs-attr">android:angle</span>=<span class="hljs-string">&quot;270&quot;</span></span><br><span class="hljs-tag">                /&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">shape</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">clip</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span><br>    <br><span class="hljs-tag">&lt;/<span class="hljs-name">layer-list</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>这里面有三个item标签，分别是进度条，第二进度条，第一进度条背景色。这里我们可以直接将内容复制下来，然后新建一个xml文件，然后修改背景颜色等属性即可</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">layer-list</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@android:id/background&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">shape</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">corners</span> <span class="hljs-attr">android:radius</span>=<span class="hljs-string">&quot;5dip&quot;</span> /&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">gradient</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:startColor</span>=<span class="hljs-string">&quot;#ffffffff&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:centerColor</span>=<span class="hljs-string">&quot;#ffffffff&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:centerY</span>=<span class="hljs-string">&quot;0.75&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:endColor</span>=<span class="hljs-string">&quot;#ffffffff&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:angle</span>=<span class="hljs-string">&quot;270&quot;</span></span><br><span class="hljs-tag">                /&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">shape</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@android:id/progress&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">clip</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">shape</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">corners</span> <span class="hljs-attr">android:radius</span>=<span class="hljs-string">&quot;5dip&quot;</span> /&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">gradient</span></span><br><span class="hljs-tag">                    <span class="hljs-attr">android:startColor</span>=<span class="hljs-string">&quot;#fff15358&quot;</span></span><br><span class="hljs-tag">                    <span class="hljs-attr">android:centerColor</span>=<span class="hljs-string">&quot;#fff15358&quot;</span></span><br><span class="hljs-tag">                    <span class="hljs-attr">android:centerY</span>=<span class="hljs-string">&quot;0.75&quot;</span></span><br><span class="hljs-tag">                    <span class="hljs-attr">android:endColor</span>=<span class="hljs-string">&quot;#fff15358&quot;</span></span><br><span class="hljs-tag">                    <span class="hljs-attr">android:angle</span>=<span class="hljs-string">&quot;270&quot;</span></span><br><span class="hljs-tag">                    /&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">shape</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">clip</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">layer-list</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>使用的如下所示</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_marginTop</span>=<span class="hljs-string">&quot;10dp&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:gravity</span>=<span class="hljs-string">&quot;center_horizontal&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;vertical&quot;</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">ProgressBar</span></span><br><span class="hljs-tag">        <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;@android:style/Widget.ProgressBar.Horizontal&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;200dp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_margin_top</span>=<span class="hljs-string">&quot;10dp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:background</span>=<span class="hljs-string">&quot;@drawable/bg_progress_color&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:max</span>=<span class="hljs-string">&quot;100&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:progress</span>=<span class="hljs-string">&quot;50&quot;</span> /&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">TextView</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_marginTop</span>=<span class="hljs-string">&quot;5dp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;修改背景颜色/进度颜色&quot;</span> /&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>效果如下所示<br><img src="/assets/tools/progressbar_06.png" srcset="/img/loading.gif" lazyload alt="改变进度条颜色"></p>
+<p>做一个颜色可以渐变的样式</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">layer-list</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@android:id/background&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">shape</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">corners</span> <span class="hljs-attr">android:radius</span>=<span class="hljs-string">&quot;360dp&quot;</span> /&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">solid</span> <span class="hljs-attr">android:color</span>=<span class="hljs-string">&quot;#e7e7e7&quot;</span> /&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">shape</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@android:id/secondaryProgress&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">scale</span> <span class="hljs-attr">android:scaleWidth</span>=<span class="hljs-string">&quot;100%&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">shape</span> <span class="hljs-attr">android:shape</span>=<span class="hljs-string">&quot;rectangle&quot;</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">corners</span> <span class="hljs-attr">android:radius</span>=<span class="hljs-string">&quot;360dp&quot;</span> /&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">gradient</span></span><br><span class="hljs-tag">                    <span class="hljs-attr">android:centerColor</span>=<span class="hljs-string">&quot;#f9630c&quot;</span></span><br><span class="hljs-tag">                    <span class="hljs-attr">android:endColor</span>=<span class="hljs-string">&quot;#f04d52&quot;</span></span><br><span class="hljs-tag">                    <span class="hljs-attr">android:startColor</span>=<span class="hljs-string">&quot;#ffa902&quot;</span> /&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">shape</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">scale</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">layer-list</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>使用进度条</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs xml"><br><span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_marginTop</span>=<span class="hljs-string">&quot;10dp&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:gravity</span>=<span class="hljs-string">&quot;center_horizontal&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;vertical&quot;</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">ProgressBar</span></span><br><span class="hljs-tag">        <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;@android:style/Widget.Holo.ProgressBar.Horizontal&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;200dp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;20dp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_margin_top</span>=<span class="hljs-string">&quot;10dp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:max</span>=<span class="hljs-string">&quot;100&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:progress</span>=<span class="hljs-string">&quot;50&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:progressDrawable</span>=<span class="hljs-string">&quot;@drawable/bg_progress_colors&quot;</span> /&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">TextView</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_marginTop</span>=<span class="hljs-string">&quot;5dp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;一个比较好看的样式&quot;</span> /&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p><img src="/assets/tools/progressbar_07.png" srcset="/img/loading.gif" lazyload alt="渐变效果样式"></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/niupuyue/blog_demo_android/tree/master/ProgressBarDemo">Github例子</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>android奇技淫巧 20 ProgressBar的使用</div>
+      <div>http://example.com/2019/10/14/android-tools-20/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年10月14日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/10/16/JavaEE-04-JSP/" title="JavaEE 04 JavaWeb基础(JSP)">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">JavaEE 04 JavaWeb基础(JSP)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/10/08/mytools-01/" title="使用Vultr搭建SSR梯子">
+                        <span class="hidden-mobile">使用Vultr搭建SSR梯子</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

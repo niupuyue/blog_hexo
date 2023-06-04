@@ -1,0 +1,752 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Realm简介">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重拾android路(二十九) Realm数据库">
+<meta property="og:url" content="http://example.com/2019/07/14/android-29-realm/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Realm简介">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/realm/realm01.png">
+<meta property="og:image" content="http://example.com/assets/realm/realm02.png">
+<meta property="og:image" content="http://example.com/assets/realm/realm03.png">
+<meta property="article:published_time" content="2019-07-14T03:13:26.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.087Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta property="article:tag" content="realm">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/realm/realm01.png">
+  
+  
+  
+  <title>重拾android路(二十九) Realm数据库 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="重拾android路(二十九) Realm数据库"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-07-14 11:13" pubdate>
+          2019年7月14日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          10k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          87 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">重拾android路(二十九) Realm数据库</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Realm简介</p>
+<span id="more"></span>
+<p>数据库Realm，是用来替代sqlite的一种解决方案，它有一套自己的数据库存储引擎，比sqlite更轻量级，拥有更快的速度，并且具有很多现代数据库的特性，比如支持JSON，流式api，数据变更通知，自动数据同步,简单身份验证，访问控制，事件处理，最重要的是跨平台，目前已有Java，Objective C，Swift，React-Native，Xamarin这五种实现。</p>
+<h1 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h1><ol>
+<li><p>在项目中build文件加上</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-keyword">buildscript</span> &#123;<br> <span class="hljs-keyword">repositories</span> &#123;<br>     jcenter()<br> &#125;<br> <span class="hljs-keyword">dependencies</span> &#123;<br>     ...<br>     <span class="hljs-keyword">classpath</span> <span class="hljs-string">&quot;io.realm:realm-gradle-plugin:1.2.0&quot;</span><br> &#125;<br></code></pre></td></tr></table></figure>
+<p>如下图所示：<br><img src="/assets/realm/realm01.png" srcset="/img/loading.gif" lazyload alt="配置在build"></p>
+</li>
+<li><p>在app的build文件中加入如下内容</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">apply</span> plugin: <span class="hljs-string">&#x27;realm-android&#x27;</span><br></code></pre></td></tr></table></figure>
+<p>如下图所示<br><img src="/assets/realm/realm02.png" srcset="/img/loading.gif" lazyload alt="配置在app中的build"></p>
+</li>
+</ol>
+<h1 id="初始化Realm"><a href="#初始化Realm" class="headerlink" title="初始化Realm"></a>初始化Realm</h1><ol>
+<li>在Application中初始化Realm</li>
+</ol>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs scala">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyApplication</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Application</span> </span>&#123;<br>  <span class="hljs-meta">@Override</span><br>  public void onCreate() &#123;<br>    <span class="hljs-keyword">super</span>.onCreate();<br>    <span class="hljs-type">Realm</span>.init(<span class="hljs-keyword">this</span>);<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ol start="2">
+<li>在Application的onCreate方法中对Realm进行初始化</li>
+</ol>
+<ul>
+<li>使用默认配置</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs scala">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyApplication</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Application</span> </span>&#123;<br>  <span class="hljs-meta">@Override</span><br>  public void onCreate() &#123;<br>    <span class="hljs-keyword">super</span>.onCreate();<br>    <span class="hljs-comment">// The Realm file will be located in Context.getFilesDir() with name &quot;default.realm&quot;</span><br>    <span class="hljs-type">Realm</span>.init(<span class="hljs-keyword">this</span>);<br>    <span class="hljs-type">RealmConfiguration</span> config = <span class="hljs-keyword">new</span> <span class="hljs-type">RealmConfiguration</span>.<span class="hljs-type">Builder</span>().build();<br>    <span class="hljs-type">Realm</span>.setDefaultConfiguration(config);<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>使用默认配置</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs scala">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyApplication</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Application</span> </span>&#123;<br>  <span class="hljs-meta">@Override</span> <br>  public void onCreate() &#123;<br>    <span class="hljs-keyword">super</span>.onCreate();<br>    <span class="hljs-type">Realm</span>.init(<span class="hljs-keyword">this</span>);<br>    <span class="hljs-type">RealmConfiguration</span> config = <span class="hljs-keyword">new</span>  <span class="hljs-type">RealmConfiguration</span>.<span class="hljs-type">Builder</span>()<br>                                         .name(<span class="hljs-string">&quot;myRealm.realm&quot;</span>)<br>                                         .deleteRealmIfMigrationNeeded()<br>                                         .build();<br>    <span class="hljs-type">Realm</span>.setDefaultConfiguration(config);<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>下面是我的配置：<br><img src="/assets/realm/realm03.png" srcset="/img/loading.gif" lazyload alt="Realm配置"></p>
+<h1 id="创建实体"><a href="#创建实体" class="headerlink" title="创建实体"></a>创建实体</h1><ol>
+<li>创建一个类继承RealmObject</li>
+</ol>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">AffairModel</span> <span class="hljs-title">extends</span> <span class="hljs-title">RealmObject</span> <span class="hljs-title">implements</span> <span class="hljs-title">Serializable</span> &#123;<br><br>    @PrimaryKey<br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> id;<br><br>    <span class="hljs-keyword">public</span> String affairNote;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">long</span> affairTime = <span class="hljs-number">0L</span>;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> affairType = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> <span class="hljs-title">getId</span>()</span> &#123;<br>        <span class="hljs-keyword">return</span> id;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setId</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> id</span>)</span> &#123;<br>        <span class="hljs-keyword">this</span>.id = id;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getAffairNote</span>()</span> &#123;<br>        <span class="hljs-keyword">return</span> affairNote;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setAffairNote</span>(<span class="hljs-params">String affairNote</span>)</span> &#123;<br>        <span class="hljs-keyword">this</span>.affairNote = affairNote;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-built_in">long</span> <span class="hljs-title">getAffairTime</span>()</span> &#123;<br>        <span class="hljs-keyword">return</span> affairTime;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setAffairTime</span>(<span class="hljs-params"><span class="hljs-built_in">long</span> affairTime</span>)</span> &#123;<br>        <span class="hljs-keyword">this</span>.affairTime = affairTime;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> <span class="hljs-title">getAffairType</span>()</span> &#123;<br>        <span class="hljs-keyword">return</span> affairType;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setAffairType</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> affairType</span>)</span> &#123;<br>        <span class="hljs-keyword">this</span>.affairType = affairType;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>如果存在多对多的关系</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs scala">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Contact</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">RealmObject</span> </span>&#123;<br>    public <span class="hljs-type">String</span> name;<br>    public <span class="hljs-type">RealmList</span>&lt;<span class="hljs-type">Email</span>&gt; emails;<br>&#125;<br> <br>public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Email</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">RealmObject</span> </span>&#123;<br>    public <span class="hljs-type">String</span> address;<br>    public boolean active;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>其他相关说明</li>
+</ol>
+<ul>
+<li>支持数据类型</li>
+</ul>
+<p>boolean, byte, short, int, long, float, double, String, Date and byte[]<br>在Realm中byte, short, int, long最终都被映射成long类型</p>
+<ul>
+<li>注解说明</li>
+</ul>
+<h4 id="PrimaryKey"><a href="#PrimaryKey" class="headerlink" title="@PrimaryKey"></a>@PrimaryKey</h4><p>①字段必须是String、 integer、byte、short、 int、long 以及它们的封装类Byte, Short, Integer, and Long</p>
+<p>②使用了该注解之后可以使用copyToRealmOrUpdate()方法，通过主键查询它的对象，如果查询到了，则更新它，否则新建一个对象来代替。</p>
+<p>③使用了该注解将默认设置（@index）注解</p>
+<p>④使用了该注解之后，创建和更新数据将会慢一点，查询数据会快一点。</p>
+<h4 id="Required"><a href="#Required" class="headerlink" title="@Required"></a>@Required</h4><p>数据不能为null</p>
+<h4 id="Ignore"><a href="#Ignore" class="headerlink" title="@Ignore"></a>@Ignore</h4><p>忽略，即该字段不被存储到本地</p>
+<h4 id="Index"><a href="#Index" class="headerlink" title="@Index"></a>@Index</h4><p>为这个字段添加一个搜索引擎，这将使插入数据变慢、数据增大，但是查询会变快。建议在需要优化读取性能的情况下使用。</p>
+<h1 id="数据库操作-增删改查-非异步操作"><a href="#数据库操作-增删改查-非异步操作" class="headerlink" title="数据库操作(增删改查) 非异步操作"></a>数据库操作(增删改查) 非异步操作</h1><h2 id="曾"><a href="#曾" class="headerlink" title="曾"></a>曾</h2><h3 id="事务操作一"><a href="#事务操作一" class="headerlink" title="事务操作一"></a>事务操作一</h3><p>创建一个对象，并进行存储</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">Realm realm=<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Realm</span>.</span></span>get<span class="hljs-constructor">DefaultInstance()</span>;<br>realm.<span class="hljs-keyword">begin</span><span class="hljs-constructor">Transaction()</span>;<br>User user = realm.create<span class="hljs-constructor">Object(User.<span class="hljs-params">class</span>)</span>; <span class="hljs-comment">// Create a new object</span><br>user.set<span class="hljs-constructor">Name(<span class="hljs-string">&quot;John&quot;</span>)</span>;<br>user.set<span class="hljs-constructor">Email(<span class="hljs-string">&quot;john@corporation.com&quot;</span>)</span>;<br>realm.commit<span class="hljs-constructor">Transaction()</span>;<br></code></pre></td></tr></table></figure>
+
+<p>复制一对象进行存储</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">Realm realm=<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Realm</span>.</span></span>get<span class="hljs-constructor">DefaultInstance()</span>;<br> <br>User user = <span class="hljs-keyword">new</span> <span class="hljs-constructor">User(<span class="hljs-string">&quot;John&quot;</span>)</span>;<br>user.set<span class="hljs-constructor">Email(<span class="hljs-string">&quot;john@corporation.com&quot;</span>)</span>;<br> <br><span class="hljs-comment">// Copy the object to Realm. Any further changes must happen on realmUser</span><br>realm.<span class="hljs-keyword">begin</span><span class="hljs-constructor">Transaction()</span>;<br>realm.copy<span class="hljs-constructor">ToRealm(<span class="hljs-params">user</span>)</span>;<br>realm.commit<span class="hljs-constructor">Transaction()</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="事务操作二"><a href="#事务操作二" class="headerlink" title="事务操作二"></a>事务操作二</h3><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">Realm  mRealm=Realm.getDefaultInstance();<br> <br>final <span class="hljs-keyword">User</span> <span class="hljs-keyword">user</span> = <span class="hljs-built_in">new</span> <span class="hljs-keyword">User</span>(&quot;John&quot;);<br><span class="hljs-keyword">user</span>.setEmail(&quot;john@corporation.com&quot;);<br> <br>mRealm.executeTransaction(<span class="hljs-built_in">new</span> Realm.<span class="hljs-keyword">Transaction</span>() &#123;<br>            @Override<br>            <span class="hljs-built_in">public</span> <span class="hljs-type">void</span> <span class="hljs-keyword">execute</span>(Realm realm) &#123;<br>            <br>            realm.copyToRealm(<span class="hljs-keyword">user</span>);<br>               <br>            &#125;<br>        &#125;);<br></code></pre></td></tr></table></figure>
+
+<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">Realm  mRealm=<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Realm</span>.</span></span>get<span class="hljs-constructor">DefaultInstance()</span>;<br> <br>    final RealmResults&lt;Dog&gt; dogs=  mRealm.where(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Dog</span>.</span></span><span class="hljs-keyword">class</span>).find<span class="hljs-constructor">All()</span>;<br> <br>        mRealm.execute<span class="hljs-constructor">Transaction(<span class="hljs-params">new</span> Realm.Transaction()</span> &#123;<br>            @Override<br>            public void execute(Realm realm) &#123;<br>            <br>                Dog dog=dogs.get(<span class="hljs-number">5</span>);<br>                dog.delete<span class="hljs-constructor">FromRealm()</span>;<br>                <span class="hljs-comment">//删除第一个数据</span><br>                dogs.delete<span class="hljs-constructor">FirstFromRealm()</span>;<br>                <span class="hljs-comment">//删除最后一个数据</span><br>                dogs.delete<span class="hljs-constructor">LastFromRealm()</span>;<br>                <span class="hljs-comment">//删除位置为1的数据</span><br>                dogs.delete<span class="hljs-constructor">FromRealm(1)</span>;<br>                <span class="hljs-comment">//删除所有数据</span><br>                dogs.delete<span class="hljs-constructor">AllFromRealm()</span>;<br>            &#125;<br>        &#125;);<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>同样也可以使用同上的beginTransaction和commitTransaction方法进行删除</p>
+</blockquote>
+<h2 id="改"><a href="#改" class="headerlink" title="改"></a>改</h2><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">Realm  mRealm=<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Realm</span>.</span></span>get<span class="hljs-constructor">DefaultInstance()</span>;<br> <br>Dog dog = mRealm.where(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Dog</span>.</span></span><span class="hljs-keyword">class</span>).equal<span class="hljs-constructor">To(<span class="hljs-string">&quot;id&quot;</span>, <span class="hljs-params">id</span>)</span>.find<span class="hljs-constructor">First()</span>;<br>mRealm.<span class="hljs-keyword">begin</span><span class="hljs-constructor">Transaction()</span>;<br>dog.set<span class="hljs-constructor">Name(<span class="hljs-params">newName</span>)</span>;<br>mRealm.commit<span class="hljs-constructor">Transaction()</span>;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>也可以用事物块来更新数据</p>
+</blockquote>
+<h2 id="查"><a href="#查" class="headerlink" title="查"></a>查</h2><h3 id="查询全部"><a href="#查询全部" class="headerlink" title="查询全部"></a>查询全部</h3><p>查询结果为RealmResults</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public List&lt;Dog&gt; query<span class="hljs-constructor">AllDog()</span> &#123;<br>        Realm  mRealm=<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Realm</span>.</span></span>get<span class="hljs-constructor">DefaultInstance()</span>;<br>    <br>        RealmResults&lt;Dog&gt; dogs = mRealm.where(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Dog</span>.</span></span><span class="hljs-keyword">class</span>).find<span class="hljs-constructor">All()</span>;<br>        <br>        return mRealm.copy<span class="hljs-constructor">FromRealm(<span class="hljs-params">dogs</span>)</span>;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="条件查询"><a href="#条件查询" class="headerlink" title="条件查询"></a>条件查询</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public Dog query<span class="hljs-constructor">DogById(String <span class="hljs-params">id</span>)</span> &#123;<br>        Realm  mRealm=<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Realm</span>.</span></span>get<span class="hljs-constructor">DefaultInstance()</span>;<br>    <br>        Dog dog = mRealm.where(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Dog</span>.</span></span><span class="hljs-keyword">class</span>).equal<span class="hljs-constructor">To(<span class="hljs-string">&quot;id&quot;</span>, <span class="hljs-params">id</span>)</span>.find<span class="hljs-constructor">First()</span>;<br>        return dog;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>常见的条件如下（详细资料请查官方文档）：</p>
+<p>between(), greaterThan(), lessThan(), greaterThanOrEqualTo() &amp; lessThanOrEqualTo()</p>
+<p>equalTo() &amp; notEqualTo()</p>
+<p>contains(), beginsWith() &amp; endsWith()</p>
+<p>isNull() &amp; isNotNull()</p>
+<p>isEmpty() &amp; isNotEmpty()</p>
+<h3 id="对查询结果进行排序"><a href="#对查询结果进行排序" class="headerlink" title="对查询结果进行排序"></a>对查询结果进行排序</h3><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-comment">/**</span><br><span class="hljs-comment">     * query （查询所有）</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> List&lt;Dog&gt; queryAllDog() &#123;<br>        RealmResults&lt;Dog&gt; dogs = mRealm.where(Dog.<span class="hljs-keyword">class</span>).<span class="hljs-keyword">findAll</span>();<br>        <span class="hljs-comment">/**</span><br><span class="hljs-comment">         * 对查询结果，按Id进行排序，只能对查询结果进行排序</span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-comment">//增序排列</span><br>        dogs=dogs.<span class="hljs-keyword">sort</span>(<span class="hljs-string">&quot;id&quot;</span>);<br>        <span class="hljs-comment">//降序排列</span><br>        dogs=dogs.<span class="hljs-keyword">sort</span>(<span class="hljs-string">&quot;id&quot;</span>, <span class="hljs-keyword">Sort</span>.DESCENDING);<br>        <span class="hljs-keyword">return</span> mRealm.copyFromRealm(dogs);<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="其他查询"><a href="#其他查询" class="headerlink" title="其他查询"></a>其他查询</h3><p>sum，min，max，average只支持整型数据字段</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs csharp">**<br>     *  查询平均年龄<br>     */<br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">getAverageAge</span>()</span> &#123;<br>         <span class="hljs-built_in">double</span> avgAge=  mRealm.<span class="hljs-keyword">where</span>(Dog.<span class="hljs-keyword">class</span>).findAll().average(<span class="hljs-string">&quot;age&quot;</span>);<br>    &#125;<br> <br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     *  查询总年龄</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">getSumAge</span>()</span> &#123;<br>      Number sum=  mRealm.<span class="hljs-keyword">where</span>(Dog.<span class="hljs-keyword">class</span>).findAll().sum(<span class="hljs-string">&quot;age&quot;</span>);<br>        <span class="hljs-built_in">int</span> sumAge=sum.intValue();<br>    &#125;<br> <br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     *  查询最大年龄</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">getMaxId</span>()</span>&#123;<br>      Number max=  mRealm.<span class="hljs-keyword">where</span>(Dog.<span class="hljs-keyword">class</span>).findAll().max(<span class="hljs-string">&quot;age&quot;</span>);<br>        <span class="hljs-built_in">int</span> maxAge=max.intValue();<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="数据库操作-增删改查-异步操作"><a href="#数据库操作-增删改查-异步操作" class="headerlink" title="数据库操作(增删改查)  异步操作"></a>数据库操作(增删改查)  异步操作</h1><p>大多数情况下，Realm的增删改查操作足够快，可以在UI线程中执行操作。但是如果遇到较复杂的增删改查，或增删改查操作的数据较多时，就可以子线程进行操作。</p>
+<h2 id="异步增"><a href="#异步增" class="headerlink" title="异步增"></a>异步增</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">private</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">addCat</span>(<span class="hljs-params">final Cat cat</span>) &#123;<br>      <span class="hljs-title class_">RealmAsyncTask</span>  addTask=  mRealm.<span class="hljs-title function_">executeTransactionAsync</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Realm</span>.<span class="hljs-title class_">Transaction</span>() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">execute</span>(<span class="hljs-params">Realm realm</span>) &#123;<br>                realm.<span class="hljs-title function_">copyToRealm</span>(cat);<br>            &#125;<br>        &#125;, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Realm</span>.<span class="hljs-property">Transaction</span>.<span class="hljs-title class_">OnSuccess</span>() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">onSuccess</span>(<span class="hljs-params"></span>) &#123;<br>                <span class="hljs-title class_">ToastUtil</span>.<span class="hljs-title function_">showShortToast</span>(mContext,<span class="hljs-string">&quot;收藏成功&quot;</span>);<br>            &#125;<br>        &#125;, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Realm</span>.<span class="hljs-property">Transaction</span>.<span class="hljs-title class_">OnError</span>() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">onError</span>(<span class="hljs-params">Throwable error</span>) &#123;<br>                <span class="hljs-title class_">ToastUtil</span>.<span class="hljs-title function_">showShortToast</span>(mContext,<span class="hljs-string">&quot;收藏失败&quot;</span>);<br>            &#125;<br>        &#125;);<br> <br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>最后在销毁Activity或Fragment时，要取消掉异步任务</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">protected</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">onDestroy</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-variable language_">super</span>.<span class="hljs-title function_">onDestroy</span>();<br>       <span class="hljs-keyword">if</span> (addTask!=<span class="hljs-literal">null</span>&amp;&amp;!addTask.<span class="hljs-title function_">isCancelled</span>())&#123;<br>            addTask.<span class="hljs-title function_">cancel</span>();<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="异步删"><a href="#异步删" class="headerlink" title="异步删"></a>异步删</h2><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">private</span> void delete<span class="hljs-constructor">Cat(<span class="hljs-params">final</span> String <span class="hljs-params">id</span>, <span class="hljs-params">final</span> ImageView <span class="hljs-params">imageView</span>)</span>&#123;<br>      RealmAsyncTask  deleteTask=   mRealm.execute<span class="hljs-constructor">TransactionAsync(<span class="hljs-params">new</span> Realm.Transaction()</span> &#123;<br>            @Override<br>            public void execute(Realm realm) &#123;<br>                Cat cat=realm.where(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Cat</span>.</span></span><span class="hljs-keyword">class</span>).equal<span class="hljs-constructor">To(<span class="hljs-string">&quot;id&quot;</span>,<span class="hljs-params">id</span>)</span>.find<span class="hljs-constructor">First()</span>;<br>                cat.delete<span class="hljs-constructor">FromRealm()</span>;<br> <br>            &#125;<br>        &#125;, <span class="hljs-keyword">new</span> Realm.Transaction.<span class="hljs-constructor">OnSuccess()</span> &#123;<br>            @Override<br>            public void on<span class="hljs-constructor">Success()</span> &#123;<br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ToastUtil</span>.</span></span>show<span class="hljs-constructor">ShortToast(<span class="hljs-params">mContext</span>,<span class="hljs-string">&quot;取消收藏成功&quot;</span>)</span>;<br>            &#125;<br>        &#125;, <span class="hljs-keyword">new</span> Realm.Transaction.<span class="hljs-constructor">OnError()</span> &#123;<br>            @Override<br>            public void on<span class="hljs-constructor">Error(Throwable <span class="hljs-params">error</span>)</span> &#123;<br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ToastUtil</span>.</span></span>show<span class="hljs-constructor">ShortToast(<span class="hljs-params">mContext</span>,<span class="hljs-string">&quot;取消收藏失败&quot;</span>)</span>;<br>            &#125;<br>        &#125;);<br> <br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>最后在销毁Activity或Fragment时，要取消掉异步任务</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">protected</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">onDestroy</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-variable language_">super</span>.<span class="hljs-title function_">onDestroy</span>();<br>       <span class="hljs-keyword">if</span> (deleteTask!=<span class="hljs-literal">null</span>&amp;&amp;!addTask.<span class="hljs-title function_">isCancelled</span>())&#123;<br>            deleteTask.<span class="hljs-title function_">cancel</span>();<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="异步改"><a href="#异步改" class="headerlink" title="异步改"></a>异步改</h2><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">RealmAsyncTask  updateTask=   mRealm.execute<span class="hljs-constructor">TransactionAsync(<span class="hljs-params">new</span> Realm.Transaction()</span> &#123;<br>            @Override<br>            public void execute(Realm realm) &#123;<br>                Cat cat=realm.where(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Cat</span>.</span></span><span class="hljs-keyword">class</span>).equal<span class="hljs-constructor">To(<span class="hljs-string">&quot;id&quot;</span>,<span class="hljs-params">mId</span>)</span>.find<span class="hljs-constructor">First()</span>;<br>                cat.set<span class="hljs-constructor">Name(<span class="hljs-params">name</span>)</span>;<br>            &#125;<br>        &#125;, <span class="hljs-keyword">new</span> Realm.Transaction.<span class="hljs-constructor">OnSuccess()</span> &#123;<br>            @Override<br>            public void on<span class="hljs-constructor">Success()</span> &#123;<br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ToastUtil</span>.</span></span>show<span class="hljs-constructor">ShortToast(UpdateCatActivity.<span class="hljs-params">this</span>,<span class="hljs-string">&quot;更新成功&quot;</span>)</span>;<br>             <br>            &#125;<br>        &#125;, <span class="hljs-keyword">new</span> Realm.Transaction.<span class="hljs-constructor">OnError()</span> &#123;<br>            @Override<br>            public void on<span class="hljs-constructor">Error(Throwable <span class="hljs-params">error</span>)</span> &#123;<br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ToastUtil</span>.</span></span>show<span class="hljs-constructor">ShortToast(UpdateCatActivity.<span class="hljs-params">this</span>,<span class="hljs-string">&quot;失败成功&quot;</span>)</span>;<br>            &#125;<br>        &#125;);<br></code></pre></td></tr></table></figure>
+
+<p>最后在销毁Activity或Fragment时，要取消掉异步任务</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">protected</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">onDestroy</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-variable language_">super</span>.<span class="hljs-title function_">onDestroy</span>();<br>       <span class="hljs-keyword">if</span> (updateTask!=<span class="hljs-literal">null</span>&amp;&amp;!addTask.<span class="hljs-title function_">isCancelled</span>())&#123;<br>            updateTask.<span class="hljs-title function_">cancel</span>();<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="异步查"><a href="#异步查" class="headerlink" title="异步查"></a>异步查</h2><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">RealmResults&lt;Cat&gt;   cats=mRealm.where(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Cat</span>.</span></span><span class="hljs-keyword">class</span>).find<span class="hljs-constructor">AllAsync()</span>;<br>        cats.add<span class="hljs-constructor">ChangeListener(<span class="hljs-params">new</span> RealmChangeListener&lt;RealmResults&lt;Cat&gt;&gt;()</span> &#123;<br>            @Override<br>            public void on<span class="hljs-constructor">Change(RealmResults&lt;Cat&gt; <span class="hljs-params">element</span>)</span> &#123;<br>               element= element.sort(<span class="hljs-string">&quot;id&quot;</span>);<br>                List&lt;Cat&gt; datas=mRealm.copy<span class="hljs-constructor">FromRealm(<span class="hljs-params">element</span>)</span>;<br>              <br>            &#125;<br>        &#125;);<br></code></pre></td></tr></table></figure>
+
+<p>最后在销毁Activity或Fragment时，要取消掉异步任务</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@Override</span><br>   <span class="hljs-keyword">protected</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">onDestroy</span>(<span class="hljs-params"></span>) &#123;<br>       <span class="hljs-variable language_">super</span>.<span class="hljs-title function_">onDestroy</span>();<br>       cats.<span class="hljs-title function_">removeChangeListeners</span>();<br> <br>   &#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="使用json"><a href="#使用json" class="headerlink" title="使用json"></a>使用json</h1><p>在实际开发中我们和json打交道的机会比较多，所以直接从json去创建对象是十分有用的，下面的代码片段展示了怎么去用。</p>
+<figure class="highlight wren"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs wren"><span class="hljs-variable">private</span> <span class="hljs-variable">void</span> <span class="hljs-title function_">testAddFromJson</span>() &#123;<br><br>   <span class="hljs-variable">realm</span>.<span class="hljs-property">executeTransaction</span>(<span class="hljs-variable">new</span> <span class="hljs-title class_">Realm</span>.<span class="hljs-property">Transaction</span>() &#123;<br><br>        @<span class="hljs-title class_">Override</span><br>        <span class="hljs-variable">public</span> <span class="hljs-variable">void</span> <span class="hljs-title function_">execute</span>(<span class="hljs-params">Realm</span> <span class="hljs-params">realm</span>) &#123;<br>            <span class="hljs-title class_">String</span> <span class="hljs-variable">json</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;&#123;<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;    <span class="hljs-char escape_">\&quot;</span>id<span class="hljs-char escape_">\&quot;</span>: <span class="hljs-char escape_">\&quot;</span>uuid1<span class="hljs-char escape_">\&quot;</span>,<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;    <span class="hljs-char escape_">\&quot;</span>name<span class="hljs-char escape_">\&quot;</span>: <span class="hljs-char escape_">\&quot;</span>solid<span class="hljs-char escape_">\&quot;</span>,<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;    <span class="hljs-char escape_">\&quot;</span>age<span class="hljs-char escape_">\&quot;</span>: 20<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;&#125;&quot;</span>;<br>            <span class="hljs-title class_">String</span> <span class="hljs-variable">jsons</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;[<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;    &#123;<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;        <span class="hljs-char escape_">\&quot;</span>id<span class="hljs-char escape_">\&quot;</span>: <span class="hljs-char escape_">\&quot;</span>uuid1<span class="hljs-char escape_">\&quot;</span>,<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;        <span class="hljs-char escape_">\&quot;</span>name<span class="hljs-char escape_">\&quot;</span>: <span class="hljs-char escape_">\&quot;</span>solid<span class="hljs-char escape_">\&quot;</span>,<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;        <span class="hljs-char escape_">\&quot;</span>age<span class="hljs-char escape_">\&quot;</span>: 20<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;    &#125;,<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;    &#123;<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;        <span class="hljs-char escape_">\&quot;</span>id<span class="hljs-char escape_">\&quot;</span>: <span class="hljs-char escape_">\&quot;</span>uuid2<span class="hljs-char escape_">\&quot;</span>,<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;        <span class="hljs-char escape_">\&quot;</span>name<span class="hljs-char escape_">\&quot;</span>: <span class="hljs-char escape_">\&quot;</span>jhack<span class="hljs-char escape_">\&quot;</span>,<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;        <span class="hljs-char escape_">\&quot;</span>age<span class="hljs-char escape_">\&quot;</span>: 21<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;    &#125;,<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;    &#123;<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;        <span class="hljs-char escape_">\&quot;</span>id<span class="hljs-char escape_">\&quot;</span>: <span class="hljs-char escape_">\&quot;</span>uuid3<span class="hljs-char escape_">\&quot;</span>,<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;        <span class="hljs-char escape_">\&quot;</span>name<span class="hljs-char escape_">\&quot;</span>: <span class="hljs-char escape_">\&quot;</span>tom<span class="hljs-char escape_">\&quot;</span>,<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;        <span class="hljs-char escape_">\&quot;</span>age<span class="hljs-char escape_">\&quot;</span>: 22<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;    &#125;<span class="hljs-char escape_">\n</span>&quot;</span> <span class="hljs-operator">+</span><br>                    <span class="hljs-string">&quot;]&quot;</span>;<br>            <span class="hljs-comment">//realm.createObjectFromJson(User.class, json);</span><br>            <span class="hljs-variable">realm</span>.<span class="hljs-property">createAllFromJson</span>(<span class="hljs-title class_">User</span>.<span class="hljs-property">class</span>, <span class="hljs-variable">jsons</span>);<br>        &#125;<br>    &#125;);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="数据模型改变"><a href="#数据模型改变" class="headerlink" title="数据模型改变"></a>数据模型改变</h1><p>开发中数据模型不可能从一开始创建了，就保证后面的开发过程中不会更改，对于Realm如果其中的某个实体类改变了，而我们没有做任何的处理，就会报错，如果还处于应用的开发的初期，这无所谓，直接清空数据即可，但是如果应用已经发布了，我们就需要去寻找一种解决方案了。</p>
+<p>这里的解决方案如下：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyMigration</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">RealmMigration</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">migrate</span>(<span class="hljs-params">DynamicRealm realm, long oldVersion, long newVersion</span>) &#123;<br>        <span class="hljs-title class_">Log</span>.<span class="hljs-title function_">e</span>(<span class="hljs-title class_">MainActivity</span>.<span class="hljs-property">TAG</span>, <span class="hljs-string">&quot;oldVersion:&quot;</span> + oldVersion + <span class="hljs-string">&quot; newVersion:&quot;</span> + newVersion);<br> <br>        <span class="hljs-title class_">RealmSchema</span> schema = realm.<span class="hljs-title function_">getSchema</span>();<br> <br>        <span class="hljs-keyword">if</span> (newVersion == <span class="hljs-number">2</span>) &#123;<br>            schema.<span class="hljs-title function_">get</span>(<span class="hljs-string">&quot;User&quot;</span>)<br>                    .<span class="hljs-title function_">addField</span>(<span class="hljs-string">&quot;desc&quot;</span>, <span class="hljs-title class_">String</span>.<span class="hljs-property">class</span>);<br>        &#125;<br>    &#125;<br> <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">boolean</span> <span class="hljs-title function_">equals</span>(<span class="hljs-params"><span class="hljs-built_in">Object</span> obj</span>) &#123;<br>        <span class="hljs-keyword">return</span> obj <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">MyMigration</span>;<br>    &#125;<br> <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> int <span class="hljs-title function_">hashCode</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">super</span>.<span class="hljs-title function_">hashCode</span>();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在用Realm进行操作之前需要对Realm作相关的配置操作，Realm中所有的写操作都必须在事务中进行，不然就会报错， 记得在Activity的onDestory中调用realm.close()释放资源。</p>
+</blockquote>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/dengpeng_/article/details/54895066">android之Realm数据库使用</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+        <a href="/tags/realm/">#realm</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>重拾android路(二十九) Realm数据库</div>
+      <div>http://example.com/2019/07/14/android-29-realm/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年7月14日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/07/19/android-30-thread/" title="重拾android路(三十) Android多线程">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">重拾android路(三十) Android多线程</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/07/12/android-tools-10/" title="android奇技淫巧 10 SoftInputMode属性介绍">
+                        <span class="hidden-mobile">android奇技淫巧 10 SoftInputMode属性介绍</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

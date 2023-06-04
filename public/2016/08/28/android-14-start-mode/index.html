@@ -1,0 +1,706 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="启动模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重拾android路(十四) 启动模式">
+<meta property="og:url" content="http://example.com/2016/08/28/android-14-start-mode/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="启动模式">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode01.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode02.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode03.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode04.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode05.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode06.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode07.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode08.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode09.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode10.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode11.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode12.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode13.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode14.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode15.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode16.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode17.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode18.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode19.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode20.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode21.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode22.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode23.png">
+<meta property="og:image" content="http://example.com/assets/startmode/startmode24.png">
+<meta property="article:published_time" content="2016-08-28T03:15:07.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.080Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/startmode/startmode01.png">
+  
+  
+  
+  <title>重拾android路(十四) 启动模式 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="重拾android路(十四) 启动模式"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2016-08-28 11:15" pubdate>
+          2016年8月28日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          52 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">重拾android路(十四) 启动模式</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>启动模式</p>
+<span id="more"></span>
+<h1 id="任务栈"><a href="#任务栈" class="headerlink" title="任务栈"></a>任务栈</h1><ol>
+<li>程序打开之后会创建一个任务栈，会存储应用程序的activity，所有的activity属于一个任务栈</li>
+<li>一个任务栈包含多个activity，是一个activity的集合，用于有序的选择哪个activity和用户进行交互，只有栈顶的activity才可以和用户进行交互</li>
+<li>任务栈可以移动到后台，并且保留每个activity的状态，有序的给用户列出他们的作用，不会丢失他们的信息</li>
+<li>退出应用程序时，所有的任务栈中所有的activity都会被清除出栈，并且销毁任务栈，退出应用</li>
+</ol>
+<blockquote>
+<p>缺点：<br>每次打开activity，都会向任务栈中加入一个新的对象，只有当所有的activity都退出的时候才可以销毁任务栈，退出应用，这样会让用户多次点击，体验较差<br>每次开启一个页面都会在任务栈中添加一个activity，会造成数据冗余，重复数据太多会造成内存溢出</p>
+</blockquote>
+<p>为了解决任务栈的问题，引入了启动模式。</p>
+<h1 id="启动模式"><a href="#启动模式" class="headerlink" title="启动模式"></a>启动模式</h1><p>启动模式在多个Activity跳转的时候扮演了非常重要的角色，他决定了是否生成新的activity对象，是否可以重用已经存在的activity对象，是否与其他activity公用同一个task。这里的task，是一个具有栈结构的对象，一个task可以管理多个activity，启动一个应用程序时也就创建了一个与之对应的task</p>
+<p>Activity中有四种启动模式</p>
+<ol>
+<li>standard</li>
+<li>singleTop</li>
+<li>singleTask</li>
+<li>singleInstance</li>
+</ol>
+<p>在配置启动模式的时候，我们可以直接在清单配置文件中设置即可，同时也可以通过startactivity flag设置</p>
+<h2 id="standard"><a href="#standard" class="headerlink" title="standard"></a>standard</h2><p>默认启动模式<br>activity_main.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span></span><br><span class="hljs-tag">    <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">xmlns:tools</span>=<span class="hljs-string">&quot;http://schemas.android.com/tools&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;vertical&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:paddingBottom</span>=<span class="hljs-string">&quot;@dimen/activity_vertical_margin&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:paddingLeft</span>=<span class="hljs-string">&quot;@dimen/activity_horizontal_margin&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:paddingRight</span>=<span class="hljs-string">&quot;@dimen/activity_horizontal_margin&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:paddingTop</span>=<span class="hljs-string">&quot;@dimen/activity_vertical_margin&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">tools:context</span>=<span class="hljs-string">&quot;com.geniusvjr.standard_demo.MainActivity&quot;</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">TextView</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/tv&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span>/&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/btn_skip&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;跳转到MainActivity&quot;</span>/&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>MainAtivity.class</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> MainActivity extends AppCompatActivity &#123;<br><br>    @Override<br>    protected void on<span class="hljs-constructor">Create(Bundle <span class="hljs-params">savedInstanceState</span>)</span> &#123;<br>        super.on<span class="hljs-constructor">Create(<span class="hljs-params">savedInstanceState</span>)</span>;<br>        set<span class="hljs-constructor">ContentView(R.<span class="hljs-params">layout</span>.<span class="hljs-params">activity_main</span>)</span>;<br>        TextView textView = (TextView) find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">tv</span>)</span>;<br>        textView.set<span class="hljs-constructor">Text(<span class="hljs-params">this</span>.<span class="hljs-params">toString</span>()</span>);<br>        Button button = (Button) find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">btn_skip</span>)</span>;<br>        button.set<span class="hljs-constructor">OnClickListener(<span class="hljs-params">new</span> View.OnClickListener()</span> &#123;<br>            @Override<br>            public void on<span class="hljs-constructor">Click(View <span class="hljs-params">v</span>)</span> &#123;<br>                Intent intent = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Intent(MainActivity.<span class="hljs-params">this</span>, MainActivity.<span class="hljs-params">class</span>)</span>;<br>                start<span class="hljs-constructor">Activity(<span class="hljs-params">intent</span>)</span>;<br>            &#125;<br>        &#125;);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>MainActivity界面中的TextView用于显示当前Activity实例的序列号，Button用于跳转到下一个FirstActivity界面<br>当我们多次点击button时<br><img src="/assets/startmode/startmode01.png" srcset="/img/loading.gif" lazyload alt="图片1"><br><img src="/assets/startmode/startmode02.png" srcset="/img/loading.gif" lazyload alt="图片2"><br><img src="/assets/startmode/startmode03.png" srcset="/img/loading.gif" lazyload alt="图片3"><br>他们都是Activity实例，但是序列号是不同的<br><img src="/assets/startmode/startmode04.png" srcset="/img/loading.gif" lazyload alt="图片4"><br>如上图所示，每次点击button，系统都会在task中生成一个新的Mainactivity实例，并且放在栈顶的位置，只有当我们按下返回键时才会返回到原来的MainAcitivity中</p>
+<blockquote>
+<p>所以standard模式，不管在task中是否存在了当前activity实例，都会创建一个新的对象</p>
+</blockquote>
+<h2 id="singleTop"><a href="#singleTop" class="headerlink" title="singleTop"></a>singleTop</h2><p>我们在上面的基础上为指定属性android:launchMode&#x3D;”singleTop”，系统就会按照singleTop启动模式处理跳转行为。我们重复上面几个动作，将会出现下面的现象<br><img src="/assets/startmode/startmode05.png" srcset="/img/loading.gif" lazyload alt="图片5"><br><img src="/assets/startmode/startmode06.png" srcset="/img/loading.gif" lazyload alt="图片6"><br><img src="/assets/startmode/startmode07.png" srcset="/img/loading.gif" lazyload alt="图片7"><br>我们看到这个结果跟standard有所不同，两个序列号是相同的，也就是说使用的都是同一个MainActivity实例；如果按一下后退键，程序立即退出，说明当前栈结构中只有一个Activity实例。singleTop模式的原理如下图所示：<br><img src="/assets/startmode/startmode08.png" srcset="/img/loading.gif" lazyload alt="图片8"><br>如上图所示，当页面执行跳转的时候，会先查看当前task栈中栈顶是否是该activity实例对象，如果没有，创建一个新的activity实例，如果有则把这个已经存在的实例对象移到栈顶的位置<br>下面是一个例子，如果当前的Activity不在栈顶，我们需要执行的操作<br>创建一个新的secondAcitivity</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> SecondActivity extends Activity&#123;<br><br>    @Override<br>    protected void on<span class="hljs-constructor">Create(Bundle <span class="hljs-params">savedInstanceState</span>)</span> &#123;<br>        super.on<span class="hljs-constructor">Create(<span class="hljs-params">savedInstanceState</span>)</span>;<br>        set<span class="hljs-constructor">ContentView(R.<span class="hljs-params">layout</span>.<span class="hljs-params">activity_second</span>)</span>;<br>        TextView textView = (TextView) find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">tv</span>)</span>;<br>        textView.set<span class="hljs-constructor">Text(<span class="hljs-params">this</span>.<span class="hljs-params">toString</span>()</span>);<br>        Button button = (Button) find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">btn_second</span>)</span>;<br>        button.set<span class="hljs-constructor">OnClickListener(<span class="hljs-params">new</span> View.OnClickListener()</span> &#123;<br>            @Override<br>            public void on<span class="hljs-constructor">Click(View <span class="hljs-params">v</span>)</span> &#123;<br>                Intent intent = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Intent(SecondActivity.<span class="hljs-params">this</span>, MainActivity.<span class="hljs-params">class</span>)</span>;<br>                start<span class="hljs-constructor">Activity(<span class="hljs-params">intent</span>)</span>;<br>            &#125;<br>        &#125;);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>把之前MainAcitivity中的button代码改成下面的内容</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">Intent intent = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Intent(MainActivity.<span class="hljs-params">this</span>, SecondActivity.<span class="hljs-params">class</span>)</span>;<br>                start<span class="hljs-constructor">Activity(<span class="hljs-params">intent</span>)</span>;<br></code></pre></td></tr></table></figure>
+<p>这时候，FirstActivity会跳转到SecondActivity，SecondActivity又会跳转到FirstActivity<br><img src="/assets/startmode/startmode09.png" srcset="/img/loading.gif" lazyload alt="图片9"><br><img src="/assets/startmode/startmode10.png" srcset="/img/loading.gif" lazyload alt="图片10"><br><img src="/assets/startmode/startmode11.png" srcset="/img/loading.gif" lazyload alt="图片11"><br>从上面的例子我们可以看出，两次MainAcitivy的序列号是不同的<br><img src="/assets/startmode/startmode12.png" srcset="/img/loading.gif" lazyload alt="图片12"><br>总结上面的例子，我们会发现当页面从SecondActivity跳转到MainActivity中的时候，栈顶不是MainActivity，但是在task中存在MainActivity，这时候我们是创建了一个新的MainActivity实例。<br>这就是singleTop启动模式，如果发现有对应的Activity实例正位于栈顶，则重复利用，不再生成新的实例。</p>
+<blockquote>
+<p>当然这种模式是很不合理的，但是也有自己的用武之地，例如QQ接受到消息后弹出Activity，如果一次来10条消息，总不能一次弹10个Activity</p>
+</blockquote>
+<h2 id="singleTask"><a href="#singleTask" class="headerlink" title="singleTask"></a>singleTask</h2><p>通过在清单配置文件中修改属性<pre>android:launchMode=”singleTask”</pre>,可以得到以下的结果<br><img src="/assets/startmode/startmode13.png" srcset="/img/loading.gif" lazyload alt="图片13"><br><img src="/assets/startmode/startmode14.png" srcset="/img/loading.gif" lazyload alt="图片14"><br><img src="/assets/startmode/startmode15.png" srcset="/img/loading.gif" lazyload alt="图片15"><br><img src="/assets/startmode/startmode16.png" srcset="/img/loading.gif" lazyload alt="图片16"><br>我们注意到，在上面的过程中，MainActivity的序列号是不变的，SecondActivity的序列号却不是唯一的，说明从SecondActivity跳转到MainActivity时，没有生成新的实例，但是从MainActivity跳转到SecondActivity时生成了新的实例。<br><img src="/assets/startmode/startmode17.png" srcset="/img/loading.gif" lazyload alt="图片17"><br>SecondActivity跳转到MainActivity后的栈结构变化的结果，我们注意到，SecondActivity消失了，没错，在这个跳转过程中系统发现有存在的FirstActivity实例，于是不再生成新的实例，而是将MainActivity之上的Activity实例统统出栈，将MainActivity变为栈顶对象，显示到幕前。也许朋友们有疑问，如果将SecondActivity也设置为singleTask模式，那么SecondActivity实例是不是可以唯一呢？在我们这个示例中是不可能的，因为每次从SecondActivity跳转到MainActivity时，SecondActivity实例都被迫出栈，下次等MainActivity跳转到SecondActivity时，找不到存在的SecondActivity实例，于是必须生成新的实例。但是如果我们有ThirdActivity，让SecondActivity和ThirdActivity互相跳转，那么SecondActivity实例就可以保证唯一。<br>这就是singleTask模式，如果发现有对应的Activity实例，则使此Activity实例之上的其他Activity实例统统出栈，使此Activity实例成为栈顶对象，显示到幕前。</p>
+<blockquote>
+<p>singleTask适合作为程序入口点。例如浏览器的主界面。不管从多少个应用启动浏览器，只会启动主界面一次，其余情况都会走onNewIntent，并且会清空主界面上面的其他页面。之前打开过的页面，打开之前的页面就ok，不再新建。</p>
+</blockquote>
+<h2 id="singleInstance"><a href="#singleInstance" class="headerlink" title="singleInstance"></a>singleInstance</h2><p>这个模式比较特殊，因为他会启动一个新的task结构，将Activity放在另一个新的栈结构中，并且保障不再有其他的activity实例进入<br>我们修改MainActivity的launchMode&#x3D;”standard”，SecondActivity的launchMode&#x3D;”singleInstance”，由于涉及到了多个栈结构，我们需要在每个Activity中显示当前栈结构的id，所以我们为每个Activity添加如下代码</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">TextView textView = (TextView) find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">tv</span>)</span>;<br>        textView.set<span class="hljs-constructor">Text(<span class="hljs-string">&quot;current task id:&quot;</span> + <span class="hljs-params">this</span>.<span class="hljs-params">getTaskId</span>()</span>);<br></code></pre></td></tr></table></figure>
+<p><img src="/assets/startmode/startmode18.png" srcset="/img/loading.gif" lazyload alt="图片18"><br><img src="/assets/startmode/startmode19.png" srcset="/img/loading.gif" lazyload alt="图片19"><br>我们会发现两个Activity实例被放在不同的栈结构中，原理如下<br><img src="/assets/startmode/startmode20.png" srcset="/img/loading.gif" lazyload alt="图片20"><br>我们看到从MainActivity跳转到SecondActivity时，重新启用了一个新的栈结构，来放置SecondActivity实例，然后按下后退键，再次回到原始栈结构；图中下半部分显示的在SecondActivity中再次跳转到MainActivity，这个时候系统会在原始栈结构中生成一个MainActivity实例，然后回退两次，注意，并没有退出，而是回到了SecondActivity，为什么呢？是因为从SecondActivity跳转到MainActivity的时候，我们的起点变成了SecondActivity实例所在的栈结构，这样一来，我们需要“回归”到这个栈结构。</p>
+<blockquote>
+<p>singleInstance适合需要与程序分离开的页面。例如闹铃提醒，将闹铃提醒与闹铃设置分离。singleInstance不要用于中间页面，如果用于中间页面，跳转会有问题，比如：A -&gt; B (singleInstance) -&gt; C，完全退出后，在此启动，首先打开的是B。</p>
+</blockquote>
+<h2 id="java代码实现设置启动模式"><a href="#java代码实现设置启动模式" class="headerlink" title="java代码实现设置启动模式"></a>java代码实现设置启动模式</h2><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs fortran"><span class="hljs-keyword">Intent</span> <span class="hljs-keyword">intent</span> = new <span class="hljs-keyword">Intent</span>（this， B.<span class="hljs-keyword">class</span>）;   <br><span class="hljs-keyword">intent</span>.setFlags（<span class="hljs-keyword">Intent</span>.FLAG_ACTIVITY_CLEAR_TOP）;  <br>startActivity（<span class="hljs-keyword">intent</span>）;  <br></code></pre></td></tr></table></figure>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs fortran"><span class="hljs-keyword">Intent</span> <span class="hljs-keyword">intent</span> = new <span class="hljs-keyword">Intent</span>（this， MainActivity.<span class="hljs-keyword">class</span>）;  <br><span class="hljs-keyword">intent</span>.addFlags（<span class="hljs-keyword">Intent</span>.FLAG_ACTIVITY_REORDER_TO_FRONT）;   <br>startActivity（<span class="hljs-keyword">intent</span>）;<br></code></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
+<li>standard，标准模式，每次启动都会创建新的实例，不管实例是否存在<br><img src="/assets/startmode/startmode21.png" srcset="/img/loading.gif" lazyload alt="图片21"></li>
+<li>singleTop，栈顶复用，如果Activity处于栈顶，则不会创建新的Activity<br><img src="/assets/startmode/startmode22.png" srcset="/img/loading.gif" lazyload alt="图片22"></li>
+<li>singleTask，栈内复用，只要Activity在栈内存在，那么多次启动该Activity都不会创建新的Activity实例。默认具有clear top的效果。<br><img src="/assets/startmode/startmode23.png" srcset="/img/loading.gif" lazyload alt="图片23"></li>
+<li>singleInstance，在singleTask的基础上，限制了此模式的Activity只能单独地位于一个任务栈中<br><img src="/assets/startmode/startmode24.png" srcset="/img/loading.gif" lazyload alt="图片24"></li>
+</ol>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a target="_blank" rel="noopener" href="http://blog.csdn.net/CodeEmperor/article/details/50481726">activity四中启动模式</a><br><a target="_blank" rel="noopener" href="http://blog.csdn.net/zhuzp_blog/article/details/51367477">深入理解启动模式</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>重拾android路(十四) 启动模式</div>
+      <div>http://example.com/2016/08/28/android-14-start-mode/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2016年8月28日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2016/09/15/android-15-broadcastReceiver/" title="重拾android路(十五) broadcastReceiver">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">重拾android路(十五) broadcastReceiver</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2016/08/05/android-13-permission/" title="重拾android路(十三) 权限">
+                        <span class="hidden-mobile">重拾android路(十三) 权限</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

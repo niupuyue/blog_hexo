@@ -1,0 +1,727 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="随着现在智能手机的普及，越来越多的手机应用充斥着各种市场，然后并不是每一个应用都会在手机里使用，不是每一个应用都会被经常使用，所以，Android手机有自己的一套内存管理方法，当你的手机在一定时间内没有使用该应用，那么可能会被杀死。但是对于我们公司或者说开发者而言，我们肯定不希望这样的事情发生，因为如果一直存活下去的话，手机再次打开的时候，这个应用的使用会比较快速，同样也能得到用户的青睐。那么我们">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重拾android路(十六) 进程保活">
+<meta property="og:url" content="http://example.com/2016/10/12/android-17-processalive/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="随着现在智能手机的普及，越来越多的手机应用充斥着各种市场，然后并不是每一个应用都会在手机里使用，不是每一个应用都会被经常使用，所以，Android手机有自己的一套内存管理方法，当你的手机在一定时间内没有使用该应用，那么可能会被杀死。但是对于我们公司或者说开发者而言，我们肯定不希望这样的事情发生，因为如果一直存活下去的话，手机再次打开的时候，这个应用的使用会比较快速，同样也能得到用户的青睐。那么我们">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/process/process01.png">
+<meta property="og:image" content="http://example.com/assets/process/process02.png">
+<meta property="og:image" content="http://example.com/assets/process/process03.png">
+<meta property="og:image" content="http://example.com/assets/process/process04.png">
+<meta property="og:image" content="http://example.com/assets/process/process05.png">
+<meta property="article:published_time" content="2016-10-12T07:51:26.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.082Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/process/process01.png">
+  
+  
+  
+  <title>重拾android路(十六) 进程保活 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="重拾android路(十六) 进程保活"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2016-10-12 15:51" pubdate>
+          2016年10月12日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          37 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">重拾android路(十六) 进程保活</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>随着现在智能手机的普及，越来越多的手机应用充斥着各种市场，然后并不是每一个应用都会在手机里使用，不是每一个应用都会被经常使用，所以，Android手机有自己的一套内存管理方法，当你的手机在一定时间内没有使用该应用，那么可能会被杀死。但是对于我们公司或者说开发者而言，我们肯定不希望这样的事情发生，因为如果一直存活下去的话，手机再次打开的时候，这个应用的使用会比较快速，同样也能得到用户的青睐。那么我们怎么做到，像QQ一样，不被杀死。</p>
+<span id="more"></span>
+<p>很多人，很多公司都在考虑这个问题，但是，并不代表他们已经把这个问题解决的很好。<br>这几日看了一篇文章，关于进程保活的，感觉挺好，反正比我之前的好，(说来惭愧以前的应用感觉都像是流氓软件)颇有感触，记录下来，和大家分享，原文地址我会在下面贴出来</p>
+<h1 id="保活手段"><a href="#保活手段" class="headerlink" title="保活手段"></a>保活手段</h1><p>目前来说，保活手段有三种”黑，白，灰“.</p>
+<ol>
+<li>黑色保活：不同的app进程使用广播相互唤醒(在手机进程后端，你会发现类似于软件相互关联的内容，就这个)</li>
+<li>白色保活：启动前台service(其实就是像一些酷狗音乐，网易云音乐，基本上都是这么干的，当然是明面上的，背地里，呵呵🙃)</li>
+<li>灰色保活：利用系统漏洞启动前台service</li>
+</ol>
+<h2 id="黑色保活"><a href="#黑色保活" class="headerlink" title="黑色保活"></a>黑色保活</h2><p>所谓的黑色保活就是相当于把各个有利益关系的app绑定在一起，只要其中一个被打开了，那么另外几个也会同样被激活，在内存里运行，所以你的内存总是不够.举个栗子🌰</p>
+<ol>
+<li>开机，网络切换，拍照，拍视频的时候，利用系统发出的广播唤醒app</li>
+<li>接入第三方SDK也会唤醒相应的app进程，如微信sdk会唤醒微信，支付宝sdk会唤醒支付宝。由此发散开去，就会直接触发了下面的第三个例子</li>
+<li>如果你的手机里装了去哪网app，淘宝app，天猫app，那么抱歉，基本上所有的app都会被唤醒(又拿马云巴巴举例子，会不会被打死)</li>
+</ol>
+<p>是不是很恶心？！对，这是这么样的。这也就是在初期的时候，Android就是干不过iPhone的原因。<br>不过后来google公司认识到了这一点，所以在Android N中取消了ACTION_NEW_PICTURE（拍照），ACTION_NEW_VIDEO（拍视频），CONNECTIVITY_ACTION（网络切换）等三种广播，无疑给了很多app沉重的打击。<br>针对场景2和场景3，因为调用SDK唤醒app进程属于正常行为，此处不讨论(不来了，真的不来了，顺丰快递已经在路上了，我要跑路了，尴尬而不失礼貌的微笑)。但是在借助LBE分析app之间的唤醒路径的时候，发现了两个问题：</p>
+<ol>
+<li>很多推送SDK也存在唤醒app的功能</li>
+<li>app之间的唤醒路径真是多，且错综复杂<br>来吧，给大家看一下(这里跟大家说一下，我的是vivo手机，不能获取root权限，很尴尬，只能偷图)<br><img src="/assets/process/process01.png" srcset="/img/loading.gif" lazyload alt="process01"><br><img src="/assets/process/process02.png" srcset="/img/loading.gif" lazyload alt="process02"><br><img src="/assets/process/process03.png" srcset="/img/loading.gif" lazyload alt="process03"><br>可以看到以上3条唤醒路径，但是涵盖的唤醒应用总数却达到了23+43+28款，数目真心惊人。请注意，这只是我手机上一款app的唤醒路径而已，到了这里是不是有点细思极恐。</li>
+</ol>
+<p>当然，这里依然存在一个疑问，就是LBE分析这些唤醒路径和互相唤醒的应用是基于什么思路，我们不得而知。所以我们也无法确定其分析结果是否准确，如果有LBE的童鞋看到此文章，不知可否告知一下思路呢？但是，手机打开一个app就唤醒一大批，我自己可是亲身体验到这种酸爽的……</p>
+<h2 id="白色保活"><a href="#白色保活" class="headerlink" title="白色保活"></a>白色保活</h2><p>白色保活手段非常简单，就是调用系统api启动一个前台的Service进程，这样会在系统的通知栏生成一个Notification，用来让用户知道有这样一个app在运行着，哪怕当前的app退到了后台.这个就不给图了，自己看手机吧</p>
+<h2 id="灰色保活"><a href="#灰色保活" class="headerlink" title="灰色保活"></a>灰色保活</h2><p>灰色保活，这种保活手段是应用范围最广泛。它是利用系统的漏洞来启动一个前台的Service进程，与普通的启动方式区别在于，它不会在系统通知栏处出现一个Notification，看起来就如同运行着一个后台Service进程一样。这样做带来的好处就是，用户无法察觉到你运行着一个前台进程（因为看不到Notification）,但你的进程优先级又是高于普通后台进程的。那么如何利用系统的漏洞呢，大致的实现思路和代码如下</p>
+<ol>
+<li>API &lt; 18，启动前台Service时直接传入new Notification()；</li>
+<li>API &gt;&#x3D; 18，同时启动两个id相同的前台Service，然后再将后启动的Service做stop处理；<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> GrayService extends Service &#123;<br><br>    <span class="hljs-keyword">private</span> final static <span class="hljs-built_in">int</span> GRAY_SERVICE_ID = <span class="hljs-number">1001</span>;<br><br>    @Override<br>    public <span class="hljs-built_in">int</span> on<span class="hljs-constructor">StartCommand(Intent <span class="hljs-params">intent</span>, <span class="hljs-params">int</span> <span class="hljs-params">flags</span>, <span class="hljs-params">int</span> <span class="hljs-params">startId</span>)</span> &#123;<br>        <span class="hljs-keyword">if</span> (Build.VERSION.SDK_INT &lt; <span class="hljs-number">18</span>) &#123;<br>            start<span class="hljs-constructor">Foreground(GRAY_SERVICE_ID, <span class="hljs-params">new</span> Notification()</span>);<span class="hljs-comment">//API &lt; 18 ，此方法能有效隐藏Notification上的图标</span><br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            Intent innerIntent = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Intent(<span class="hljs-params">this</span>, GrayInnerService.<span class="hljs-params">class</span>)</span>;<br>            start<span class="hljs-constructor">Service(<span class="hljs-params">innerIntent</span>)</span>;<br>            start<span class="hljs-constructor">Foreground(GRAY_SERVICE_ID, <span class="hljs-params">new</span> Notification()</span>);<br>        &#125;<br><br>        return super.on<span class="hljs-constructor">StartCommand(<span class="hljs-params">intent</span>, <span class="hljs-params">flags</span>, <span class="hljs-params">startId</span>)</span>;<br>    &#125;<span class="hljs-operator"></span><br><span class="hljs-operator"></span><br><span class="hljs-operator">    ...</span><br><span class="hljs-operator">    </span>...<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 给 API &gt;= 18 的平台上用的灰色保活手段</span><br><span class="hljs-comment">     */</span><br>    public static <span class="hljs-keyword">class</span> GrayInnerService extends Service &#123;<br><br>        @Override<br>        public <span class="hljs-built_in">int</span> on<span class="hljs-constructor">StartCommand(Intent <span class="hljs-params">intent</span>, <span class="hljs-params">int</span> <span class="hljs-params">flags</span>, <span class="hljs-params">int</span> <span class="hljs-params">startId</span>)</span> &#123;<br>            start<span class="hljs-constructor">Foreground(GRAY_SERVICE_ID, <span class="hljs-params">new</span> Notification()</span>);<br>            stop<span class="hljs-constructor">Foreground(<span class="hljs-params">true</span>)</span>;<br>            stop<span class="hljs-constructor">Self()</span>;<br>            return super.on<span class="hljs-constructor">StartCommand(<span class="hljs-params">intent</span>, <span class="hljs-params">flags</span>, <span class="hljs-params">startId</span>)</span>;<br>        &#125;<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+代码大致就是这样，能让你神不知鬼不觉的启动着一个前台Service。其实市面上很多app都用着这种灰色保活的手段，什么？你不信？好吧，我们来验证一下。流程很简单，打开一个app，看下系统通知栏有没有一个 Notification，如果没有，我们就进入手机的adb shell模式，然后输入下面的shell命令<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">dumpsys activity services PackageName</span><br></code></pre></td></tr></table></figure>
+打印出指定包名的所有进程中的Service信息，看下有没有 isForeground&#x3D;true 的关键信息。如果通知栏没有看到属于app的 Notification 且又看到 isForeground&#x3D;true 则说明了，此app利用了这种灰色保活的手段。</li>
+</ol>
+<p>其实Google察觉到了此漏洞的存在，并逐步进行封堵。这就是为什么这种保活方式分 API &gt;&#x3D; 18 和 API &lt; 18 两种情况，从Android5.0的ServiceRecord类的postNotification函数源代码中可以看到这样的一行注释<br><img src="/assets/process/process04.png" srcset="/img/loading.gif" lazyload alt="process04"><br>当某一天 API &gt;&#x3D; 18 的方案也失效的时候，我们就又要另谋出路了。需要注意的是，使用灰色保活并不代表着你的Service就永生不死了，只能说是提高了进程的优先级。如果你的app进程占用了大量的内存，按照回收进程的策略，同样会干掉你的app。</p>
+<p>其实真正的做到进程保活是可以的，因为我们的Android手机本身在你关闭软件的时候并没有把进程杀死，而是放入了缓存，而当我们的内容不够的时候才会去吧这一些优先级比较低的kill掉。想要做到永远存活是不可能的，不管是用户还是google官方。所以还是老老实实的做优化吧。</p>
+<h1 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h1><h2 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h2><p>每一个Android应用启动后至少对应一个进程，有的是多个进程，而且主流应用中多个进程的应用比例较大<br><img src="/assets/process/process05.png" srcset="/img/loading.gif" lazyload alt="process05"></p>
+<h3 id="如何查看进程的基本信息"><a href="#如何查看进程的基本信息" class="headerlink" title="如何查看进程的基本信息"></a>如何查看进程的基本信息</h3><p>对于任何一个进程，我们都可以通过adb shell ps|grep 的方式来查看它的基本信息</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>u0_a16</td>
+<td>USER 进程当前用户</td>
+</tr>
+<tr>
+<td>3881</td>
+<td>进程ID</td>
+</tr>
+<tr>
+<td>1223</td>
+<td>进程的父进程ID</td>
+</tr>
+<tr>
+<td>873024</td>
+<td>进程的虚拟内存大小</td>
+</tr>
+<tr>
+<td>37108</td>
+<td>实际驻留”在内存中”的内存大小</td>
+</tr>
+<tr>
+<td>com.wangjing.processlive</td>
+<td>进程名</td>
+</tr>
+</tbody></table>
+<h3 id="进程划分"><a href="#进程划分" class="headerlink" title="进程划分"></a>进程划分</h3><p>Android中的进程跟封建社会一样，分了三流九等，Android系统把进程的划为了如下几种（重要性从高到低），网上多位大神都详细总结过（备注：严格来说是划分了6种）。</p>
+<ol>
+<li>前台进程<br>场景：</li>
+</ol>
+<ul>
+<li>某个进程持有一个正在与用户交互的Activity并且该Activity正处于resume的状态。 </li>
+<li>某个进程持有一个Service，并且该Service与用户正在交互的Activity绑定。 </li>
+<li>某个进程持有一个Service，并且该Service调用startForeground()方法使之位于前台运行。 </li>
+<li>某个进程持有一个Service，并且该Service正在执行它的某个生命周期回调方法，比如onCreate()、 onStart()或onDestroy()。 </li>
+<li>某个进程持有一个BroadcastReceiver，并且该BroadcastReceiver正在执行其onReceive()方法。<br>用户正在使用的程序，一般系统是不会杀死前台进程的，除非用户强制停止应用或者系统内存不足等极端情况会杀死</li>
+</ul>
+<ol start="2">
+<li>可见进程<br>场景：</li>
+</ol>
+<ul>
+<li>拥有不在前台、但仍对用户可见的 Activity（已调用 onPause()）。 </li>
+<li>拥有绑定到可见（或前台）Activity 的 Service</li>
+</ul>
+<p>用户正在使用，看得到，但是摸不着，没有覆盖到整个屏幕,只有屏幕的一部分可见进程不包含任何前台组件，一般系统也是不会杀死可见进程的，除非要在资源吃紧的情况下，要保持某个或多个前台进程存活<br>3. 服务进程<br>场景 </p>
+<ul>
+<li>某个进程中运行着一个Service且该Service是通过startService()启动的，与用户看见的界面没有直接关联。</li>
+</ul>
+<p>在内存不足以维持所有前台进程和可见进程同时运行的情况下，服务进程会被杀死<br>4. 后台进程<br>场景： </p>
+<ul>
+<li>在用户按了”back”或者”home”后,程序本身看不到了,但是其实还在运行的程序，比如Activity调用了onPause方法</li>
+</ul>
+<p>系统可能随时终止它们，回收内存<br>5. 空进程<br>场景： </p>
+<ul>
+<li>某个进程不包含任何活跃的组件时该进程就会被置为空进程，完全没用,杀了它只有好处没坏处,第一个干它!</li>
+</ul>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/63aafe3c12af">android进程保活，你所需要知道的一切</a><br><a target="_blank" rel="noopener" href="http://blog.csdn.net/qq_17007915/article/details/77963570">android进程保活</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>重拾android路(十六) 进程保活</div>
+      <div>http://example.com/2016/10/12/android-17-processalive/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2016年10月12日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2017/12/24/android-interview-2017/" title="android-interview-2017">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">android-interview-2017</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2016/09/30/android-16-sorting/" title="排序算法总结">
+                        <span class="hidden-mobile">排序算法总结</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

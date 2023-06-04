@@ -1,0 +1,737 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="总的来说Android的动画一共分为三种，分别是间补动画，帧动画和属性动画。间补动画和帧动画比较简单，这里会简单介绍，对于属性动画，可能会说的更多一些">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重拾android路(二十五) Android动画">
+<meta property="og:url" content="http://example.com/2019/04/08/android-26-anim/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="总的来说Android的动画一共分为三种，分别是间补动画，帧动画和属性动画。间补动画和帧动画比较简单，这里会简单介绍，对于属性动画，可能会说的更多一些">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/anim/anim01.png">
+<meta property="article:published_time" content="2019-04-08T03:27:11.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.086Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/anim/anim01.png">
+  
+  
+  
+  <title>重拾android路(二十五) Android动画 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="重拾android路(二十五) Android动画"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-04-08 11:27" pubdate>
+          2019年4月8日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          24k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          202 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">重拾android路(二十五) Android动画</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>总的来说Android的动画一共分为三种，分别是间补动画，帧动画和属性动画。间补动画和帧动画比较简单，这里会简单介绍，对于属性动画，可能会说的更多一些</p>
+<span id="more"></span>
+<h1 id="间补动画-Tween"><a href="#间补动画-Tween" class="headerlink" title="间补动画(Tween)"></a>间补动画(Tween)</h1><p>所谓的间补动画，就是指改变了当前图像的显示位置，样式和形式，但是对于组件的本身来说依然是保持原来的样子。举个例子来说就是如果我们通过间补动画将一个ImageView进行了移动，表面上看上去我们的ImageView是发生了移动，但是实际上，只是显示的改变，实际位置还是保留在原地，如果想要针对这个ImageView触发一些点击滑动事件，触发点还在原来的位置上。</p>
+<blockquote>
+<p>间补动画分为以下几个内容：平移，旋转，缩放和透明度</p>
+</blockquote>
+<p>位移改变的动画。创建动画时只需要指定动画开始的位置(以x，y坐标展示)，结束时的位置，并指出动画持续的时间即可<br>这里我们需要知道，基本上间补动画都是通过XML文件完成的操作，所以这里我们直接使用。需要将所需要的XML文件放在res&#x2F;anim文件夹下</p>
+<h3 id="淡入淡出"><a href="#淡入淡出" class="headerlink" title="淡入淡出"></a>淡入淡出</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">alpha</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;1000&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:fromAlpha</span>=<span class="hljs-string">&quot;1.0&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:interpolator</span>=<span class="hljs-string">&quot;@android:anim/accelerate_decelerate_interpolator&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:toAlpha</span>=<span class="hljs-string">&quot;0.0&quot;</span> /&gt;</span><br></code></pre></td></tr></table></figure>
+<p>这里的interpolator 表示插值器，表示的是当前动画变化的速度。可以通过 @android:anim 来选择不同的插值器。</p>
+<h3 id="放缩"><a href="#放缩" class="headerlink" title="放缩"></a>放缩</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;?xml <span class="hljs-attribute">version</span>=<span class="hljs-string">&quot;1.0&quot;</span> <span class="hljs-attribute">encoding</span>=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;<br>&lt;scale xmlns:<span class="hljs-attribute">android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span><br>    android:<span class="hljs-attribute">duration</span>=<span class="hljs-string">&quot;1000&quot;</span><br>    android:<span class="hljs-attribute">fromXScale</span>=<span class="hljs-string">&quot;0.0&quot;</span><br>    android:<span class="hljs-attribute">fromYScale</span>=<span class="hljs-string">&quot;0.0&quot;</span><br>    android:<span class="hljs-attribute">pivotX</span>=<span class="hljs-string">&quot;50%&quot;</span><br>    android:<span class="hljs-attribute">pivotY</span>=<span class="hljs-string">&quot;50%&quot;</span><br>    android:<span class="hljs-attribute">toXScale</span>=<span class="hljs-string">&quot;1.0&quot;</span><br>    android:<span class="hljs-attribute">toYScale</span>=<span class="hljs-string">&quot;1.0&quot;</span>/&gt;<br></code></pre></td></tr></table></figure>
+
+<h3 id="平移"><a href="#平移" class="headerlink" title="平移"></a>平移</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">rotate</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag">      <span class="hljs-attr">android:fromDegree</span>=<span class="hljs-string">&quot;0&quot;</span></span><br><span class="hljs-tag">      <span class="hljs-attr">android:toDegree</span>=<span class="hljs-string">&quot;1800&quot;</span></span><br><span class="hljs-tag">      <span class="hljs-attr">android:pivotX</span> = <span class="hljs-string">&quot;50%&quot;</span></span><br><span class="hljs-tag">      <span class="hljs-attr">android:pivotY</span>=<span class="hljs-string">&quot;50%&quot;</span></span><br><span class="hljs-tag">      <span class="hljs-attr">android:duration</span> = <span class="hljs-string">&quot;3000&quot;</span></span><br><span class="hljs-tag">/&gt;</span><br></code></pre></td></tr></table></figure>
+<p>pivot 这个属性主要是在translate 和 scale 动画中，这两种动画都牵扯到view 的“物理位置“发生变化，所以需要一个参考点。而pivotX和pivotY就共同决定了这个点；它的值可以是float或者是百分比数值。<br>以 pivotX 为例，说明其取不同的值的含义：<br>10:距离动画所在view自身左边缘10像素<br>10% :距离动画所在view自身左边缘 的距离是整个view宽度的10%<br>10%p:距离动画所在view父控件左边缘的距离是整个view宽度的10%</p>
+<h3 id="旋转"><a href="#旋转" class="headerlink" title="旋转"></a>旋转</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">rotate</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:fromDegrees</span>=<span class="hljs-string">&quot;float&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:toDegrees</span>=<span class="hljs-string">&quot;float&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:pivotX</span>=<span class="hljs-string">&quot;50%&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:pivotY</span>=<span class="hljs-string">&quot;50%&quot;</span> /&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>这样定义完成之后，就可以直接使用了</p>
+<p>一个小例子<br>动画资源</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">set</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:interpolator</span>=<span class="hljs-string">&quot;@android:anim/accelerate_decelerate_interpolator&quot;</span></span><br><span class="hljs-tag">    &gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">scale</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;3000&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:fromXScale</span>=<span class="hljs-string">&quot;0.0&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:fromYScale</span>=<span class="hljs-string">&quot;0.0&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:pivotX</span>=<span class="hljs-string">&quot;50%&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:pivotY</span>=<span class="hljs-string">&quot;50%&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:toXScale</span>=<span class="hljs-string">&quot;1.0&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:toYScale</span>=<span class="hljs-string">&quot;1.0&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">alpha</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;3000&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:fromAlpha</span>=<span class="hljs-string">&quot;1.0&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:toAlpha</span>=<span class="hljs-string">&quot;0.5&quot;</span> /&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">rotate</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:fromDegrees</span>=<span class="hljs-string">&quot;0&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:toDegrees</span>=<span class="hljs-string">&quot;720&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:pivotX</span> = <span class="hljs-string">&quot;50%&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:pivotY</span>=<span class="hljs-string">&quot;50%&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:duration</span> = <span class="hljs-string">&quot;3000&quot;</span></span><br><span class="hljs-tag">        /&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">translate</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:fromXDelta</span>=<span class="hljs-string">&quot;0&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:toXDelta</span>=<span class="hljs-string">&quot;100&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:fromYDelta</span>=<span class="hljs-string">&quot;0&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:toYDelta</span>=<span class="hljs-string">&quot;100&quot;</span> /&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">set</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>也可以使用java代码实现</p>
+<h3 id="移动"><a href="#移动" class="headerlink" title="移动"></a>移动</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs awk">Animation translateAnimation = new TranslateAnimation(<span class="hljs-number">0</span>，<span class="hljs-number">500</span>，<span class="hljs-number">0</span>，<span class="hljs-number">500</span>);<br>        <span class="hljs-regexp">//</span> 创建平移动画的对象：平移动画对应的Animation子类为TranslateAnimation<br>        <span class="hljs-regexp">//</span> 参数分别是：<br>        <span class="hljs-regexp">//</span> <span class="hljs-number">1</span>. fromXDelta ：视图在水平方向x 移动的起始值<br>        <span class="hljs-regexp">//</span> <span class="hljs-number">2</span>. toXDelta ：视图在水平方向x 移动的结束值<br>        <span class="hljs-regexp">//</span> <span class="hljs-number">3</span>. fromYDelta ：视图在竖直方向y 移动的起始值<br>        <span class="hljs-regexp">//</span> <span class="hljs-number">4</span>. toYDelta：视图在竖直方向y 移动的结束值<br>        translateAnimation.setDuration(<span class="hljs-number">3000</span>);<br>        <span class="hljs-regexp">//</span> 播放动画直接 startAnimation(translateAnimation)<br>        <span class="hljs-regexp">//</span>如：<br>        mButton.startAnimation(translateAnimation);<br></code></pre></td></tr></table></figure>
+<h3 id="缩放"><a href="#缩放" class="headerlink" title="缩放"></a>缩放</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs awk">Animation scaleAnimation= new ScaleAnimation(<span class="hljs-number">0</span>,<span class="hljs-number">2</span>,<span class="hljs-number">0</span>,<span class="hljs-number">2</span>,Animation.RELATIVE_TO_SELF,<span class="hljs-number">0.5</span>f,Animation.RELATIVE_TO_SELF,<span class="hljs-number">0.5</span>f);<br>        <span class="hljs-regexp">//</span> <span class="hljs-number">1</span>. fromX ：动画在水平方向X的结束缩放倍数<br>        <span class="hljs-regexp">//</span> <span class="hljs-number">2</span>. toX ：动画在水平方向X的结束缩放倍数<br>        <span class="hljs-regexp">//</span> <span class="hljs-number">3</span>. fromY ：动画开始前在竖直方向Y的起始缩放倍数<br>        <span class="hljs-regexp">//</span> <span class="hljs-number">4</span>. toY：动画在竖直方向Y的结束缩放倍数<br>        <span class="hljs-regexp">//</span> <span class="hljs-number">5</span>. pivotXType:缩放轴点的x坐标的模式<br>        <span class="hljs-regexp">//</span> <span class="hljs-number">6</span>. pivotXValue:缩放轴点x坐标的相对值<br>        <span class="hljs-regexp">//</span> <span class="hljs-number">7</span>. pivotYType:缩放轴点的y坐标的模式<br>        <span class="hljs-regexp">//</span> <span class="hljs-number">8</span>. pivotYValue:缩放轴点y坐标的相对值<br>        <span class="hljs-regexp">//</span> pivotXType = Animation.ABSOLUTE:缩放轴点的x坐标 =  View左上角的原点 在x方向 加上 pivotXValue数值的点(y方向同理)<br>        <span class="hljs-regexp">//</span> pivotXType = Animation.RELATIVE_TO_SELF:缩放轴点的x坐标 = View左上角的原点 在x方向 加上 自身宽度乘上pivotXValue数值的值(y方向同理)<br>        <span class="hljs-regexp">//</span> pivotXType = Animation.RELATIVE_TO_PARENT:缩放轴点的x坐标 = View左上角的原点 在x方向 加上 父控件宽度乘上pivotXValue数值的值 (y方向同理)<br>        scaleAnimation.setDuration(<span class="hljs-number">3000</span>);<br>        <span class="hljs-regexp">//</span> 使用<br>        mButton.startAnimation(scaleAnimation);<br></code></pre></td></tr></table></figure>
+<h3 id="旋转-1"><a href="#旋转-1" class="headerlink" title="旋转"></a>旋转</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs awk">Animation rotateAnimation = new RotateAnimation(<span class="hljs-number">0</span>,<span class="hljs-number">270</span>,Animation.RELATIVE_TO_SELF,<span class="hljs-number">0.5</span>f,Animation.RELATIVE_TO_SELF,<span class="hljs-number">0.5</span>f);<br>        <span class="hljs-regexp">//</span> <span class="hljs-number">1</span>. fromDegrees ：动画开始时 视图的旋转角度(正数 = 顺时针，负数 = 逆时针)<br>        <span class="hljs-regexp">//</span> <span class="hljs-number">2</span>. toDegrees ：动画结束时 视图的旋转角度(正数 = 顺时针，负数 = 逆时针)<br>        <span class="hljs-regexp">//</span> <span class="hljs-number">3</span>. pivotXType：旋转轴点的x坐标的模式<br>        <span class="hljs-regexp">//</span> <span class="hljs-number">4</span>. pivotXValue：旋转轴点x坐标的相对值<br>        <span class="hljs-regexp">//</span> <span class="hljs-number">5</span>. pivotYType：旋转轴点的y坐标的模式<br>        <span class="hljs-regexp">//</span> <span class="hljs-number">6</span>. pivotYValue：旋转轴点y坐标的相对值<br>        <span class="hljs-regexp">//</span> pivotXType = Animation.ABSOLUTE:旋转轴点的x坐标 =  View左上角的原点 在x方向 加上 pivotXValue数值的点(y方向同理)<br>        <span class="hljs-regexp">//</span> pivotXType = Animation.RELATIVE_TO_SELF:旋转轴点的x坐标 = View左上角的原点 在x方向 加上 自身宽度乘上pivotXValue数值的值(y方向同理)<br>        <span class="hljs-regexp">//</span> pivotXType = Animation.RELATIVE_TO_PARENT:旋转轴点的x坐标 = View左上角的原点 在x方向 加上 父控件宽度乘上pivotXValue数值的值 (y方向同理)<br>        rotateAnimation.setDuration(<span class="hljs-number">3000</span>);<br>        mButton.startAnimation(rotateAnimation);<br></code></pre></td></tr></table></figure>
+<h3 id="淡入淡出-1"><a href="#淡入淡出-1" class="headerlink" title="淡入淡出"></a>淡入淡出</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">Animation alphaAnimation = <span class="hljs-keyword">new</span> <span class="hljs-constructor">AlphaAnimation(1,0)</span>;<br>        <span class="hljs-comment">// 1. fromAlpha:动画开始时视图的透明度(取值范围: -1 ~ 1)</span><br>        <span class="hljs-comment">// 2. toAlpha:动画结束时视图的透明度(取值范围: -1 ~ 1)</span><br>        alphaAnimation.set<span class="hljs-constructor">Duration(3000)</span>;<br>        mButton.start<span class="hljs-constructor">Animation(<span class="hljs-params">alphaAnimation</span>)</span>;<br></code></pre></td></tr></table></figure>
+<h3 id="组合动画"><a href="#组合动画" class="headerlink" title="组合动画"></a>组合动画</h3><figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs processing"><span class="hljs-comment">// 组合动画设置</span><br>        AnimationSet setAnimation = <span class="hljs-keyword">new </span><span class="hljs-class title_">AnimationSet</span>(<span class="hljs-literal">true</span>);<br><br>        <span class="hljs-comment">// 特别说明以下情况</span><br>        <span class="hljs-comment">// 因为在下面的旋转动画设置了无限循环(RepeatCount = INFINITE)</span><br>        <span class="hljs-comment">// 所以动画不会结束，而是无限循环</span><br>        <span class="hljs-comment">// 所以组合动画的下面两行设置是无效的</span><br>        setAnimation.<span class="hljs-property">setRepeatMode</span>(Animation.<span class="hljs-property">RESTART</span>);<br>        setAnimation.<span class="hljs-property">setRepeatCount</span>(<span class="hljs-number">1</span>);<span class="hljs-comment">// 设置了循环一次,但无效</span><br><br>        <span class="hljs-comment">// 旋转动画</span><br>        Animation <span class="hljs-built_in">rotate</span> = <span class="hljs-keyword">new </span><span class="hljs-class title_">RotateAnimation</span>(<span class="hljs-number">0</span>,<span class="hljs-number">360</span>,Animation.<span class="hljs-property">RELATIVE_TO_SELF</span>,<span class="hljs-number">0.5</span>f,Animation.<span class="hljs-property">RELATIVE_TO_SELF</span>,<span class="hljs-number">0.5</span>f);<br>        <span class="hljs-built_in">rotate</span>.<span class="hljs-property">setDuration</span>(<span class="hljs-number">1000</span>);<br>        <span class="hljs-built_in">rotate</span>.<span class="hljs-property">setRepeatMode</span>(Animation.<span class="hljs-property">RESTART</span>);<br>        <span class="hljs-built_in">rotate</span>.<span class="hljs-property">setRepeatCount</span>(Animation.<span class="hljs-property">INFINITE</span>);<br><br>        <span class="hljs-comment">// 平移动画</span><br>        Animation <span class="hljs-built_in">translate</span> = <span class="hljs-keyword">new </span><span class="hljs-class title_">TranslateAnimation</span>(TranslateAnimation.<span class="hljs-property">RELATIVE_TO_PARENT</span>,<span class="hljs-number">-0.5</span>f,<br>                TranslateAnimation.<span class="hljs-property">RELATIVE_TO_PARENT</span>,<span class="hljs-number">0.5</span>f,<br>                TranslateAnimation.<span class="hljs-property">RELATIVE_TO_SELF</span>,<span class="hljs-number">0</span><br>                ,TranslateAnimation.<span class="hljs-property">RELATIVE_TO_SELF</span>,<span class="hljs-number">0</span>);<br>        <span class="hljs-built_in">translate</span>.<span class="hljs-property">setDuration</span>(<span class="hljs-number">10000</span>);<br><br>        <span class="hljs-comment">// 透明度动画</span><br>        Animation <span class="hljs-built_in">alpha</span> = <span class="hljs-keyword">new </span><span class="hljs-class title_">AlphaAnimation</span>(<span class="hljs-number">1</span>,<span class="hljs-number">0</span>);<br>        <span class="hljs-built_in">alpha</span>.<span class="hljs-property">setDuration</span>(<span class="hljs-number">3000</span>);<br>        <span class="hljs-built_in">alpha</span>.<span class="hljs-property">setStartOffset</span>(<span class="hljs-number">7000</span>);<br><br>        <span class="hljs-comment">// 缩放动画</span><br>        Animation scale1 = <span class="hljs-keyword">new </span><span class="hljs-class title_">ScaleAnimation</span>(<span class="hljs-number">1</span>,<span class="hljs-number">0.5</span>f,<span class="hljs-number">1</span>,<span class="hljs-number">0.5</span>f,Animation.<span class="hljs-property">RELATIVE_TO_SELF</span>,<span class="hljs-number">0.5</span>f,Animation.<span class="hljs-property">RELATIVE_TO_SELF</span>,<span class="hljs-number">0.5</span>f);<br>        scale1.<span class="hljs-property">setDuration</span>(<span class="hljs-number">1000</span>);<br>        scale1.<span class="hljs-property">setStartOffset</span>(<span class="hljs-number">4000</span>);<br><br>        <span class="hljs-comment">// 将创建的子动画添加到组合动画里</span><br>        setAnimation.<span class="hljs-property">addAnimation</span>(<span class="hljs-built_in">alpha</span>);<br>        setAnimation.<span class="hljs-property">addAnimation</span>(<span class="hljs-built_in">rotate</span>);<br>        setAnimation.<span class="hljs-property">addAnimation</span>(<span class="hljs-built_in">translate</span>);<br>        setAnimation.<span class="hljs-property">addAnimation</span>(scale1);<br>        <span class="hljs-comment">// 使用</span><br>        mButton.<span class="hljs-property">startAnimation</span>(setAnimation);<br></code></pre></td></tr></table></figure>
+<p>有时候我们会有一些需求，如当动画执行完成之后，需要跳转页面，所以我们需要监听动画状态</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-selector-tag">Animation</span><span class="hljs-selector-class">.addListener</span>(new <span class="hljs-built_in">AnimatorListener</span>() &#123;<br>          <span class="hljs-variable">@Override</span><br>          public void <span class="hljs-built_in">onAnimationStart</span>(Animation animation) &#123;<br>              <span class="hljs-comment">//动画开始时执行</span><br>          &#125;<br><br>           <span class="hljs-variable">@Override</span><br>          public void <span class="hljs-built_in">onAnimationRepeat</span>(Animation animation) &#123;<br>              <span class="hljs-comment">//动画重复时执行</span><br>          &#125;<br><br>         <span class="hljs-variable">@Override</span><br>          public void <span class="hljs-built_in">onAnimationCancel</span>()(Animation animation) &#123;<br>              <span class="hljs-comment">//动画取消时执行</span><br>          &#125;<br><br>          <span class="hljs-variable">@Override</span><br>          public void <span class="hljs-built_in">onAnimationEnd</span>(Animation animation) &#123;<br>              <span class="hljs-comment">//动画结束时执行</span><br>          &#125;<br>      &#125;);<br></code></pre></td></tr></table></figure>
+<h3 id="自定义间补动画"><a href="#自定义间补动画" class="headerlink" title="自定义间补动画"></a>自定义间补动画</h3><p>Android 提供了 Animation 作为补间动画抽象基类，而且为该抽象基类提供了 AlphaAnimation、RotationAnimation、ScaleAnimation、TranslateAnimation 四个实现类，这四个实现类只是补间动画的基本形式：透明度、旋转、缩放、位移。但是要实现复杂的动画，就需要继承 Animation。继承 Animation 类关键是要重写一个方法：</p>
+<p>applyTransformation(float interpolatedTime,Transformation t)<br>interploatedTime: 代表了动画的时间进行比。不管动画实际的持续时间如何，当动画播放时，该参数总是从 0 到 1。</p>
+<p>Transformation t:该参数代表了补间动画在不同时刻对图形或组件的变形程度。<br>在实现自定义动画的关键就是重写 applyTransformation 方法时 根据 interpolatedTime 时间来动态地计算动画对图片或视图的变形程度。<br>Transformation 代表了对图片或者视图的变形，该对象封装了一个 Matrix 对象，对它所包装了 Matrix 进行位移、倾斜、旋转等变换时，Transformation 将会控制对应的图片或视图进行相应的变换。<br>为了控制图片或者 View 进行三维空间的变换，还需要借助于 Android 提供的一个 Camera，这个 Camera 并非代表手机摄像头，而是空间变换工具。作用类似于 Matrix，其常用方法如下：<br>getMatrix(Matrix matrix)：将 Camera 所做的变换应用到指定的  matrix 上。<br>rotateX(float deg):将组件沿 X 轴旋转。<br>rotateY(float deg):将组件沿 Y 轴旋转。<br>rotateZ(float deg):将组件沿 Z 轴旋转。<br>translate(float x,float y,float z):目标组件在三维空间里变换。<br>applyToCanvas(Canvas canvas):把 Camera 所做的变换应用到 Canvas 上.<br><img src="/assets/anim/anim01.png" srcset="/img/loading.gif" lazyload alt="动画坐标系">实现自定义间补动画</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> CustomAnimation extends Animation &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span> centerX;<br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span> centerY;<br>    <span class="hljs-comment">// 定义动画的持续事件</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> duration;<br>    <span class="hljs-keyword">private</span> Camera camera = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Camera()</span>;<br>    public <span class="hljs-constructor">CustomAnimation(<span class="hljs-params">float</span> <span class="hljs-params">x</span>,<span class="hljs-params">float</span> <span class="hljs-params">y</span>,<span class="hljs-params">int</span> <span class="hljs-params">duration</span>)</span><br>    &#123;<br>        this.centerX = x;<br>        this.centerY = y;<br>        this.duration = duration;<br>    &#125;<br><br>    @Override<br>    public void initialize(<span class="hljs-built_in">int</span> width, <span class="hljs-built_in">int</span> height, <span class="hljs-built_in">int</span> parentWidth, <span class="hljs-built_in">int</span> parentHeight) &#123;<br>        super.initialize(width, height, parentWidth, parentHeight);<br>        <span class="hljs-comment">//设置动画的持续时间</span><br>        set<span class="hljs-constructor">Duration(<span class="hljs-params">duration</span>)</span>;<br>        <span class="hljs-comment">//设置动画结束后保留效果</span><br>        set<span class="hljs-constructor">FillAfter(<span class="hljs-params">true</span>)</span>;<br>        set<span class="hljs-constructor">Interpolator(<span class="hljs-params">new</span> LinearInterpolator()</span>);<br>    &#125;<br><br>    @Override<br>    protected void apply<span class="hljs-constructor">Transformation(<span class="hljs-params">float</span> <span class="hljs-params">interpolatedTime</span>, Transformation <span class="hljs-params">t</span>)</span> &#123;<br>        <span class="hljs-comment">//super.applyTransformation(interpolatedTime, t);</span><br>        camera.save<span class="hljs-literal">()</span>;<br>        <span class="hljs-comment">// 根据 interpolatedTime 时间来控制X,Y,Z 上偏移</span><br>        camera.translate(<span class="hljs-number">100.0</span>f - <span class="hljs-number">100.</span>f<span class="hljs-operator"> * </span>interpolatedTime,<span class="hljs-number">150.0</span>f<span class="hljs-operator"> * </span>interpolatedTime - <span class="hljs-number">150</span>,<span class="hljs-number">80.0</span>f - <span class="hljs-number">80.0</span>f<span class="hljs-operator"> * </span>interpolatedTime);<br>        <span class="hljs-comment">// 根据 interploatedTime 设置在 X 轴 和 Y 轴旋转</span><br>        camera.rotate<span class="hljs-constructor">X(360 <span class="hljs-operator">*</span> <span class="hljs-params">interpolatedTime</span>)</span>;<br>        camera.rotate<span class="hljs-constructor">Y(360 <span class="hljs-operator">*</span> <span class="hljs-params">interpolatedTime</span>)</span>;<br>        <span class="hljs-comment">// 获取 Transformation 参数的 Matrix 对象</span><br>        Matrix matrix = t.get<span class="hljs-constructor">Matrix()</span>;<br>        camera.get<span class="hljs-constructor">Matrix(<span class="hljs-params">matrix</span>)</span>;<br>        matrix.pre<span class="hljs-constructor">Translate(-<span class="hljs-params">centerX</span>,-<span class="hljs-params">centerY</span>)</span>;<br>        matrix.post<span class="hljs-constructor">Translate(<span class="hljs-params">centerX</span>,<span class="hljs-params">centerY</span>)</span>;<br>        camera.restore<span class="hljs-literal">()</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>使用的时候直接调用即可</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">linearLayout.start<span class="hljs-constructor">Animation(<span class="hljs-params">new</span> CustomAnimation(<span class="hljs-params">metrics</span>.<span class="hljs-params">xdpi</span><span class="hljs-operator">/</span>2,<span class="hljs-params">metrics</span>.<span class="hljs-params">ydpi</span><span class="hljs-operator">/</span>2,3500)</span>);<br></code></pre></td></tr></table></figure>
+
+<h1 id="逐帧动画"><a href="#逐帧动画" class="headerlink" title="逐帧动画"></a>逐帧动画</h1><p>逐帧动画的原理就是把一系列的静态动画按照一定的顺序播放，形成的动画效果，这种动画在以前的加载动画中会出现</p>
+<h3 id="利用XML实现逐帧动画"><a href="#利用XML实现逐帧动画" class="headerlink" title="利用XML实现逐帧动画"></a>利用XML实现逐帧动画</h3><p>逐帧动画通常是采用 XML 资源进行定义的，需要在 animation-list …&#x2F;&gt; 标签下使用 &lt;item …&#x2F;&gt; 子元素标签定义动画的全部帧，并指定各帧的持续时间。<br>定义逐帧动画的语法格式如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">animation-list</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag">                  <span class="hljs-attr">android:oneshot</span>=<span class="hljs-string">&quot;true|false&quot;</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:drawable</span>=<span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;&quot;</span>/&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">animation-list</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>其中android:oneshot控制该动画是否循环播放。如果为true，动画将不会循环播放， 否则该动画将会循环播放</p>
+<p>创建一个XML文件放在res&#x2F;drawable文件夹中<br>这里定义动画的每一帧，素材图片放在drawable文件中</p>
+<p>frame_anim.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">animation-list</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:oneshot</span>=<span class="hljs-string">&quot;true&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:drawable</span>=<span class="hljs-string">&quot;@drawable/frame01&quot;</span> <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;100&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:drawable</span>=<span class="hljs-string">&quot;@drawable/frame02&quot;</span> <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;100&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:drawable</span>=<span class="hljs-string">&quot;@drawable/frame03&quot;</span> <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;100&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:drawable</span>=<span class="hljs-string">&quot;@drawable/frame04&quot;</span> <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;100&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:drawable</span>=<span class="hljs-string">&quot;@drawable/frame05&quot;</span> <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;100&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:drawable</span>=<span class="hljs-string">&quot;@drawable/frame06&quot;</span> <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;100&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:drawable</span>=<span class="hljs-string">&quot;@drawable/frame07&quot;</span> <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;100&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:drawable</span>=<span class="hljs-string">&quot;@drawable/frame08&quot;</span> <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;100&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:drawable</span>=<span class="hljs-string">&quot;@drawable/frame09&quot;</span> <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;100&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:drawable</span>=<span class="hljs-string">&quot;@drawable/frame10&quot;</span> <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;100&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:drawable</span>=<span class="hljs-string">&quot;@drawable/frame11&quot;</span> <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;100&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:drawable</span>=<span class="hljs-string">&quot;@drawable/frame12&quot;</span> <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;100&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:drawable</span>=<span class="hljs-string">&quot;@drawable/frame13&quot;</span> <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;100&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:drawable</span>=<span class="hljs-string">&quot;@drawable/frame14&quot;</span> <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;100&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:drawable</span>=<span class="hljs-string">&quot;@drawable/frame15&quot;</span> <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;100&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:drawable</span>=<span class="hljs-string">&quot;@drawable/frame16&quot;</span> <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;100&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:drawable</span>=<span class="hljs-string">&quot;@drawable/frame17&quot;</span> <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;100&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:drawable</span>=<span class="hljs-string">&quot;@drawable/frame18&quot;</span> <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;100&quot;</span>/&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">animation-list</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>在布局文件中直接将AnimationDrawable作为背景</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">RelativeLayout</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;vertical&quot;</span> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span>&gt;</span><br><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">ImageView</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_marginTop</span>=<span class="hljs-string">&quot;50dp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_centerHorizontal</span>=<span class="hljs-string">&quot;true&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/frame_image&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;200dp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;200dp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:background</span>=<span class="hljs-string">&quot;@drawable/frame_animation&quot;</span></span><br><span class="hljs-tag">        /&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_alignParentBottom</span>=<span class="hljs-string">&quot;true&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;horizontal&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_margin</span>=<span class="hljs-string">&quot;5dp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_marginBottom</span>=<span class="hljs-string">&quot;20dp&quot;</span></span><br><span class="hljs-tag">        &gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/frame_start&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_weight</span>=<span class="hljs-string">&quot;1&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:onClick</span>=<span class="hljs-string">&quot;start&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;start&quot;</span></span><br><span class="hljs-tag">        /&gt;</span><br><br>        <span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/frame_stop&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:layout_weight</span>=<span class="hljs-string">&quot;1&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:onClick</span>=<span class="hljs-string">&quot;stop&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;stop&quot;</span></span><br><span class="hljs-tag">            /&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">RelativeLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>在Activity中直接使用即可</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-title class_">ImageView</span> frame_image;<br>    <span class="hljs-title class_">AnimationDrawable</span> animationDrawable;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">protected</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">onCreate</span>(<span class="hljs-params"><span class="hljs-meta">@Nullable</span> Bundle savedInstanceState</span>) &#123;<br>        <span class="hljs-variable language_">super</span>.<span class="hljs-title function_">onCreate</span>(savedInstanceState);<br>        <span class="hljs-title function_">setContentView</span>(R.<span class="hljs-property">layout</span>.<span class="hljs-property">activity_frame_animation</span>);<br>        frame_image = <span class="hljs-title function_">findViewById</span>(R.<span class="hljs-property">id</span>.<span class="hljs-property">frame_image</span>);<br>        <span class="hljs-comment">// 获取 AnimationDrawable 对象</span><br>         animationDrawable = (<span class="hljs-title class_">AnimationDrawable</span>) frame_image.<span class="hljs-title function_">getBackground</span>();<br>    &#125;<br><br><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">start</span>(<span class="hljs-params">View view</span>)&#123;<br>        <span class="hljs-comment">// 开始播放</span><br>        animationDrawable.<span class="hljs-title function_">start</span>();<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">stop</span>(<span class="hljs-params">View view</span>)&#123;<br>        <span class="hljs-comment">//停止播放</span><br>        animationDrawable.<span class="hljs-title function_">stop</span>();<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>同时我们可以通过java代码实现逐帧动画</p>
+<ol>
+<li>首先创建AnimationDrawable对象<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">animationDrawable = <span class="hljs-keyword">new</span> <span class="hljs-constructor">AnimationDrawable()</span>;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">1</span>; i &lt; <span class="hljs-number">10</span>; i<span class="hljs-operator"> ++ </span>)&#123;<br>        <span class="hljs-built_in">int</span> id = get<span class="hljs-constructor">Resources()</span>.get<span class="hljs-constructor">Identifier(<span class="hljs-string">&quot;frame0&quot;</span> + <span class="hljs-params">i</span>, <span class="hljs-string">&quot;drawable&quot;</span>, <span class="hljs-params">getPackageName</span>()</span>);<br>        Drawable drawable = get<span class="hljs-constructor">Resources()</span>.get<span class="hljs-constructor">Drawable(<span class="hljs-params">id</span>)</span>;<br>        animationDrawable.add<span class="hljs-constructor">Frame(<span class="hljs-params">drawable</span>, 100)</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">10</span>; i &lt; <span class="hljs-number">19</span>; i ++)&#123;<br>        <span class="hljs-built_in">int</span> id = get<span class="hljs-constructor">Resources()</span>.get<span class="hljs-constructor">Identifier(<span class="hljs-string">&quot;frame&quot;</span> + <span class="hljs-params">i</span>, <span class="hljs-string">&quot;drawable&quot;</span>, <span class="hljs-params">getPackageName</span>()</span>);<br>        Drawable drawable = get<span class="hljs-constructor">Resources()</span>.get<span class="hljs-constructor">Drawable(<span class="hljs-params">id</span>)</span>;<br>        animationDrawable.add<span class="hljs-constructor">Frame(<span class="hljs-params">drawable</span>, 100)</span>;<br>    &#125;<br></code></pre></td></tr></table></figure></li>
+<li>控制播放和停止<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs scss">public void <span class="hljs-built_in">start</span>(View view)&#123;<br>    <span class="hljs-comment">// 开始播放</span><br>   <span class="hljs-comment">// animationDrawable.start();</span><br><br>    animationDrawable<span class="hljs-selector-class">.setOneShot</span>(true);<br>    frame_image<span class="hljs-selector-class">.setImageDrawable</span>(animationDrawable);<br>    <span class="hljs-comment">// 获取资源对象</span><br>    animationDrawable<span class="hljs-selector-class">.stop</span>();<br>    <span class="hljs-comment">// 特别注意：在动画start()之前要先stop()，不然在第一次动画之后会停在最后一帧，这样动画就只会触发一次</span><br>    animationDrawable<span class="hljs-selector-class">.start</span>();<br>    <span class="hljs-comment">// 启动动画</span><br><br>&#125;<br><br>public void <span class="hljs-built_in">stop</span>(View view)&#123;<br>    <span class="hljs-comment">//停止播放</span><br>   <span class="hljs-comment">// animationDrawable.stop();</span><br>    animationDrawable<span class="hljs-selector-class">.setOneShot</span>(true);<br>    frame_image<span class="hljs-selector-class">.setImageDrawable</span>(animationDrawable);<br>    animationDrawable<span class="hljs-selector-class">.stop</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+完整代码如下：<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> FrameAnimation extends AppCompatActivity &#123;<br>    ImageView frame_image;<br>    AnimationDrawable animationDrawable;<br>    @Override<br>    protected void on<span class="hljs-constructor">Create(@Nullable Bundle <span class="hljs-params">savedInstanceState</span>)</span> &#123;<br>        super.on<span class="hljs-constructor">Create(<span class="hljs-params">savedInstanceState</span>)</span>;<br>        set<span class="hljs-constructor">ContentView(R.<span class="hljs-params">layout</span>.<span class="hljs-params">activity_frame_animation</span>)</span>;<br>        frame_image = find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">frame_image</span>)</span>;<br>        <span class="hljs-comment">// 获取 AnimationDrawable 对象</span><br>        <span class="hljs-comment">// animationDrawable = (AnimationDrawable) frame_image.getBackground();</span><br><br>        animationDrawable = <span class="hljs-keyword">new</span> <span class="hljs-constructor">AnimationDrawable()</span>;<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">1</span>; i &lt; <span class="hljs-number">10</span>; i<span class="hljs-operator"> ++ </span>)&#123;<br>            <span class="hljs-built_in">int</span> id = get<span class="hljs-constructor">Resources()</span>.get<span class="hljs-constructor">Identifier(<span class="hljs-string">&quot;frame0&quot;</span> + <span class="hljs-params">i</span>, <span class="hljs-string">&quot;drawable&quot;</span>, <span class="hljs-params">getPackageName</span>()</span>);<br>            Drawable drawable = get<span class="hljs-constructor">Resources()</span>.get<span class="hljs-constructor">Drawable(<span class="hljs-params">id</span>)</span>;<br>            animationDrawable.add<span class="hljs-constructor">Frame(<span class="hljs-params">drawable</span>, 100)</span>;<br>        &#125;<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">10</span>; i &lt; <span class="hljs-number">19</span>; i ++)&#123;<br>            <span class="hljs-built_in">int</span> id = get<span class="hljs-constructor">Resources()</span>.get<span class="hljs-constructor">Identifier(<span class="hljs-string">&quot;frame&quot;</span> + <span class="hljs-params">i</span>, <span class="hljs-string">&quot;drawable&quot;</span>, <span class="hljs-params">getPackageName</span>()</span>);<br>            Drawable drawable = get<span class="hljs-constructor">Resources()</span>.get<span class="hljs-constructor">Drawable(<span class="hljs-params">id</span>)</span>;<br>            animationDrawable.add<span class="hljs-constructor">Frame(<span class="hljs-params">drawable</span>, 100)</span>;<br>        &#125;<br><br><br>    &#125;<br><br><br>    public void start(View view)&#123;<br>        <span class="hljs-comment">// 开始播放</span><br>       <span class="hljs-comment">// animationDrawable.start();</span><br><br>        animationDrawable.set<span class="hljs-constructor">OneShot(<span class="hljs-params">true</span>)</span>;<br>        frame_image.set<span class="hljs-constructor">ImageDrawable(<span class="hljs-params">animationDrawable</span>)</span>;<br>        <span class="hljs-comment">// 获取资源对象</span><br>        animationDrawable.stop<span class="hljs-literal">()</span>;<br>        <span class="hljs-comment">// 特别注意：在动画start()之前要先stop()，不然在第一次动画之后会停在最后一帧，这样动画就只会触发一次</span><br>        animationDrawable.start<span class="hljs-literal">()</span>;<br>        <span class="hljs-comment">// 启动动画</span><br><br>    &#125;<br><br>    public void stop(View view)&#123;<br>        <span class="hljs-comment">//停止播放</span><br>       <span class="hljs-comment">// animationDrawable.stop();</span><br>        animationDrawable.set<span class="hljs-constructor">OneShot(<span class="hljs-params">true</span>)</span>;<br>        frame_image.set<span class="hljs-constructor">ImageDrawable(<span class="hljs-params">animationDrawable</span>)</span>;<br>        animationDrawable.stop<span class="hljs-literal">()</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h1 id="属性动画"><a href="#属性动画" class="headerlink" title="属性动画"></a>属性动画</h1><p>从Android3.0之后，Android引入了新的动画系统，也就是属性动画，属性动画可以弥补补间动画的一些不足，基本上可以完全替代补间动画。在补间动画中，我们可以通过android.view.animation包下的类和方法帮我们实现多种操作，其实已经是比较完善的，但是在一些特殊的情况下，补间动画并不能满足我们的实际需要，特别是这里说一个，所有的补间动画，虽然在UI效果上是移动了，但是实际上，他在View树中的位置是不变的，也就是说，如果我们想再给这个组件添加点击事件，当我们的动画执行完成之后，点击组件是得不到事件响应的，只有点击组件原来的位置才能响应事件。也就是我看来补间动画最大的缺陷。而属性动画可以很好的避免这样的情况。注意，此处补间动画所有的操作都是针对View的。也就是说，我们是针对一个Button，一个ImageView进行操作。<br>属性动画机制已经不再是针对于View来设计的了，也不限定于只能实现移动、缩放、旋转和淡入淡出这几种动画操作，同时也不再只是一种视觉上的动画效果了。它实际上是一种不断地对值进行操作的机制，并将值赋值到指定对象的指定属性上，可以是任意对象的任意属性。所以我们仍然可以将一个View进行移动或者缩放，但同时也可以对自定义View中的Point对象进行动画操作了。我们只需要告诉系统动画的运行时长，需要执行哪种类型的动画，以及动画的初始值和结束值，剩下的工作就可以全部交给系统去完成了</p>
+<h2 id="ValueAnimator"><a href="#ValueAnimator" class="headerlink" title="ValueAnimator"></a>ValueAnimator</h2><p>ValueAnimator是整个属性动画机制当中最核心的一个类，前面我们已经提到了，属性动画的运行机制是通过不断地对值进行操作来实现的，而初始值和结束值之间的动画过渡就是由ValueAnimator这个类来负责计算的。它的内部使用一种时间循环的机制来计算值与值之间的动画过渡，我们只需要将初始值和结束值提供给ValueAnimator，并且告诉它动画所需运行的时长，那么ValueAnimator就会自动帮我们完成从初始值平滑地过渡到结束值这样的效果。除此之外，ValueAnimator还负责管理动画的播放次数、播放模式、以及对动画设置监听器等，确实是一个非常重要的类。<br>一个小例子，我们想要将一个值从0过渡到1，耗时300毫秒</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">ValueAnimator</span> anim = ValueAnimator.ofFloat(<span class="hljs-number">0</span>f, <span class="hljs-number">1</span>f);  <br><span class="hljs-attribute">anim</span>.setDuration(<span class="hljs-number">300</span>);  <br><span class="hljs-attribute">anim</span>.start();  <br></code></pre></td></tr></table></figure>
+<p>我们只需要调用ValueAnimator中的ofFloat方法就可以构建一个ValueAnimator对象，ofFloat方法允许传入多个float类型的值，然后这些值就是我们过度的值。再通过setDuration方法设置过度需要的时间，这样姐可以了。最后再通过start方法启动动画即可。之后我们通过注册一个监听器设置基本的操作</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">ValueAnimator anim = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ValueAnimator</span>.</span></span><span class="hljs-keyword">of</span><span class="hljs-constructor">Float(0f, 1f)</span>;  <br>anim.set<span class="hljs-constructor">Duration(300)</span>;  <br>anim.add<span class="hljs-constructor">UpdateListener(<span class="hljs-params">new</span> ValueAnimator.AnimatorUpdateListener()</span> &#123;  <br>    @Override  <br>    public void on<span class="hljs-constructor">AnimationUpdate(ValueAnimator <span class="hljs-params">animation</span>)</span> &#123;  <br>        <span class="hljs-built_in">float</span> currentValue = (<span class="hljs-built_in">float</span>) animation.get<span class="hljs-constructor">AnimatedValue()</span>;  <br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>d(<span class="hljs-string">&quot;TAG&quot;</span>, <span class="hljs-string">&quot;cuurent value is &quot;</span> + currentValue);  <br>    &#125;  <br>&#125;);  <br>anim.start<span class="hljs-literal">()</span>;<br></code></pre></td></tr></table></figure>
+<p>可以看到，这里我们通过addUpdateListener()方法来添加一个动画的监听器，在动画执行的过程中会不断地进行回调，我们只需要在回调方法当中将当前的值取出并打印出来，就可以知道动画有没有真正运行了<br>同时我们还可以使用传递多个参数，如传入多个值，那么动画的变化时一样的</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">ValueAnimator</span> anim = ValueAnimator.ofFloat(<span class="hljs-number">0</span>f, <span class="hljs-number">5</span>f, <span class="hljs-number">3</span>f, <span class="hljs-number">10</span>f);  <br><span class="hljs-attribute">anim</span>.setDuration(<span class="hljs-number">5000</span>);  <br><span class="hljs-attribute">anim</span>.start();  <br></code></pre></td></tr></table></figure>
+<p>如果我们只需要执行的是int类型，则可以使用ofInt方法。<br>除此之外还有一些别的常用方法，如setStartDelay，设置延时开始动画的时间，setRepeatCount设置动画重复的次数，setRepeatMode设置重复的模式，RESTART重头开始，REVERSE倒着播放。</p>
+<h2 id="ObjectAnimator"><a href="#ObjectAnimator" class="headerlink" title="ObjectAnimator"></a>ObjectAnimator</h2><p>一般情况下，我们通过使用ValueAnimator对值进行平滑过渡，使用的情况比不是非常多，而ObjectAnimator使用的就比较多了。他可以对任意对象的任意值机型操作。虽然说ObjectAnimator使用的情况更多，但是他也是继承自ValueAnimator对象的。<br>一个小例子，如果我们想要TextView在5秒钟从常规变到透明，在从透明变到常规，就可以使用下面的代码</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">ObjectAnimator</span> animator = ObjectAnimator.ofFloat(textview, <span class="hljs-string">&quot;alpha&quot;</span>, <span class="hljs-number">1</span>f, <span class="hljs-number">0</span>f, <span class="hljs-number">1</span>f);  <br><span class="hljs-attribute">animator</span>.setDuration(<span class="hljs-number">5000</span>);  <br><span class="hljs-attribute">animator</span>.start(); <br></code></pre></td></tr></table></figure>
+<p>可以看到，我们还是调用了ofFloat()方法来去创建一个ObjectAnimator的实例，只不过ofFloat()方法当中接收的参数有点变化了。这里第一个参数要求传入一个object对象，我们想要对哪个对象进行动画操作就传入什么，这里我传入了一个textview。第二个参数是想要对该对象的哪个属性进行动画操作，由于我们想要改变TextView的不透明度，因此这里传入”alpha”。后面的参数就是不固定长度了，想要完成什么样的动画就传入什么值，这里传入的值就表示将TextView从常规变换成全透明，再从全透明变换成常规。之后调用setDuration()方法来设置动画的时长，然后调用start()方法启动动画</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">ObjectAnimator animator = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ObjectAnimator</span>.</span></span><span class="hljs-keyword">of</span><span class="hljs-constructor">Float(<span class="hljs-params">textview</span>, <span class="hljs-string">&quot;rotation&quot;</span>, 0f, 360f)</span>;  <br>animator.set<span class="hljs-constructor">Duration(5000)</span>;  <br>animator.start<span class="hljs-literal">()</span>; <br></code></pre></td></tr></table></figure>
+<p>如果我们想要把textView移除屏幕，再移动回来</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-built_in">float</span> curTranslationX = textview.get<span class="hljs-constructor">TranslationX()</span>;  <br>ObjectAnimator animator = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ObjectAnimator</span>.</span></span><span class="hljs-keyword">of</span><span class="hljs-constructor">Float(<span class="hljs-params">textview</span>, <span class="hljs-string">&quot;translationX&quot;</span>, <span class="hljs-params">curTranslationX</span>, -500f, <span class="hljs-params">curTranslationX</span>)</span>;  <br>animator.set<span class="hljs-constructor">Duration(5000)</span>;  <br>animator.start<span class="hljs-literal">()</span>;  <br></code></pre></td></tr></table></figure>
+<p>我们还可以对TextView进行缩放操作</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">ObjectAnimator</span> animator = ObjectAnimator.ofFloat(textview, <span class="hljs-string">&quot;scaleY&quot;</span>, <span class="hljs-number">1</span>f, <span class="hljs-number">3</span>f, <span class="hljs-number">1</span>f);  <br><span class="hljs-attribute">animator</span>.setDuration(<span class="hljs-number">5000</span>);  <br><span class="hljs-attribute">animator</span>.start();<br></code></pre></td></tr></table></figure>
+<p>其实看到这里我们会发现，其实很多情况下对第二个参数的使用会有一定的疑问，我们这里是用过的有scaleX,scaleY,translationX,translationY,alpha，那么这些字符串是有什么特殊的含义吗？其实是肯定的。查看TextView的源码，我们会发现，在TextView中，我们根本就额没有类似alpha这样的属性，那么到底是如何操作，使TextView实现了透明的效果呢？</p>
+<blockquote>
+<p>textview对象需要根据alpha属性值的改变来不断刷新界面的显示，从而让用户可以看出淡入淡出的动画效果<br>其实ObjectAnimator内部的工作机制并不是直接对我们传入的属性名进行操作的，而是会去寻找这个属性名对应的get和set方法，因此alpha属性所对应的get和set方法应该就是<br>public void setAlpha(float value);<br>public float getAlpha();<br>这两个方法是由View对象提供的</p>
+</blockquote>
+<h2 id="组合动画-1"><a href="#组合动画-1" class="headerlink" title="组合动画"></a>组合动画</h2><p>独立的动画能够实现的视觉效果毕竟是相当有限的，因此将多个动画组合到一起播放就显得尤为重要。Android团队在设计属性动画的时候也充分考虑到了组合动画的功能，因此提供了一套非常丰富的API来让我们将多个动画组合到一起</p>
+<p>实现组合动画功能主要需要借助AnimatorSet这个类，这个类提供了一个play()方法，如果我们向这个方法中传入一个Animator对象(ValueAnimator或ObjectAnimator)将会返回一个AnimatorSet.Builder的实例，AnimatorSet.Builder中包括以下四个方法</p>
+<ul>
+<li>after(Animator anim)   将现有动画插入到传入的动画之后执行</li>
+<li>after(long delay)   将现有动画延迟指定毫秒后执行</li>
+<li>before(Animator anim)   将现有动画插入到传入的动画之前执行</li>
+<li>with(Animator anim)   将现有动画和传入的动画同时执行</li>
+</ul>
+<p>这里我们可以让TextView实现先从屏幕外移动到屏幕内，然后在旋转的过程中完成淡入淡出效果</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">ObjectAnimator moveIn = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ObjectAnimator</span>.</span></span><span class="hljs-keyword">of</span><span class="hljs-constructor">Float(<span class="hljs-params">textview</span>, <span class="hljs-string">&quot;translationX&quot;</span>, -500f, 0f)</span>;  <br>ObjectAnimator rotate = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ObjectAnimator</span>.</span></span><span class="hljs-keyword">of</span><span class="hljs-constructor">Float(<span class="hljs-params">textview</span>, <span class="hljs-string">&quot;rotation&quot;</span>, 0f, 360f)</span>;  <br>ObjectAnimator fadeInOut = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ObjectAnimator</span>.</span></span><span class="hljs-keyword">of</span><span class="hljs-constructor">Float(<span class="hljs-params">textview</span>, <span class="hljs-string">&quot;alpha&quot;</span>, 1f, 0f, 1f)</span>;  <br>AnimatorSet animSet = <span class="hljs-keyword">new</span> <span class="hljs-constructor">AnimatorSet()</span>;  <br>animSet.play(rotate).<span class="hljs-keyword">with</span>(fadeInOut).after(moveIn);  <br>animSet.set<span class="hljs-constructor">Duration(5000)</span>;  <br>animSet.start<span class="hljs-literal">()</span>;<br></code></pre></td></tr></table></figure>
+<p>我们也可以换一种思路：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public void rotatey<span class="hljs-constructor">AnimRuns(<span class="hljs-params">final</span> View <span class="hljs-params">view</span>)</span> &#123;<br>        ObjectAnimator anim = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ObjectAnimator</span>.</span></span>off<span class="hljs-constructor">Float(<span class="hljs-params">view</span>,<span class="hljs-string">&quot;npl&quot;</span>,1.0f,0.0f)</span>;       <br>　　　　 anim.set<span class="hljs-constructor">Duration(500)</span>;        <br>         anim.start<span class="hljs-literal">()</span>;<br>        anim.add<span class="hljs-constructor">UpdateListener(<span class="hljs-params">new</span> AnimatorUpdateListener()</span> &#123;<br>            @Override<br>            public void on<span class="hljs-constructor">AnimationUpdate(ValueAnimator <span class="hljs-params">animation</span>)</span> &#123;<br>                <span class="hljs-built_in">float</span> cVal = (Float) animation.get<span class="hljs-constructor">AnimatedValue()</span>;<br>                view.set<span class="hljs-constructor">Alpha(<span class="hljs-params">cVal</span>)</span>;<br>                view.set<span class="hljs-constructor">ScaleX(<span class="hljs-params">cVal</span>)</span>;<br>                view.set<span class="hljs-constructor">ScaleY(<span class="hljs-params">cVal</span>)</span>;<br>            &#125;<br>        &#125;);<br>    &#125;<br></code></pre></td></tr></table></figure>
+<p>这里我们只需要将属性类型写进去，至于具体的操作，我们是在onAnimationUpdate方法中设置的。<br>再换一种方法实现：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public void property<span class="hljs-constructor">ValuesHolder(View <span class="hljs-params">view</span>)</span> &#123;<br>        PropertyValuesHolder pvhX = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">PropertyValuesHolder</span>.</span></span><span class="hljs-keyword">of</span><span class="hljs-constructor">Float(<span class="hljs-string">&quot;alpha&quot;</span>, 1f, 0f, 1f)</span>;<br>        PropertyValuesHolder pvhY = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">PropertyValuesHolder</span>.</span></span><span class="hljs-keyword">of</span><span class="hljs-constructor">Float(<span class="hljs-string">&quot;scaleX&quot;</span>, 1f, 0, 1f)</span>;<br>        PropertyValuesHolder pvhZ = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">PropertyValuesHolder</span>.</span></span><span class="hljs-keyword">of</span><span class="hljs-constructor">Float(<span class="hljs-string">&quot;scaleY&quot;</span>, 1f, 0, 1f)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ObjectAnimator</span>.</span></span><span class="hljs-keyword">of</span><span class="hljs-constructor">PropertyValuesHolder(<span class="hljs-params">view</span>, <span class="hljs-params">pvhX</span>, <span class="hljs-params">pvhY</span>, <span class="hljs-params">pvhZ</span>)</span>.set<span class="hljs-constructor">Duration(1000)</span>.start<span class="hljs-literal">()</span>;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="Animator监听器"><a href="#Animator监听器" class="headerlink" title="Animator监听器"></a>Animator监听器</h2><p>在很多时候，我们希望可以监听到动画的各种事件，比如动画何时开始，何时结束，然后在开始或者结束的时候去执行一些逻辑处理。这个功能是完全可以实现的，Animator类当中提供了一个addListener()方法，这个方法接收一个AnimatorListener，我们只需要去实现这个AnimatorListener就可以监听动画的各种事件了<br>ObjectAnimator是继承自ValueAnimator的，而ValueAnimator又是继承自Animator的，因此不管是ValueAnimator还是ObjectAnimator都是可以使用addListener()这个方法的。另外AnimatorSet也是继承自Animator的，因此addListener()这个方法算是个通用的方法<br>添加一个监听器的代码如下：</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-selector-tag">anim</span><span class="hljs-selector-class">.addListener</span>(new <span class="hljs-built_in">AnimatorListener</span>() &#123;  <br>    <span class="hljs-variable">@Override</span>  <br>    public void <span class="hljs-built_in">onAnimationStart</span>(Animator animation) &#123;  <br>    &#125;  <br>  <br>    <span class="hljs-variable">@Override</span>  <br>    public void <span class="hljs-built_in">onAnimationRepeat</span>(Animator animation) &#123;  <br>    &#125;  <br>  <br>    <span class="hljs-variable">@Override</span>  <br>    public void <span class="hljs-built_in">onAnimationEnd</span>(Animator animation) &#123;  <br>    &#125;  <br>  <br>    <span class="hljs-variable">@Override</span>  <br>    public void <span class="hljs-built_in">onAnimationCancel</span>(Animator animation) &#123;  <br>    &#125;  <br>&#125;);<br></code></pre></td></tr></table></figure>
+<p>我们需要实现接口中的四个方法，onAnimationStart()方法会在动画开始的时候调用，onAnimationRepeat()方法会在动画重复执行的时候调用，onAnimationEnd()方法会在动画结束的时候调用，onAnimationCancel()方法会在动画被取消的时候调用.但是也许很多时候我们并不想要监听那么多个事件，可能我只想要监听动画结束这一个事件，那么每次都要将四个接口全部实现一遍就显得非常繁琐。没关系，为此Android提供了一个适配器类，叫作AnimatorListenerAdapter，使用这个类就可以解决掉实现接口繁琐的问题了，如下所示：</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs haxe">anim.addListener(<span class="hljs-keyword">new</span> <span class="hljs-type">AdimatorAdapter</span>()&#123;&#125;)<br></code></pre></td></tr></table></figure>
+<p>在这个Adapter中，我们是需要重写我们自己所使用的方法即可。</p>
+<h2 id="使用XML实现动画效果"><a href="#使用XML实现动画效果" class="headerlink" title="使用XML实现动画效果"></a>使用XML实现动画效果</h2><p>我们可以使用代码来编写所有的动画功能，这也是最常用的一种做法。不过，过去的补间动画除了使用代码编写之外也是可以使用XML编写的，因此属性动画也提供了这一功能，即通过XML来完成和代码一样的属性动画功能。</p>
+<p>通过XML来编写动画可能会比通过代码来编写动画要慢一些，但是在重用方面将会变得非常轻松，比如某个将通用的动画编写到XML里面，我们就可以在各个界面当中轻松去重用它。</p>
+<p>如果想要使用XML来编写动画，首先要在res目录下面新建一个animator文件夹，所有属性动画的XML文件都应该存放在这个文件夹当中。然后在XML文件中我们一共可以使用如下三种标签</p>
+<ul>
+<li><animator> 对应代码中的ValueAnimator</li>
+<li><objectAnimator>  对应代码中的ObjectAnimator</li>
+<li><set>  对应代码中的AnimatorSet</li>
+</ul>
+<p>这里我们现实的是从0到100的平滑过渡</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;animator xmlns:<span class="hljs-attribute">android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span>  <br>    android:<span class="hljs-attribute">valueFrom</span>=<span class="hljs-string">&quot;0&quot;</span>  <br>    android:<span class="hljs-attribute">valueTo</span>=<span class="hljs-string">&quot;100&quot;</span>  <br>    android:<span class="hljs-attribute">valueType</span>=<span class="hljs-string">&quot;intType&quot;</span>/&gt;<br></code></pre></td></tr></table></figure>
+<p>这里我们实现的是透明度的从100%到0的变化</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;objectAnimator xmlns:<span class="hljs-attribute">android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span>  <br>    android:<span class="hljs-attribute">valueFrom</span>=<span class="hljs-string">&quot;1&quot;</span>  <br>    android:<span class="hljs-attribute">valueTo</span>=<span class="hljs-string">&quot;0&quot;</span>  <br>    android:<span class="hljs-attribute">valueType</span>=<span class="hljs-string">&quot;floatType&quot;</span>  <br>    android:<span class="hljs-attribute">propertyName</span>=<span class="hljs-string">&quot;alpha&quot;</span>/&gt;  <br></code></pre></td></tr></table></figure>
+<p>同时使用XML进行组合动画操作，将TextView从屏幕外移入，然后旋转，并且在旋转的过程中添加淡入淡出效果</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">set</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span>  </span><br><span class="hljs-tag">    <span class="hljs-attr">android:ordering</span>=<span class="hljs-string">&quot;sequentially&quot;</span> &gt;</span>  <br>  <br>    <span class="hljs-tag">&lt;<span class="hljs-name">objectAnimator</span>  </span><br><span class="hljs-tag">        <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;2000&quot;</span>  </span><br><span class="hljs-tag">        <span class="hljs-attr">android:propertyName</span>=<span class="hljs-string">&quot;translationX&quot;</span>  </span><br><span class="hljs-tag">        <span class="hljs-attr">android:valueFrom</span>=<span class="hljs-string">&quot;-500&quot;</span>  </span><br><span class="hljs-tag">        <span class="hljs-attr">android:valueTo</span>=<span class="hljs-string">&quot;0&quot;</span>  </span><br><span class="hljs-tag">        <span class="hljs-attr">android:valueType</span>=<span class="hljs-string">&quot;floatType&quot;</span> &gt;</span>  <br>    <span class="hljs-tag">&lt;/<span class="hljs-name">objectAnimator</span>&gt;</span>  <br>  <br>    <span class="hljs-tag">&lt;<span class="hljs-name">set</span> <span class="hljs-attr">android:ordering</span>=<span class="hljs-string">&quot;together&quot;</span> &gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">objectAnimator</span>  </span><br><span class="hljs-tag">            <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;3000&quot;</span>  </span><br><span class="hljs-tag">            <span class="hljs-attr">android:propertyName</span>=<span class="hljs-string">&quot;rotation&quot;</span>  </span><br><span class="hljs-tag">            <span class="hljs-attr">android:valueFrom</span>=<span class="hljs-string">&quot;0&quot;</span>  </span><br><span class="hljs-tag">            <span class="hljs-attr">android:valueTo</span>=<span class="hljs-string">&quot;360&quot;</span>  </span><br><span class="hljs-tag">            <span class="hljs-attr">android:valueType</span>=<span class="hljs-string">&quot;floatType&quot;</span> &gt;</span>  <br>        <span class="hljs-tag">&lt;/<span class="hljs-name">objectAnimator</span>&gt;</span>  <br>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">set</span> <span class="hljs-attr">android:ordering</span>=<span class="hljs-string">&quot;sequentially&quot;</span> &gt;</span>  <br>            <span class="hljs-tag">&lt;<span class="hljs-name">objectAnimator</span>  </span><br><span class="hljs-tag">                <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;1500&quot;</span>  </span><br><span class="hljs-tag">                <span class="hljs-attr">android:propertyName</span>=<span class="hljs-string">&quot;alpha&quot;</span>  </span><br><span class="hljs-tag">                <span class="hljs-attr">android:valueFrom</span>=<span class="hljs-string">&quot;1&quot;</span>  </span><br><span class="hljs-tag">                <span class="hljs-attr">android:valueTo</span>=<span class="hljs-string">&quot;0&quot;</span>  </span><br><span class="hljs-tag">                <span class="hljs-attr">android:valueType</span>=<span class="hljs-string">&quot;floatType&quot;</span> &gt;</span>  <br>            <span class="hljs-tag">&lt;/<span class="hljs-name">objectAnimator</span>&gt;</span>  <br>            <span class="hljs-tag">&lt;<span class="hljs-name">objectAnimator</span>  </span><br><span class="hljs-tag">                <span class="hljs-attr">android:duration</span>=<span class="hljs-string">&quot;1500&quot;</span>  </span><br><span class="hljs-tag">                <span class="hljs-attr">android:propertyName</span>=<span class="hljs-string">&quot;alpha&quot;</span>  </span><br><span class="hljs-tag">                <span class="hljs-attr">android:valueFrom</span>=<span class="hljs-string">&quot;0&quot;</span>  </span><br><span class="hljs-tag">                <span class="hljs-attr">android:valueTo</span>=<span class="hljs-string">&quot;1&quot;</span>  </span><br><span class="hljs-tag">                <span class="hljs-attr">android:valueType</span>=<span class="hljs-string">&quot;floatType&quot;</span> &gt;</span>  <br>            <span class="hljs-tag">&lt;/<span class="hljs-name">objectAnimator</span>&gt;</span>  <br>        <span class="hljs-tag">&lt;/<span class="hljs-name">set</span>&gt;</span>  <br>    <span class="hljs-tag">&lt;/<span class="hljs-name">set</span>&gt;</span>  <br>  <br><span class="hljs-tag">&lt;/<span class="hljs-name">set</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>最后在我们的XML文件编写完成之后，在使用如下代码即可</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">Animator animator = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">AnimatorInflater</span>.</span></span>load<span class="hljs-constructor">Animator(<span class="hljs-params">context</span>, R.<span class="hljs-params">animator</span>.<span class="hljs-params">anim_file</span>)</span>;  <br>animator.set<span class="hljs-constructor">Target(<span class="hljs-params">view</span>)</span>;  <br>animator.start<span class="hljs-literal">()</span>;  <br></code></pre></td></tr></table></figure>
+
+<h2 id="属性动画的高级操作"><a href="#属性动画的高级操作" class="headerlink" title="属性动画的高级操作"></a>属性动画的高级操作</h2><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ldq2016/p/5407061.html">Android三种动画</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/2412d00a0ce4">Android属性动画</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/609b6d88798d">Android动画总结</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>重拾android路(二十五) Android动画</div>
+      <div>http://example.com/2019/04/08/android-26-anim/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年4月8日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/05/08/android-25-keyboard/" title="重拾android路(二十四) Android自定义键盘">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">重拾android路(二十四) Android自定义键盘</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/02/08/android-24-push/" title="重拾android路(二十三) Android推送集成">
+                        <span class="hidden-mobile">重拾android路(二十三) Android推送集成</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

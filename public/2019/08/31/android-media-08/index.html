@@ -1,0 +1,661 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="使用OpenGL ES绘制立方体，并且设置为彩色的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android 音视频开发(八)">
+<meta property="og:url" content="http://example.com/2019/08/31/android-media-08/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="使用OpenGL ES绘制立方体，并且设置为彩色的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/tools/tools-opengl-09.png">
+<meta property="article:published_time" content="2019-08-31T01:30:10.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.101Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta property="article:tag" content="音视频">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/tools/tools-opengl-09.png">
+  
+  
+  
+  <title>android 音视频开发(八) - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="android 音视频开发(八)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-08-31 09:30" pubdate>
+          2019年8月31日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          43 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">android 音视频开发(八)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>使用OpenGL ES绘制立方体，并且设置为彩色的</p>
+<span id="more"></span>
+
+<p>先来看一下效果，因为我之前设置的颜色看起来并不是非常的明显，所以我在网上找了一个颜色<br><img src="/assets/tools/tools-opengl-09.png" srcset="/img/loading.gif" lazyload alt="绘制立方体"><br>下面我们将一步步的实现一个立方体效果</p>
+<h4 id="构建立方体"><a href="#构建立方体" class="headerlink" title="构建立方体"></a>构建立方体</h4><p>从我们之前学习过的数学知识，我们知道立方体(这里以正方体为例)是有六个面的，那么就对应着六个定点，所以第一步，我们需要先把定点生命出来</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs subunit">private float[] vertexCoords = &#123;<br>            <span class="hljs-string">-0</span>.5f, 0.5f, 1f,<br>            <span class="hljs-string">-0</span>.5f, <span class="hljs-string">-0</span>.5f, 1f,<br>            0.5f, <span class="hljs-string">-0</span>.5f, 1f,<br>            0.5f, 0.5f, 1f,<br>            <span class="hljs-string">-0</span>.5f, 0.5f, 0f,<br>            <span class="hljs-string">-0</span>.5f, <span class="hljs-string">-0</span>.5f, 0f,<br>            0.5f, <span class="hljs-string">-0</span>.5f, 0f,<br>            0.5f, 0.5f, 0f<br>    &#125;;<br></code></pre></td></tr></table></figure>
+
+<p>设置完六个定点之后，我们需要设置这六个点的索引，所谓的索引就是要依次找到各个点可能组成的三角形，如下所示</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs awk">private static short[] indexCoords = &#123;<br>            <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>,<span class="hljs-regexp">//</span> 上面<br>            <span class="hljs-number">0</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">0</span>, <span class="hljs-number">5</span>, <span class="hljs-number">1</span>,<span class="hljs-regexp">//</span> 左面<br>            <span class="hljs-number">0</span>, <span class="hljs-number">4</span>, <span class="hljs-number">7</span>, <span class="hljs-number">0</span>, <span class="hljs-number">7</span>, <span class="hljs-number">3</span>,<span class="hljs-regexp">//</span> 后面<br>            <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">7</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>,<span class="hljs-regexp">//</span> 底面<br>            <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">5</span>, <span class="hljs-number">2</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>,<span class="hljs-regexp">//</span> 前面<br>            <span class="hljs-number">2</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">7</span><span class="hljs-regexp">//</span> 右面<br>    &#125;;<br></code></pre></td></tr></table></figure>
+
+<p>如果我们只是用单一颜色，那么这个立方体看起来会比较怪异，所以我们这里给立方体设置了多个颜色</p>
+<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs autohotkey">private float[] colorCoords = &#123;<br><span class="hljs-built_in">            0f,</span><span class="hljs-number">1</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<br><span class="hljs-built_in">            0f,</span><span class="hljs-number">1</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<br><span class="hljs-built_in">            0f,</span><span class="hljs-number">1</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<br><span class="hljs-built_in">            0f,</span><span class="hljs-number">1</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<br><span class="hljs-built_in">            1f,</span><span class="hljs-number">0</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<br><span class="hljs-built_in">            1f,</span><span class="hljs-number">0</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<br><span class="hljs-built_in">            1f,</span><span class="hljs-number">0</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<br><span class="hljs-built_in">            1f,</span><span class="hljs-number">0</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<br>    &#125;<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="绘制立方体"><a href="#绘制立方体" class="headerlink" title="绘制立方体"></a>绘制立方体</h4><p>设置完成定点和颜色之后，我们需要设置顶点着色器和片元着色器。</p>
+<p>步骤其实就是那么四步</p>
+<ul>
+<li>初始化坐标数据、索引数据、颜色数据，具体操作为将坐标数据、颜色数据分别写入到独自的FloatBuffer中，将索引数据写入到ShortBuffer中</li>
+<li>创建OpenGL2.0程序，将顶点着色器和片元着色器加入到程序中，并链接程序。</li>
+<li>使用创建的OpenGLES2.0程序，写入变换矩阵、顶点坐标数据及颜色数据。</li>
+<li>索引法绘制出所有顶点坐标组成的三角形，得到一个立方体。</li>
+</ul>
+<p>如果我们仅仅只做了以上事情，往往我们得不到一个正确的立方里，反而会出现比较奇怪的立方体，所以我们一般情况下是需要做一个深度测试的</p>
+<p>这是因为我们没有开启深度测试GLES20.glEnable(GLES20.GL_DEPTH_TEST)，并在绘制前清除深度缓存导致GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT)的。<br>加入后，我们即可得到正常的立方体</p>
+<h4 id="深度测试"><a href="#深度测试" class="headerlink" title="深度测试"></a>深度测试</h4><ol>
+<li>什么是深度？<br>深度其实就是该象素点在3d世界中距离摄象机的距离（绘制坐标），深度缓存中存储着每个象素点（绘制在屏幕上的）的深度值！<br>深度值（Z值）越大，则离摄像机越远。<br>深度值是存贮在深度缓存里面的，我们用深度缓存的位数来衡量深度缓存的精度。深度缓存位数越高，则精确度越高，目前的显卡一般都可支持16位的Z Buffer，一些高级的显卡已经可以支持32位的Z Buffer，但一般用24位Z Buffer就已经足够了。</li>
+<li>为什么需要深度？<br>在不使用深度测试的时候，如果我们先绘制一个距离较近的物体，再绘制距离较远的物体，则距离远的物体因为后绘制，会把距离近的物体覆盖掉，这样的效果并不是我们所希望的。而有了深度缓冲以后，绘制物体的顺序就不那么重要了，都能按照远近（Z值）正常显示，这很关键。<br>实际上，只要存在深度缓冲区，无论是否启用深度测试，OpenGL在像素被绘制时都会尝试将深度数据写入到缓冲区内，除非调用了glDepthMask(GL_FALSE)来禁止写入。这些深度数据除了用于常规的测试外，还可以有一些有趣的用途，比如绘制阴影等等。</li>
+<li>启用深度测试<br>使用 glEnable(GL_DEPTH_TEST);<br>在默认情况是将需要绘制的新像素的z值与深度缓冲区中对应位置的z值进行比较，如果比深度缓存中的值小，那么用新像素的颜色值更新帧缓存中对应像素的颜色值。<br>但是可以使用glDepthFunc(func)来对这种默认测试方式进行修改。<br>其中参数func的值可以为GL_NEVER（没有处理）、GL_ALWAYS（处理所有）、GL_LESS（小于）、GL_LEQUAL（小于等于）、GL_EQUAL（等于）、GL_GEQUAL（大于等于）、GL_GREATER（大于）或GL_NOTEQUAL（不等于），其中默认值是GL_LESS。<br>一般来将，使用glDepthFunc(GL_LEQUAL);来表达一般物体之间的遮挡关系。</li>
+<li>启用了深度测试，那么这就不适用于同时绘制不透明物体。</li>
+</ol>
+<p>实现代码：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> MyOpenGLRenderCube implements GLSurfaceView.Renderer &#123;<br><br>    <span class="hljs-keyword">private</span> Context context;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> program;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> positionHandler;<br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> colorHandler;<br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> matrixHandler;<br><br>    <span class="hljs-keyword">private</span> FloatBuffer vertexBuffer;<br>    <span class="hljs-keyword">private</span> FloatBuffer colorBuffer;<br>    <span class="hljs-keyword">private</span> ShortBuffer indexBuffer;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[]</span> projectMatrix = <span class="hljs-keyword">new</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[<span class="hljs-number">16</span>]</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[]</span> viewMatrix = <span class="hljs-keyword">new</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[<span class="hljs-number">16</span>]</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[]</span> mvpMatrix = <span class="hljs-keyword">new</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[<span class="hljs-number">16</span>]</span>;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[]</span> colorCoords = &#123;<br>            <span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<br>            <span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<br>            <span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<br>            <span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<br>            <span class="hljs-number">1</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<br>            <span class="hljs-number">1</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<br>            <span class="hljs-number">1</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<br>            <span class="hljs-number">1</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">0</span>f,<span class="hljs-number">1</span>f,<br>    &#125;;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[]</span> vertexCoords = &#123;<br>            -<span class="hljs-number">0.5</span>f, <span class="hljs-number">0.5</span>f, <span class="hljs-number">1</span>f,<br>            -<span class="hljs-number">0.5</span>f, -<span class="hljs-number">0.5</span>f, <span class="hljs-number">1</span>f,<br>            <span class="hljs-number">0.5</span>f, -<span class="hljs-number">0.5</span>f, <span class="hljs-number">1</span>f,<br>            <span class="hljs-number">0.5</span>f, <span class="hljs-number">0.5</span>f, <span class="hljs-number">1</span>f,<br>            -<span class="hljs-number">0.5</span>f, <span class="hljs-number">0.5</span>f, <span class="hljs-number">0</span>f,<br>            -<span class="hljs-number">0.5</span>f, -<span class="hljs-number">0.5</span>f, <span class="hljs-number">0</span>f,<br>            <span class="hljs-number">0.5</span>f, -<span class="hljs-number">0.5</span>f, <span class="hljs-number">0</span>f,<br>            <span class="hljs-number">0.5</span>f, <span class="hljs-number">0.5</span>f, <span class="hljs-number">0</span>f<br>    &#125;;<br><br>    <span class="hljs-keyword">private</span> static short<span class="hljs-literal">[]</span> indexCoords = &#123;<br>            <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>,<span class="hljs-comment">// 上面</span><br>            <span class="hljs-number">0</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">0</span>, <span class="hljs-number">5</span>, <span class="hljs-number">1</span>,<span class="hljs-comment">// 左面</span><br>            <span class="hljs-number">0</span>, <span class="hljs-number">4</span>, <span class="hljs-number">7</span>, <span class="hljs-number">0</span>, <span class="hljs-number">7</span>, <span class="hljs-number">3</span>,<span class="hljs-comment">// 后面</span><br>            <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">7</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>,<span class="hljs-comment">// 底面</span><br>            <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">5</span>, <span class="hljs-number">2</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>,<span class="hljs-comment">// 前面</span><br>            <span class="hljs-number">2</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">7</span><span class="hljs-comment">// 右面</span><br>    &#125;;<br><br>    public <span class="hljs-constructor">MyOpenGLRenderCube(Context <span class="hljs-params">context</span>)</span> &#123;<br>        this.context = context;<br><br>        <span class="hljs-comment">// 设置顶点</span><br>        ByteBuffer bb = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ByteBuffer</span>.</span></span>allocate<span class="hljs-constructor">Direct(<span class="hljs-params">vertexCoords</span>.<span class="hljs-params">length</span> <span class="hljs-operator">*</span> 4)</span>;<br>        bb.order(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ByteOrder</span>.</span></span>native<span class="hljs-constructor">Order()</span>);<br>        vertexBuffer = bb.<span class="hljs-keyword">as</span><span class="hljs-constructor">FloatBuffer()</span>;<br>        vertexBuffer.put(vertexCoords);<br>        vertexBuffer.position(<span class="hljs-number">0</span>);<br><br>        <span class="hljs-comment">// 设置颜色</span><br>        ByteBuffer cc = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ByteBuffer</span>.</span></span>allocate<span class="hljs-constructor">Direct(<span class="hljs-params">colorCoords</span>.<span class="hljs-params">length</span> <span class="hljs-operator">*</span> 4)</span>;<br>        cc.order(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ByteOrder</span>.</span></span>native<span class="hljs-constructor">Order()</span>);<br>        colorBuffer = cc.<span class="hljs-keyword">as</span><span class="hljs-constructor">FloatBuffer()</span>;<br>        colorBuffer.put(colorCoords);<br>        colorBuffer.position(<span class="hljs-number">0</span>);<br><br>        <span class="hljs-comment">// 设置索引</span><br>        ByteBuffer dd = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ByteBuffer</span>.</span></span>allocate<span class="hljs-constructor">Direct(<span class="hljs-params">indexCoords</span>.<span class="hljs-params">length</span> <span class="hljs-operator">*</span> 2)</span>;<br>        dd.order(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ByteOrder</span>.</span></span>native<span class="hljs-constructor">Order()</span>);<br>        indexBuffer = dd.<span class="hljs-keyword">as</span><span class="hljs-constructor">ShortBuffer()</span>;<br>        indexBuffer.put(indexCoords);<br>        indexBuffer.position(<span class="hljs-number">0</span>);<br>    &#125;<br><br>    @Override<br>    public void on<span class="hljs-constructor">SurfaceCreated(GL10 <span class="hljs-params">gl10</span>, EGLConfig <span class="hljs-params">eglConfig</span>)</span> &#123;<br>        String vertexSource = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ShaderUtils</span>.</span></span>read<span class="hljs-constructor">RawText(<span class="hljs-params">context</span>, R.<span class="hljs-params">raw</span>.<span class="hljs-params">vertex_shader_7</span>)</span>;<br>        String fragmentSource = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ShaderUtils</span>.</span></span>read<span class="hljs-constructor">RawText(<span class="hljs-params">context</span>, R.<span class="hljs-params">raw</span>.<span class="hljs-params">fragment_shader_7</span>)</span>;<br>        program = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ShaderUtils</span>.</span></span>create<span class="hljs-constructor">Program(<span class="hljs-params">vertexSource</span>, <span class="hljs-params">fragmentSource</span>)</span>;<br>        <span class="hljs-keyword">if</span> (program &gt; <span class="hljs-number">0</span>) &#123;<br>            positionHandler = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">GetAttribLocation(<span class="hljs-params">program</span>, <span class="hljs-string">&quot;position&quot;</span>)</span>;<br>            colorHandler = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">GetAttribLocation(<span class="hljs-params">program</span>, <span class="hljs-string">&quot;color&quot;</span>)</span>;<br>            matrixHandler = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">GetUniformLocation(<span class="hljs-params">program</span>, <span class="hljs-string">&quot;matrix&quot;</span>)</span>;<br>        &#125;<br>        <span class="hljs-comment">// 开启深度测试</span><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">Enable(GLES20.GL_DEPTH_TEST)</span>;<br>    &#125;<br><br>    @Override<br>    public void on<span class="hljs-constructor">SurfaceChanged(GL10 <span class="hljs-params">gl10</span>, <span class="hljs-params">int</span> <span class="hljs-params">i</span>, <span class="hljs-params">int</span> <span class="hljs-params">i1</span>)</span> &#123;<br>        <span class="hljs-built_in">float</span> ratio = (<span class="hljs-built_in">float</span>)i/i1;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Matrix</span>.</span></span>frustum<span class="hljs-constructor">M(<span class="hljs-params">projectMatrix</span>,0,-<span class="hljs-params">ratio</span>,<span class="hljs-params">ratio</span>,-1,1,3,20)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Matrix</span>.</span></span>set<span class="hljs-constructor">LookAtM(<span class="hljs-params">viewMatrix</span>,0,5.0f,5.0f,10.0f,0f,0f,0f,0f,1f,0f)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Matrix</span>.</span></span>multiply<span class="hljs-constructor">MM(<span class="hljs-params">mvpMatrix</span>,0,<span class="hljs-params">projectMatrix</span>,0,<span class="hljs-params">viewMatrix</span>,0)</span>;<br>    &#125;<br><br>    @Override<br>    public void on<span class="hljs-constructor">DrawFrame(GL10 <span class="hljs-params">gl10</span>)</span> &#123;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">Clear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">ClearColor(0.5f,0.5f,0.5f,1f)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">UseProgram(<span class="hljs-params">program</span>)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">EnableVertexAttribArray(<span class="hljs-params">positionHandler</span>)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">VertexAttribPointer(<span class="hljs-params">positionHandler</span>,3,GLES20.GL_FLOAT,<span class="hljs-params">false</span>,0,<span class="hljs-params">vertexBuffer</span>)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">EnableVertexAttribArray(<span class="hljs-params">colorHandler</span>)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">VertexAttribPointer(<span class="hljs-params">colorHandler</span>,4,GLES20.GL_FLOAT,<span class="hljs-params">false</span>,0,<span class="hljs-params">colorBuffer</span>)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">UniformMatrix4fv(<span class="hljs-params">matrixHandler</span>,1,<span class="hljs-params">false</span>,<span class="hljs-params">mvpMatrix</span>,0)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">DrawElements(GLES20.GL_TRIANGLES,<span class="hljs-params">indexCoords</span>.<span class="hljs-params">length</span>,GLES20.GL_UNSIGNED_SHORT,<span class="hljs-params">indexBuffer</span>)</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+        <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/">#音视频</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>android 音视频开发(八)</div>
+      <div>http://example.com/2019/08/31/android-media-08/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年8月31日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/09/01/android-media-09/" title="android 音视频开发(九)">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">android 音视频开发(九)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/08/29/android-media-07/" title="android 音视频开发(七)">
+                        <span class="hidden-mobile">android 音视频开发(七)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

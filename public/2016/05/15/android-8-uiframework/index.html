@@ -1,0 +1,846 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Android中的UI是非常重要的方面，直接关系到用户体验，所以我打算把之前用到的，比较好的UI拿出来复习一下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重拾android路(八) UI">
+<meta property="og:url" content="http://example.com/2016/05/15/android-8-uiframework/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Android中的UI是非常重要的方面，直接关系到用户体验，所以我打算把之前用到的，比较好的UI拿出来复习一下。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/android/service-life.png">
+<meta property="article:published_time" content="2016-05-15T15:24:36.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.095Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/android/service-life.png">
+  
+  
+  
+  <title>重拾android路(八) UI - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="重拾android路(八) UI"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2016-05-15 23:24" pubdate>
+          2016年5月15日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          29k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          242 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">重拾android路(八) UI</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Android中的UI是非常重要的方面，直接关系到用户体验，所以我打算把之前用到的，比较好的UI拿出来复习一下。</p>
+<span id="more"></span>
+<h1 id="通知-Notification"><a href="#通知-Notification" class="headerlink" title="通知 Notification"></a>通知 Notification</h1><p>通知是一个可以在应用程序正常的用户界面之外显示给用户的消息。<br>通知发出时，它首先出现在状态栏的通知区域中，用户打开通知抽屉可查看通知详情。通知区域和通知抽屉都是用户可以随时查看的系统控制区域</p>
+<p>简单的说一下，我们这里使用的是Android4.1以上的版本，比较低的版本暂时不考虑，因为现在市面上很难再见到4.0以下的版本了</p>
+<h2 id="创建notification"><a href="#创建notification" class="headerlink" title="创建notification"></a>创建notification</h2><p>使用创建者模式创建notification，并且设置三个属性，这三个属性是必须的</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">Notification notification = <span class="hljs-keyword">new</span> Notification.<span class="hljs-constructor">Builder(NotificationActivity.<span class="hljs-params">this</span>)</span><br>                        .set<span class="hljs-constructor">SmallIcon(R.<span class="hljs-params">mipmap</span>.<span class="hljs-params">ic_launcher</span>)</span> <span class="hljs-comment">//设置小图标</span><br>                        .set<span class="hljs-constructor">ContentText(<span class="hljs-string">&quot;这是内容&quot;</span>)</span>  <span class="hljs-comment">//设置内容</span><br>                        .set<span class="hljs-constructor">ContentTitle(<span class="hljs-string">&quot;这是标题&quot;</span>)</span> <span class="hljs-comment">// 设置标题</span><br>                        .build<span class="hljs-literal">()</span>;<br></code></pre></td></tr></table></figure>
+
+<h2 id="创建notification管理器"><a href="#创建notification管理器" class="headerlink" title="创建notification管理器"></a>创建notification管理器</h2><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs abnf">//获取notification管理器<br>                NotificationManager manager <span class="hljs-operator">=</span> (NotificationManager) getSystemService(NOTIFICATION_SERVICE)<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="使用notification管理器将notification弹出显示"><a href="#使用notification管理器将notification弹出显示" class="headerlink" title="使用notification管理器将notification弹出显示"></a>使用notification管理器将notification弹出显示</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">//</span>将notification显示<br>                manager.notify(<span class="hljs-number">0</span>,notification);<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>其中0表示当前id，用来唯一表示notification</p>
+</blockquote>
+<h2 id="pendingIntent"><a href="#pendingIntent" class="headerlink" title="pendingIntent"></a>pendingIntent</h2><p>到目前为止，我们的notification还不能显示，因为我们还没有为这个notification设置一个显示的操作，也就是说，如果当前的notification没有具体的操作的话，是无意义的。一般情况下，我们会为这个notification设置一个需要跳转的页面或者需要打开浏览器的网址</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">PendingIntent intent = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">PendingIntent</span>.</span></span>get<span class="hljs-constructor">Activity(NotificationActivity.<span class="hljs-params">this</span>,0,<span class="hljs-params">new</span> Intent(NotificationActivity.<span class="hljs-params">this</span>,TestActivity.<span class="hljs-params">class</span>)</span>,PendingIntent.FLAG_UPDATE_CURRENT);<br></code></pre></td></tr></table></figure>
+
+<p>PendingIntent字面意思有延迟的意思，用于某个事件结束之后执行特定的Action。<br>PendingIntent 是 Android 系统管理并持有的用于描述和获取原始数据的对象的标志(引用)。也就是说，即便创建该PendingIntent对象的进程被杀死了，这个PendingItent对象在其他进程中还是可用的。<br>日常使用中的短信、闹钟等都用到了 PendingIntent<br>PendingIntent有下面的三种方式获取：</p>
+<ul>
+<li><p>&#x2F;&#x2F;获取一个用于启动 Activity 的 PendingIntent 对象<br>public static PendingIntent getActivity(Context context, int requestCode, Intent intent, int flags);</p>
+</li>
+<li><p>&#x2F;&#x2F;获取一个用于启动 Service 的 PendingIntent 对象<br>public static PendingIntent getService(Context context, int requestCode, Intent intent, int flags);</p>
+</li>
+<li><p>&#x2F;&#x2F;获取一个用于向 BroadcastReceiver 广播的 PendingIntent 对象<br>public static PendingIntent getBroadcast(Context context, int requestCode, Intent intent, int flags)</p>
+</li>
+</ul>
+<p>除此之外，PendingIntent有下面几个flag</p>
+<ul>
+<li><p>FLAG_CANCEL_CURRENT:如果当前系统中已经存在一个相同的 PendingIntent 对象，那么就将先将已有的 PendingIntent 取消，然后重新生成一个 PendingIntent 对象。</p>
+</li>
+<li><p>FLAG_NO_CREATE:如果当前系统中不存在相同的 PendingIntent 对象，系统将不会创建该 PendingIntent 对象而是直接返回 null 。</p>
+</li>
+<li><p>FLAG_ONE_SHOT:该 PendingIntent 只作用一次。</p>
+</li>
+<li><p>FLAG_UPDATE_CURRENT:如果系统中已存在该 PendingIntent 对象，那么系统将保留该 PendingIntent 对象，但是会使用新的 Intent 来更新之前 PendingIntent 中的 Intent 对象数据，例如更新 Intent 中的 Extras 。</p>
+</li>
+</ul>
+<h2 id="更新Notification"><a href="#更新Notification" class="headerlink" title="更新Notification"></a>更新Notification</h2><p>更新通知很简单，只需要再次发送相同 ID 的通知即可，如果之前的通知还未被取消，则会直接更新该通知相关的属性；如果之前的通知已经被取消，则会重新创建一个新通知。更新通知跟发送通知使用相同的方式</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs abnf">//设置当前可以点击之后消失<br>notification.flags <span class="hljs-operator">=</span> Notification.FLAG_AUTO_CANCEL<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="取消Notification"><a href="#取消Notification" class="headerlink" title="取消Notification"></a>取消Notification</h3><p>取消Notification有五种方式：</p>
+<ol>
+<li>点击通知栏的清除按钮，会清除所有可清除的通知</li>
+<li>设置了 setAutoCancel() 或 FLAG_AUTO_CANCEL 的通知，点击该通知时会清除它</li>
+<li>通过 NotificationManager 调用 cancel(int id) 方法清除指定 ID 的通知</li>
+<li>通过 NotificationManager 调用 cancel(String tag, int id) 方法清除指定 TAG 和 ID 的通知</li>
+<li>通过 NotificationManager 调用 cancelAll() 方法清除所有该应用之前发送的通知</li>
+</ol>
+<p>如果你是通过 NotificationManager.notify(String tag, int id, Notification notify) 方法创建的通知，那么只能通过 NotificationManager.cancel(String tag, int id) 方法才能清除对应的通知，调用NotificationManager.cancel(int id) 无效</p>
+<p>下面是一个完整的例子：<br>XML布局文件：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span></span><br><span class="hljs-tag">    <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;vertical&quot;</span>&gt;</span><br><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">ScrollView</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span>&gt;</span><br><br>        <span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;vertical&quot;</span>&gt;</span><br><br>            <span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/btn_remove_all_notification&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;清除所有 Notification&quot;</span> /&gt;</span><br><br>            <span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/btn_send_notification&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;发送 id = 1 的通知&quot;</span> /&gt;</span><br><br>            <span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/btn_remove_notification&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;移除 id = 1 的通知&quot;</span> /&gt;</span><br><br>            <span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/btn_send_notification_with_tag&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;发送 ID = 1,TAG = &#x27;littlejie&#x27; 的通知&quot;</span> /&gt;</span><br><br>            <span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/btn_remove_notification_with_tag&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;移除 ID = 1,TAG = &#x27;littlejie&#x27; 的通知&quot;</span> /&gt;</span><br><br>            <span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/btn_send_ten_notification&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;我要一口气发十个通知&quot;</span> /&gt;</span><br><br>            <span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/btn_send_flag_no_clear_notification&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;发送一个 FLAG_NO_CLEAR 的通知,不能被移除&quot;</span> /&gt;</span><br><br>            <span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/btn_send_flag_ongoing_event_notification&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;发送一个 FLAG_ONGONG_EVENT 的通知,不能被移除&quot;</span> /&gt;</span><br><br>            <span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/btn_send_flag_auto_cancecl_notification&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">                <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;发送一个 FLAG_AUTO_CANCEL 的通知,能移除&quot;</span> /&gt;</span><br><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">ScrollView</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>java文件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SimpleNotificationActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Activity</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">View</span>.OnClickListener &#123;<br><br>    <span class="hljs-comment">//Notification.FLAG_FOREGROUND_SERVICE    //表示正在运行的服务</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">NOTIFICATION_TAG</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;littlejie&quot;</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">DEFAULT_NOTIFICATION_ID</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br><br>    <span class="hljs-keyword">private</span> NotificationManager mNotificationManager;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onCreate</span><span class="hljs-params">(Bundle savedInstanceState)</span> &#123;<br>        <span class="hljs-built_in">super</span>.onCreate(savedInstanceState);<br>        setContentView(R.layout.activity_simple_notification);<br><br>        findViewById(R.id.btn_remove_all_notification).setOnClickListener(<span class="hljs-built_in">this</span>);<br>        findViewById(R.id.btn_send_notification).setOnClickListener(<span class="hljs-built_in">this</span>);<br>        findViewById(R.id.btn_remove_notification).setOnClickListener(<span class="hljs-built_in">this</span>);<br>        findViewById(R.id.btn_send_notification_with_tag).setOnClickListener(<span class="hljs-built_in">this</span>);<br>        findViewById(R.id.btn_remove_notification_with_tag).setOnClickListener(<span class="hljs-built_in">this</span>);<br>        findViewById(R.id.btn_send_ten_notification).setOnClickListener(<span class="hljs-built_in">this</span>);<br>        findViewById(R.id.btn_send_flag_no_clear_notification).setOnClickListener(<span class="hljs-built_in">this</span>);<br>        findViewById(R.id.btn_send_flag_ongoing_event_notification).setOnClickListener(<span class="hljs-built_in">this</span>);<br>        findViewById(R.id.btn_send_flag_auto_cancecl_notification).setOnClickListener(<span class="hljs-built_in">this</span>);<br><br>        mNotificationManager = (NotificationManager) <span class="hljs-built_in">this</span>.getSystemService(Context.NOTIFICATION_SERVICE);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onClick</span><span class="hljs-params">(View v)</span> &#123;<br>        <span class="hljs-keyword">switch</span> (v.getId()) &#123;<br>            <span class="hljs-keyword">case</span> R.id.btn_remove_all_notification:<br>                <span class="hljs-comment">//移除当前 Context 下所有 Notification,包括 FLAG_NO_CLEAR 和 FLAG_ONGOING_EVENT</span><br>                mNotificationManager.cancelAll();<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> R.id.btn_send_notification:<br>                <span class="hljs-comment">//发送一个 Notification,此处 ID = 1</span><br>                sendNotification();<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> R.id.btn_remove_notification:<br>                <span class="hljs-comment">//移除 ID = 1 的 Notification,注意:该方法只针对当前 Context。</span><br>                mNotificationManager.cancel(DEFAULT_NOTIFICATION_ID);<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> R.id.btn_send_notification_with_tag:<br>                <span class="hljs-comment">//发送一个 ID = 1 并且 TAG = littlejie 的 Notification</span><br>                <span class="hljs-comment">//注意:此处发送的通知与 sendNotification() 发送的通知并不冲突</span><br>                <span class="hljs-comment">//因为此处的 Notification 带有 TAG</span><br>                sendNotificationWithTag();<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> R.id.btn_remove_notification_with_tag:<br>                <span class="hljs-comment">//移除一个 ID = 1 并且 TAG = littlejie 的 Notification</span><br>                <span class="hljs-comment">//注意:此处移除的通知与 NotificationManager.cancel(int id) 移除通知并不冲突</span><br>                <span class="hljs-comment">//因为此处的 Notification 带有 TAG</span><br>                mNotificationManager.cancel(NOTIFICATION_TAG, DEFAULT_NOTIFICATION_ID);<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> R.id.btn_send_ten_notification:<br>                <span class="hljs-comment">//连续发十条 Notification</span><br>                sendTenNotifications();<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> R.id.btn_send_flag_no_clear_notification:<br>                <span class="hljs-comment">//发送 ID = 1, flag = FLAG_NO_CLEAR 的 Notification</span><br>                <span class="hljs-comment">//下面两个 Notification 的 ID 都为 1,会发现 ID 相等的 Notification 会被最新的替换掉</span><br>                sendFlagNoClearNotification();<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> R.id.btn_send_flag_auto_cancecl_notification:<br>                sendFlagOngoingEventNotification();<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> R.id.btn_send_flag_ongoing_event_notification:<br>                sendFlagAutoCancelNotification();<br>                <span class="hljs-keyword">break</span>;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 发送最简单的通知,该通知的ID = 1</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sendNotification</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">//这里使用 NotificationCompat 而不是 Notification ,因为 Notification 需要 API 16 才能使用</span><br>        <span class="hljs-comment">//NotificationCompat 存在于 V4 Support Library</span><br>        NotificationCompat.<span class="hljs-type">Builder</span> <span class="hljs-variable">builder</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NotificationCompat</span>.Builder(<span class="hljs-built_in">this</span>)<br>                .setSmallIcon(R.mipmap.ic_launcher)<br>                .setContentTitle(<span class="hljs-string">&quot;Send Notification&quot;</span>)<br>                .setContentText(<span class="hljs-string">&quot;Hi,My id is 1&quot;</span>);<br>        mNotificationManager.notify(DEFAULT_NOTIFICATION_ID, builder.build());<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 使用notify(String tag, int id, Notification notification)方法发送通知</span><br><span class="hljs-comment">     * 移除对应通知需使用 cancel(String tag, int id)</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sendNotificationWithTag</span><span class="hljs-params">()</span> &#123;<br>        NotificationCompat.<span class="hljs-type">Builder</span> <span class="hljs-variable">builder</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NotificationCompat</span>.Builder(<span class="hljs-built_in">this</span>)<br>                .setSmallIcon(R.mipmap.ic_launcher)<br>                .setContentTitle(<span class="hljs-string">&quot;Send Notification With Tag&quot;</span>)<br>                .setContentText(<span class="hljs-string">&quot;Hi,My id is 1,tag is &quot;</span> + NOTIFICATION_TAG);<br>        mNotificationManager.notify(NOTIFICATION_TAG, DEFAULT_NOTIFICATION_ID, builder.build());<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 循环发送十个通知</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sendTenNotifications</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) &#123;<br>            NotificationCompat.<span class="hljs-type">Builder</span> <span class="hljs-variable">builder</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NotificationCompat</span>.Builder(<span class="hljs-built_in">this</span>)<br>                    .setSmallIcon(R.mipmap.ic_launcher)<br>                    .setContentTitle(<span class="hljs-string">&quot;Send Notification Batch&quot;</span>)<br>                    .setContentText(<span class="hljs-string">&quot;Hi,My id is &quot;</span> + i);<br>            mNotificationManager.notify(i, builder.build());<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 设置FLAG_NO_CLEAR</span><br><span class="hljs-comment">     * 该 flag 表示该通知不能被状态栏的清除按钮给清除掉,也不能被手动清除,但能通过 cancel() 方法清除</span><br><span class="hljs-comment">     * Notification.flags属性可以通过 |= 运算叠加效果</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sendFlagNoClearNotification</span><span class="hljs-params">()</span> &#123;<br>        NotificationCompat.<span class="hljs-type">Builder</span> <span class="hljs-variable">builder</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NotificationCompat</span>.Builder(<span class="hljs-built_in">this</span>)<br>                .setSmallIcon(R.mipmap.ic_launcher)<br>                .setContentTitle(<span class="hljs-string">&quot;Send Notification Use FLAG_NO_CLEAR&quot;</span>)<br>                .setContentText(<span class="hljs-string">&quot;Hi,My id is 1,i can&#x27;t be clear.&quot;</span>);<br>        <span class="hljs-type">Notification</span> <span class="hljs-variable">notification</span> <span class="hljs-operator">=</span> builder.build();<br>        <span class="hljs-comment">//设置 Notification 的 flags = FLAG_NO_CLEAR</span><br>        <span class="hljs-comment">//FLAG_NO_CLEAR 表示该通知不能被状态栏的清除按钮给清除掉,也不能被手动清除,但能通过 cancel() 方法清除</span><br>        <span class="hljs-comment">//flags 可以通过 |= 运算叠加效果</span><br>        notification.flags |= Notification.FLAG_NO_CLEAR;<br>        mNotificationManager.notify(DEFAULT_NOTIFICATION_ID, notification);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 设置FLAG_AUTO_CANCEL</span><br><span class="hljs-comment">     * 该 flag 表示用户单击通知后自动消失</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sendFlagAutoCancelNotification</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">//设置一个Intent,不然点击通知不会自动消失</span><br>        <span class="hljs-type">Intent</span> <span class="hljs-variable">resultIntent</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Intent</span>(<span class="hljs-built_in">this</span>, MainActivity.class);<br>        <span class="hljs-type">PendingIntent</span> <span class="hljs-variable">resultPendingIntent</span> <span class="hljs-operator">=</span> PendingIntent.getActivity(<br>                <span class="hljs-built_in">this</span>, <span class="hljs-number">0</span>, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);<br>        NotificationCompat.<span class="hljs-type">Builder</span> <span class="hljs-variable">builder</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NotificationCompat</span>.Builder(<span class="hljs-built_in">this</span>)<br>                .setSmallIcon(R.mipmap.ic_launcher)<br>                .setContentTitle(<span class="hljs-string">&quot;Send Notification Use FLAG_AUTO_CLEAR&quot;</span>)<br>                .setContentText(<span class="hljs-string">&quot;Hi,My id is 1,i can be clear.&quot;</span>)<br>                .setContentIntent(resultPendingIntent);<br>        <span class="hljs-type">Notification</span> <span class="hljs-variable">notification</span> <span class="hljs-operator">=</span> builder.build();<br>        <span class="hljs-comment">//设置 Notification 的 flags = FLAG_NO_CLEAR</span><br>        <span class="hljs-comment">//FLAG_AUTO_CANCEL 表示该通知能被状态栏的清除按钮给清除掉</span><br>        <span class="hljs-comment">//等价于 builder.setAutoCancel(true);</span><br>        notification.flags |= Notification.FLAG_AUTO_CANCEL;<br>        mNotificationManager.notify(DEFAULT_NOTIFICATION_ID, notification);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 设置FLAG_ONGOING_EVENT</span><br><span class="hljs-comment">     * 该 flag 表示发起正在运行事件（活动中）</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sendFlagOngoingEventNotification</span><span class="hljs-params">()</span> &#123;<br>        NotificationCompat.<span class="hljs-type">Builder</span> <span class="hljs-variable">builder</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NotificationCompat</span>.Builder(<span class="hljs-built_in">this</span>)<br>                .setSmallIcon(R.mipmap.ic_launcher)<br>                .setContentTitle(<span class="hljs-string">&quot;Send Notification Use FLAG_ONGOING_EVENT&quot;</span>)<br>                .setContentText(<span class="hljs-string">&quot;Hi,My id is 1,i can&#x27;t be clear.&quot;</span>);<br>        <span class="hljs-type">Notification</span> <span class="hljs-variable">notification</span> <span class="hljs-operator">=</span> builder.build();<br>        <span class="hljs-comment">//设置 Notification 的 flags = FLAG_NO_CLEAR</span><br>        <span class="hljs-comment">//FLAG_ONGOING_EVENT 表示该通知通知放置在正在运行,不能被手动清除,但能通过 cancel() 方法清除</span><br>        <span class="hljs-comment">//等价于 builder.setOngoing(true);</span><br>        notification.flags |= Notification.FLAG_ONGOING_EVENT;<br>        mNotificationManager.notify(DEFAULT_NOTIFICATION_ID, notification);<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="其他内容"><a href="#其他内容" class="headerlink" title="其他内容"></a>其他内容</h2><p>上面的例子都是关于一些基本操作的，但是有时候我们的通知Notification可能需要有一些特殊的样式，比如当有新的通知的时候，应该有一些提示声音，震动等操作。<br>Notification 有震动、响铃、呼吸灯三种响铃效果，可以通过 setDefaults(int defualts) 方法来设置。 Default 属性有以下四种，一旦设置了 Default 效果，自定义的效果就会失效</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">//</span>设置系统默认提醒效果，一旦设置默认提醒效果，则自定义的提醒效果会全部失效。具体可看源码<br><span class="hljs-regexp">//</span>添加默认震动效果,需要申请震动权限<br><span class="hljs-regexp">//</span>&lt;uses-permission android:name=<span class="hljs-string">&quot;android.permission.VIBRATE&quot;</span> /&gt;<br>Notification.DEFAULT_VIBRATE<br><br><span class="hljs-regexp">//</span>添加系统默认声音效果，设置此值后，调用setSound()设置自定义声音无效<br>Notification.DEFAULT_SOUND<br><br><span class="hljs-regexp">//</span>添加默认呼吸灯效果，使用时须与 Notification.FLAG_SHOW_LIGHTS 结合使用，否则无效<br>Notification.DEFAULT_LIGHTS<br><br><span class="hljs-regexp">//</span>添加上述三种默认提醒效果<br>Notification.DEFAULT_ALL<br></code></pre></td></tr></table></figure>
+
+<p>除了以上几种设置 Notification 默认通知效果，还可以通过以下几种 FLAG 设置通知效果。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">//</span>提醒效果常用 Flag<br><span class="hljs-regexp">//</span>三色灯提醒，在使用三色灯提醒时候必须加该标志符<br>Notification.FLAG_SHOW_LIGHTS<br><br><span class="hljs-regexp">//</span>发起正在运行事件（活动中）<br>Notification.FLAG_ONGOING_EVENT<br><br><span class="hljs-regexp">//</span>让声音、振动无限循环，直到用户响应 （取消或者打开）<br>Notification.FLAG_INSISTENT<br><br><span class="hljs-regexp">//</span>发起Notification后，铃声和震动均只执行一次<br>Notification.FLAG_ONLY_ALERT_ONCE<br><br><span class="hljs-regexp">//</span>用户单击通知后自动消失<br>Notification.FLAG_AUTO_CANCEL<br><br><span class="hljs-regexp">//</span>只有调用NotificationManager.cancel()时才会清除<br>Notification.FLAG_NO_CLEAR<br><br><span class="hljs-regexp">//</span>表示正在运行的服务<br>Notification.FLAG_FOREGROUND_SERVICE<br></code></pre></td></tr></table></figure>
+
+<p>我们可以写一个工具类，帮助我们实现各种效果</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> NotificationUtils &#123;<br><br>    <span class="hljs-keyword">private</span> static final <span class="hljs-built_in">int</span> NOTIFICATION_ID = <span class="hljs-number">1</span>;<br><br>    Context context;<br>    NotificationManager manager;<br><br>    public <span class="hljs-constructor">NotificationUtils(Context <span class="hljs-params">context</span>)</span>&#123;<br>        this.context = context;<br>        manager = (NotificationManager) context.get<span class="hljs-constructor">SystemService(Context.NOTIFICATION_SERVICE)</span>;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 普通通知效果</span><br><span class="hljs-comment">     */</span><br>    public void show<span class="hljs-constructor">SimpleNotification()</span>&#123;<br>        NotificationCompat.Builder builder = <span class="hljs-keyword">new</span> NotificationCompat.<span class="hljs-constructor">Builder(<span class="hljs-params">context</span>)</span><br>                .set<span class="hljs-constructor">SmallIcon(R.<span class="hljs-params">mipmap</span>.<span class="hljs-params">ic_launcher</span>)</span><br>                .set<span class="hljs-constructor">ContentText(<span class="hljs-string">&quot;我是文本信息&quot;</span>)</span><br>                .set<span class="hljs-constructor">ContentTitle(<span class="hljs-string">&quot;我是标题&quot;</span>)</span>;<br><br>        manager.notify(NOTIFICATION_ID,builder.build<span class="hljs-literal">()</span>);<br><br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 展示有自定义铃声效果的通知</span><br><span class="hljs-comment">     * 使用系统自带的铃声效果:Uri.withAppendedPath(Audio.Media.INTERNAL_CONTENT_URI, &quot;6&quot;);</span><br><span class="hljs-comment">     */</span><br>    public void show<span class="hljs-constructor">NotificationWithRing()</span>&#123;<br>        NotificationCompat.Builder builder = <span class="hljs-keyword">new</span> NotificationCompat.<span class="hljs-constructor">Builder(<span class="hljs-params">context</span>)</span><br>                .set<span class="hljs-constructor">SmallIcon(R.<span class="hljs-params">mipmap</span>.<span class="hljs-params">ic_launcher</span>)</span><br>                .set<span class="hljs-constructor">ContentTitle(<span class="hljs-string">&quot;我是标题&quot;</span>)</span><br>                .set<span class="hljs-constructor">ContentText(<span class="hljs-string">&quot;我是内容&quot;</span>)</span><br>                .set<span class="hljs-constructor">Sound(Uri.<span class="hljs-params">withAppendedPath</span>(MediaStore.Audio.Media.INTERNAL_CONTENT_URI,<span class="hljs-string">&quot;6&quot;</span>)</span>);<br>        manager.notify(<span class="hljs-number">2</span>,builder.build<span class="hljs-literal">()</span>);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 震动效果</span><br><span class="hljs-comment">     * &lt;uses-permission android:name=&quot;android.permission.VIBRATE&quot; /&gt;</span><br><span class="hljs-comment">     */</span><br>    public void show<span class="hljs-constructor">NotifyWithVibrate()</span>&#123;<br>        long <span class="hljs-literal">[]</span> vibrate = <span class="hljs-keyword">new</span> long<span class="hljs-literal">[]</span>&#123;<span class="hljs-number">0</span>,<span class="hljs-number">500</span>,<span class="hljs-number">1000</span>,<span class="hljs-number">1500</span>&#125;;<br>        NotificationCompat.Builder builder = <span class="hljs-keyword">new</span> NotificationCompat.<span class="hljs-constructor">Builder(<span class="hljs-params">context</span>)</span><br>                .set<span class="hljs-constructor">SmallIcon(R.<span class="hljs-params">mipmap</span>.<span class="hljs-params">ic_launcher</span>)</span><br>                .set<span class="hljs-constructor">ContentText(<span class="hljs-string">&quot;我是内容&quot;</span>)</span><br>                .set<span class="hljs-constructor">ContentTitle(<span class="hljs-string">&quot;我是标题&quot;</span>)</span><br>                .set<span class="hljs-constructor">Vibrate(<span class="hljs-params">vibrate</span>)</span>;<br><br>        manager.notify(<span class="hljs-number">3</span>,builder.build<span class="hljs-literal">()</span>);<br>    &#125;<br><br>    public void show<span class="hljs-constructor">NotifyWithLights()</span>&#123;<br>        final NotificationCompat.Builder builder = <span class="hljs-keyword">new</span> NotificationCompat.<span class="hljs-constructor">Builder(<span class="hljs-params">context</span>)</span><br>                .set<span class="hljs-constructor">SmallIcon(R.<span class="hljs-params">mipmap</span>.<span class="hljs-params">ic_launcher</span>)</span><br>                .set<span class="hljs-constructor">ContentTitle(<span class="hljs-string">&quot;我是带有呼吸灯效果的通知&quot;</span>)</span><br>                .set<span class="hljs-constructor">ContentText(<span class="hljs-string">&quot;一闪一闪亮晶晶~&quot;</span>)</span><br>                <span class="hljs-comment">//ledARGB 表示灯光颜色、 ledOnMS 亮持续时间、ledOffMS 暗的时间</span><br>                .set<span class="hljs-constructor">Lights(0xFF0000, 3000, 3000)</span>;<br>        Notification notify = builder.build<span class="hljs-literal">()</span>;<br>        <span class="hljs-comment">//只有在设置了标志符Flags为Notification.FLAG_SHOW_LIGHTS的时候，才支持呼吸灯提醒。</span><br>        notify.flags = Notification.FLAG_SHOW_LIGHTS;<br>        <span class="hljs-comment">//设置lights参数的另一种方式</span><br>        <span class="hljs-comment">//notify.ledARGB = 0xFF0000;</span><br>        <span class="hljs-comment">//notify.ledOnMS = 500;</span><br>        <span class="hljs-comment">//notify.ledOffMS = 5000;</span><br>        <span class="hljs-comment">//使用handler延迟发送通知,因为连接usb时,呼吸灯一直会亮着</span><br>        Handler handler = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Handler()</span>;<br>        handler.post<span class="hljs-constructor">Delayed(<span class="hljs-params">new</span> Runnable()</span> &#123;<br>            @Override<br>            public void run<span class="hljs-literal">()</span> &#123;<br>                manager.notify(<span class="hljs-number">4</span>, builder.build<span class="hljs-literal">()</span>);<br>            &#125;<br>        &#125;, <span class="hljs-number">10000</span>);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 显示带有默认铃声、震动、呼吸灯效果的通知</span><br><span class="hljs-comment">     * 如需实现自定义效果,请参考前面三个例子</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> void show<span class="hljs-constructor">NotifyWithMixed()</span> &#123;<br>        NotificationCompat.Builder builder = <span class="hljs-keyword">new</span> NotificationCompat.<span class="hljs-constructor">Builder(<span class="hljs-params">context</span>)</span><br>                .set<span class="hljs-constructor">SmallIcon(R.<span class="hljs-params">mipmap</span>.<span class="hljs-params">ic_launcher</span>)</span><br>                .set<span class="hljs-constructor">ContentTitle(<span class="hljs-string">&quot;我是有铃声+震动+呼吸灯效果的通知&quot;</span>)</span><br>                .set<span class="hljs-constructor">ContentText(<span class="hljs-string">&quot;我是最棒的~&quot;</span>)</span><br>                <span class="hljs-comment">//等价于setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE);</span><br>                .set<span class="hljs-constructor">Defaults(Notification.DEFAULT_ALL)</span>;<br>        manager.notify(<span class="hljs-number">5</span>, builder.build<span class="hljs-literal">()</span>);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 清除所有通知</span><br><span class="hljs-comment">     */</span><br>    public void clear<span class="hljs-constructor">AllNotification()</span>&#123;<br>        manager.cancel<span class="hljs-constructor">All()</span>;<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="Android8-0的通知"><a href="#Android8-0的通知" class="headerlink" title="Android8.0的通知"></a>Android8.0的通知</h2><p>在Android O中，使用了新的方式完成通知。<br>Android O 引入了 通知渠道（Notification Channels），以提供统一的系统来帮助用户管理通知，如果是针对 android O 为目标平台时，必须实现一个或者多个通知渠道，以向用户显示通知。若并不以 Android O 为目标平台，当应用运行在 android O 设备上时，其行为将与运行在 Android 7.0 上时相同。<br>开发者可以为需要发送的每个不同的通知类型创建一个通知渠道。还可以创建通知渠道来反映应用的用户做出的选择。例如，可以为聊天应用的用户创建的每个聊天组建立单独的通知渠道。<br>Android O 的用户可以使用一致的系统 UI 管理大多数与通知有关的设置。所有发布至通知渠道的通知都具有相同的行为。当用户修改任何下列特性的行为时，修改将作用于通知渠道：</p>
+<ul>
+<li>重要性</li>
+<li>光</li>
+<li>声音</li>
+<li>震动</li>
+<li>在锁屏上显示</li>
+<li>替换免打扰模式</li>
+</ul>
+<p>用户可以访问 Settings（右划一段距离通知可以看到Settings），或长按通知来更改这些行为，甚至可以随时屏蔽通知渠道。一旦在创建完某个通知渠道并将其提交到通知管理器后，便无法通过编程方式修改通知渠道的行为，这些设置由用户掌控</p>
+<h3 id="通知的优先级和重要性"><a href="#通知的优先级和重要性" class="headerlink" title="通知的优先级和重要性"></a>通知的优先级和重要性</h3><p>Android O 弃用了为单个通知设置优先级的功能。创建通知渠道时可以设置建议重要性级别。为通知渠道指定的重要性级别适用于发布至该渠道的所有通知消息。可以配置五个级别中的一个，这些级别代表着通知渠道可以打断用户的程度，范围是 IMPORTANCE_NONE(0)至 IMPORTANCE_HIGH(4)。默认重要性级别为 3：在所有位置显示，发出提示音，但不会对用户产生视觉干扰。创建通知渠道后，只有系统可以修改其重要性。用户可以在设置中找到</p>
+<h3 id="创建渠道"><a href="#创建渠道" class="headerlink" title="创建渠道"></a>创建渠道</h3><p>创建渠道需要执行以下操作</p>
+<ol>
+<li>构建一个在软件包内具有唯一 ID 的通知渠道对象。</li>
+<li>为该通知渠道对象配置所需的任何初始设置（例如提示音以及对用户可见的可选说明）。</li>
+<li>将通知渠道对象提交到通知管理器</li>
+</ol>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">/**</span><br><span class="hljs-comment">         * Android8.0通知渠道</span><br><span class="hljs-comment">         */</span><br>        NotificationManager manager = (NotificationManager) get<span class="hljs-constructor">SystemService(NOTIFICATION_SERVICE)</span>;<br>        <span class="hljs-comment">//渠道ID</span><br>        String channelId = <span class="hljs-string">&quot;channelid&quot;</span>;<br>        <span class="hljs-comment">// 用户可以看到的通知渠道的名字.</span><br>        CharSequence name = <span class="hljs-string">&quot;我是标题&quot;</span>;<br>        <span class="hljs-comment">// 用户可以看到的通知渠道的描述</span><br>        String description = <span class="hljs-string">&quot;我是描述内容&quot;</span>;<br>        <span class="hljs-comment">//优先级</span><br>        <span class="hljs-built_in">int</span> importment = NotificationManager.IMPORTANCE_HIGH;<br>        NotificationChannel channel = <span class="hljs-keyword">new</span> <span class="hljs-constructor">NotificationChannel(<span class="hljs-params">channelId</span>,<span class="hljs-params">name</span>,<span class="hljs-params">importment</span>)</span>;<br>        channel.set<span class="hljs-constructor">Description(<span class="hljs-params">description</span>)</span>;<br>        <span class="hljs-comment">// 设置通知出现时的闪灯（如果 android 设备支持的话）</span><br>        channel.enable<span class="hljs-constructor">Lights(<span class="hljs-params">true</span>)</span>;<br>        channel.set<span class="hljs-constructor">LightColor(Color.RED)</span>;<br>        <span class="hljs-comment">// 设置通知出现时的震动（如果 android 设备支持的话）</span><br>        channel.enable<span class="hljs-constructor">Vibration(<span class="hljs-params">true</span>)</span>;<br>        channel.set<span class="hljs-constructor">VibrationPattern(<span class="hljs-params">new</span> <span class="hljs-params">long</span>[]&#123;100, 200, 300, 400, 500, 400, 300, 200, 400&#125;)</span>;<br>        <span class="hljs-comment">//最后在notificationmanager中创建该通知渠道</span><br>        manager.create<span class="hljs-constructor">NotificationChannel(<span class="hljs-params">channel</span>)</span>;<br></code></pre></td></tr></table></figure>
+
+<p>可以通过调用 createNotificationChannels(List &lt; NotificationChannel &gt; channels)<br>一次性创建多个通知渠道。</p>
+<h1 id="android-support-v4包解析"><a href="#android-support-v4包解析" class="headerlink" title="android support v4包解析"></a>android support v4包解析</h1><h2 id="Android-supportv4如何支持低版本"><a href="#Android-supportv4如何支持低版本" class="headerlink" title="Android supportv4如何支持低版本"></a>Android supportv4如何支持低版本</h2><p>Android support v4这个包是为Android 1.6(API版本为4)及以上的版本设计的（从android-support-v4-24.2.0开始，V4包支持的最低版本是Android 2.3即API Level 9），该支持库可以让在旧版本 Android 平台上运行的应用，支持新版本平台推出的功能。</p>
+<p>举个Fragment的例子说明一下，假设我们某个应用支持的最低版本是：minSdkVersion&#x3D;8，但是应用中用到了android.app.Fragment类，而Fragment类是在Android 11的时候才开始加入的，那么当我们的应用运行在Android 11以下的手机就会出现问题，那么如何能让Fragment在低于11的手机上也能正常使用呢？我们需要引入android.support.v4包中android.support.v4.app.Fragment来替换掉原来用到的android.app.Fragment类，android.support.v4.app.Fragment和android.app.Fragment有一样的效果，但是它能在低于11的手机上正常使用，这就是support支持库提供的功能，能兼容低版本的Android平台。</p>
+<p>android.support.v4包支持的最低版本是Android 4，v4的意思是就是支持最低版本是4，如果你要使用Fragment，最低版本只兼容到4了。</p>
+<p>拿上面的例子来说：应用中的minSdkVersion&#x3D;8，为了兼容低版本的手机，引入了android.support.v4包中android.support.v4.app.Fragment</p>
+<ol>
+<li><p>当运行在Android版本是4-10手机上，手机Android框架没有提供Fragmeng提供的功能：则android.support.v4支持库会调用自身android.support.v4.app.Fragment；</p>
+</li>
+<li><p>当运行在Android版本是11及以上的手机上，手机Android框架提供了Fragmeng提供的功能：则android.support.v4支持库会调用手机Android框架android.app.Fragment。</p>
+</li>
+</ol>
+<p>也就是说，如果应用调用其中一个支持类的方法，则支持库的行为将取决于运行应用的手机的Android 版本。如果手机Android框架提供必要的功能，则支持库将通过调用手机Android框架执行任务。如果应用在旧版本的 Android 上运行，且手机Android框架未提供所需的功能，则支持库自身可能会尝试提供相应的功能或什么都不做。无论是哪一种情形，应用通常都不需要检查其在哪一版本的 Android 上运行，而是通过支持库执行检查并选择适当的行为。</p>
+<p>还有一些android.support.v4中类，比如ViewPager等，不管在Android那个版本，都没有这个类，所以要用到ViewPager，就必须引用android.support.v4包了。</p>
+<h2 id="android-v4包版本介绍"><a href="#android-v4包版本介绍" class="headerlink" title="android v4包版本介绍"></a>android v4包版本介绍</h2><blockquote>
+<p>随着系统的迭代Android 1.6的设备已经很少了，官方在Support Library 24.2.0版本的时候移除了对Android 2.2(API Level 8)及以下版本的支持，所以从Android Support v4 24.2.0开始，V4包支持的最低版本是Android 2.3即API Level 9</p>
+</blockquote>
+<p>我们可以发现android-support-v4后面都跟着版本号：比如android-support-v4-23.0.0 (对应Android Api Level 23)，如果不清楚这个版本号，在开发中也会带来很多问题。</p>
+<p>最常见的问题就是已经引入了android-support-v4包，但是某个类或者某个方法却找不到，这个原因应该就是版本号不对了。</p>
+<p>比如我们在targetSdkVersion &lt; 23的时，用到android.support.v4.content.PermissionChecker这个类来检查权限，但是引入了android-support-v4-22.2.1.jar后，却找不到PermissionChecker类，原因就是PermissionChecker是23.0.0版本才加入的，所以引入android-support-v4-23.0.0.jar就行了。</p>
+<p>遇到这种问题，可以去Android官方中文网站找到对应的类或方法，看看它们加入的版本：added in version，然后在引入对应的support包</p>
+<blockquote>
+<p>在android-support-v4-24.2.0及之后的版本中，为了增强效率和减小APK的大小起见，Android将android-support-v4包从一个独立的依赖包拆分成v4 compat library、v4 core-utils library、v4 core-ui library、v4 media-compat library和v4 fragment library这5个包，考虑到V4的向后兼容，你在工程中依赖V4这个依赖包时默认是包含拆分后的5个包的，但为了节省APK大小，建议在开发过程中根据实际情况依赖对应的V4包，移除不必要的V4包</p>
+</blockquote>
+<h2 id="Android-v4包关键API介绍"><a href="#Android-v4包关键API介绍" class="headerlink" title="Android v4包关键API介绍"></a>Android v4包关键API介绍</h2><p>v4 compat library </p>
+<p>兼容一些 Framework API，如 Context.getDrawable() 和 View.performAccessibilityAction()等，在AS中的依赖方式如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">compile</span> &#x27;com.android.support:support-compat:<span class="hljs-number">24</span>.<span class="hljs-number">2</span>.<span class="hljs-number">1</span>&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>v4 core-utils library</p>
+<p>提供一系列核心的工具类，如 AsyncTaskLoader 和 PermissionChecker，在AS中的依赖方式如下，按自己需求选择合适版本：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">compile</span> &#x27;com.android.support:support-core-utils:<span class="hljs-number">24</span>.<span class="hljs-number">2</span>.<span class="hljs-number">1</span>&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>core-ui library</p>
+<p>提供一系列核心的 UI，如 ViewPager、 NestedScrollView，在AS中的依赖方式如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">compile</span> &#x27;com.android.support:support-core-ui:<span class="hljs-number">24</span>.<span class="hljs-number">2</span>.<span class="hljs-number">1</span>&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>v4 media-compat library</p>
+<p>android.media 兼容库，包括 MediaBrowser 和 MediaSession，在AS中的依赖方式如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">compile</span> &#x27;com.android.support:support-media-compat:<span class="hljs-number">24</span>.<span class="hljs-number">2</span>.<span class="hljs-number">1</span>&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>v4 fragment library</p>
+<p>跟fragment相关部分，v4 fragment library这个子库依赖了其他4个子库，所以我们一旦依赖这个库就会自动导入其他4个子库，这跟直接依赖整个support-v4效果类似，在AS中的依赖方式如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">compile</span> &#x27;com.android.support:support-fragment:<span class="hljs-number">24</span>.<span class="hljs-number">2</span>.<span class="hljs-number">1</span>&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>拆包并不一定代表能够真的解决效率和减小APK的大小问题，V4包拆分后的5个子包有依赖关系。即拆包之后，要用到某个子包的API时，可能还得依赖其它的子包，这也是有坑的地方。当我们编译没有问题，运行出现Do not find class之类的错误时，一定要看看是不是子包之间的依赖关系造成的，如果是引入相应的子包。出现这个依赖问题，再加上版本可能出现问题，对于新手来说，比较棘手，建议新手全部导入</p>
+<h1 id="android-support-v7包解析"><a href="#android-support-v7包解析" class="headerlink" title="android support v7包解析"></a>android support v7包解析</h1><p>android support v7包和v4包一样，都是为了支持比较低版本的Android系统而出现的内容。<br>例：应用在android框架 5.0（API 级别 21）版本以下的 手机系统上运行时，将无法显示 Material Design 元素，因为5.0版本以下的 Android 框架不支持 Material Design。但是，如果此应用引入了android support V7库，则可以访问 5.0（API 级别 21）中具有的许多功能，其中包括对 Material Design 的支持。</p>
+<p>android support V7，同样包含多个依赖包，但和V4不同的是，V7下的多个子包并不是后面拆分开来的，而是最初发布时就以各个独立库的形式发布的。它是针对Android 2.3(API Level 9)及以上的版本谷歌提供了一系列的support包（和V4包的命名一样，V7最初支持的最低版本是Android 2.1即API Level 7，所以称其为V7，同样在android-support-v7-24.2.0将V7支持的最低版本改为Android 2.3即API Level 9了），这些support包各自对应着特定的功能，每一个都可以单独地被引用。</p>
+<p>v7 appcompat library</p>
+<p>这个包支持对Action Bar接口的设计模式、Material Design接口的实现等，核心类有ActionBar、AppCompatActivity、AppCompatDialog、ShareActionProvider等，在AS中的依赖方式如下：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">compil<span class="hljs-string">e&#x27;com.android.support:appcompat-v7:24.2.1&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>注意：这个包需要依赖android-support-v4，版本要对应。</p>
+<p>v7 cardview library</p>
+<p>支持cardview控件，使用Material Design语言设计，卡片式的信息展示，在电视App中有广泛的使用，在AS中的依赖方式如下，按自己需求选择合适版本：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">compil<span class="hljs-string">e&#x27;com.android.support:cardview-v7:24.2.1&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>v7 gridlayout library</p>
+<p>支持GridLayout布局的support包，在AS中的依赖方式如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">com</span>.android.support:gridlayout-v7:<span class="hljs-number">24</span>.<span class="hljs-number">2</span>.<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<p>v7 mediarouter library</p>
+<p>用于设备间音频、视频交换显示的support包，在AS中的依赖方式如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">com</span>.android.support:mediarouter-v7:<span class="hljs-number">24</span>.<span class="hljs-number">2</span>.<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<p>v7 palette library</p>
+<p>该库提供了palette类，使用这个类可以很方便提取出图片中主题色。比如在音乐App中，从音乐专辑封面图片中提取出专辑封面图片的主题色，然后将播放界面的背景色设置为封面的主题色，随着播放音乐的改变，播放界面的背景色也会巧妙的跟着改变，从而提供更好的用户体验。，在AS中的依赖方式如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">com</span>.android.support:palette-v7:<span class="hljs-number">24</span>.<span class="hljs-number">2</span>.<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<p>v7 recyclerview library</p>
+<p>核心类是RecyclerView，用于替换ListView、GridView，具体可以查阅RecyclerView方面的资料，在AS中的依赖方式如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">com</span>.android.support:recyclerview-v7:<span class="hljs-number">24</span>.<span class="hljs-number">2</span>.<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<p>v7 Preference Support Library</p>
+<p>用于支持各种控件存储配置数据的support包，比如CheckBoxPreference和ListPreference，在AS中的依赖方式如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">com</span>.android.support:preference-v7:<span class="hljs-number">24</span>.<span class="hljs-number">2</span>.<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>关于v4，v7包中的新组件，新样式，到后面说道material design的时候再说</p>
+</blockquote>
+<h1 id="tablayout-viewpager"><a href="#tablayout-viewpager" class="headerlink" title="tablayout+viewpager"></a>tablayout+viewpager</h1><p>一般情况下，我们的viewpager是一种预加载的模式，也就是说，在页面还没有显示的时候，已经请求的网络数据。虽然现在流量的使用逐渐增加，但是给用户的体验却没有那么友好，所以，我们一般采用懒加载的方式实现。<br>不过，我们先实现最普通的样式效果<br>代码如下：<br>主页面的XML文件:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">RelativeLayout</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">xmlns:app</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res-auto&quot;</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">android.support.v4.view.ViewPager</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:id</span>=<span class="hljs-string">&#x27;@+id/tabview_viewpager&#x27;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_alignParentTop</span>=<span class="hljs-string">&quot;true&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_above</span>=<span class="hljs-string">&quot;+id/tabview_bottom_tab&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">android.support.v4.view.ViewPager</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">android.support.design.widget.TabLayout</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:id</span>=<span class="hljs-string">&#x27;@+id/tabview_bottom_tab&#x27;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:background</span>=<span class="hljs-string">&quot;#EF8D11&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">app:tabIndicatorColor</span>=<span class="hljs-string">&quot;#f00&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">app:tabIndicatorHeight</span>=<span class="hljs-string">&quot;4dp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">app:tabMode</span>=<span class="hljs-string">&quot;fixed&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">app:tabSelectedTextColor</span>=<span class="hljs-string">&quot;#FFFFFF&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">app:tabTextColor</span>=<span class="hljs-string">&quot;#FFFFFF&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_alignParentBottom</span>=<span class="hljs-string">&quot;true&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">android.support.design.widget.TabLayout</span>&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">RelativeLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>主页面的Activity：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> TabViewpagerActivity extends AppCompatActivity &#123;<br><br>    <span class="hljs-keyword">private</span> TabLayout tabLayout;<br>    <span class="hljs-keyword">private</span> ViewPager viewPager;<br>    <span class="hljs-keyword">private</span> TabLayout.Tab one,two,three;<br>    <span class="hljs-keyword">private</span> MyFragmentPagerAdapter adapter;<br><br>    @Override<br>    protected void on<span class="hljs-constructor">Create(@Nullable Bundle <span class="hljs-params">savedInstanceState</span>)</span> &#123;<br>        super.on<span class="hljs-constructor">Create(<span class="hljs-params">savedInstanceState</span>)</span>;<br>        set<span class="hljs-constructor">ContentView(R.<span class="hljs-params">layout</span>.<span class="hljs-params">activity_tabviewpager</span>)</span>;<br>        tabLayout = find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">tabview_bottom_tab</span>)</span>;<br>        viewPager = find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">tabview_viewpager</span>)</span>;<br>        adapter = <span class="hljs-keyword">new</span> <span class="hljs-constructor">MyFragmentPagerAdapter(<span class="hljs-params">getSupportFragmentManager</span>()</span>);<br>        viewPager.set<span class="hljs-constructor">Adapter(<span class="hljs-params">adapter</span>)</span>;<br>        tabLayout.setup<span class="hljs-constructor">WithViewPager(<span class="hljs-params">viewPager</span>)</span>;<br><br>        one = tabLayout.get<span class="hljs-constructor">TabAt(0)</span>;<br>        two = tabLayout.get<span class="hljs-constructor">TabAt(1)</span>;<br>        three = tabLayout.get<span class="hljs-constructor">TabAt(2)</span>;<br><br>        one.set<span class="hljs-constructor">Icon(R.<span class="hljs-params">mipmap</span>.<span class="hljs-params">ic_launcher</span>)</span>;<br>        two.set<span class="hljs-constructor">Icon(R.<span class="hljs-params">mipmap</span>.<span class="hljs-params">ic_launcher</span>)</span>;<br>        three.set<span class="hljs-constructor">Icon(R.<span class="hljs-params">mipmap</span>.<span class="hljs-params">ic_launcher</span>)</span>;<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>适配器MyFragmentAdapter:</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs arduino">package com.paulniu.ui_demo.ui.tablayouts;<br><br><span class="hljs-keyword">import</span> android.support.v4.app.Fragment;<br><span class="hljs-keyword">import</span> android.support.v4.app.FragmentManager;<br><span class="hljs-keyword">import</span> android.support.v4.app.FragmentPagerAdapter;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Created by niupule</span><br><span class="hljs-comment"> * E-mail: niupuyue@aliyun.com</span><br><span class="hljs-comment"> * Time: 2018/1/12  12:30</span><br><span class="hljs-comment"> * PurPose:</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyFragmentPagerAdapter</span> extends FragmentPagerAdapter &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">String</span> [] titles = <span class="hljs-keyword">new</span> <span class="hljs-type">String</span>[]&#123;<br>            <span class="hljs-string">&quot;首页&quot;</span>,<br>            <span class="hljs-string">&quot;发现&quot;</span>,<br>            <span class="hljs-string">&quot;我的&quot;</span><br>    &#125;;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">MyFragmentPagerAdapter</span><span class="hljs-params">(FragmentManager fm)</span> </span>&#123;<br>        <span class="hljs-built_in">super</span>(fm);<br>    &#125;<br><br>    @<span class="hljs-function">Override</span><br><span class="hljs-function">    <span class="hljs-keyword">public</span> Fragment <span class="hljs-title">getItem</span><span class="hljs-params">(<span class="hljs-type">int</span> position)</span> </span>&#123;<br>        <span class="hljs-keyword">switch</span> (position)<br>        &#123;<br>            <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:<br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Fragment2</span>();<br>            <span class="hljs-keyword">case</span> <span class="hljs-number">2</span>:<br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Fragment3</span>();<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Fragment1</span>();<br>    &#125;<br><br>    @<span class="hljs-function">Override</span><br><span class="hljs-function">    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title">getCount</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> titles.length;<br>    &#125;<br><br>    @<span class="hljs-function">Override</span><br><span class="hljs-function">    <span class="hljs-keyword">public</span> CharSequence <span class="hljs-title">getPageTitle</span><span class="hljs-params">(<span class="hljs-type">int</span> position)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> titles[position];<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Fragment页面，三个页面的样式是一样的：</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-selector-tag">public</span> <span class="hljs-selector-tag">class</span> <span class="hljs-selector-tag">Fragment1</span> <span class="hljs-selector-tag">extends</span> <span class="hljs-selector-tag">Fragment</span> &#123;<br><br><br>    <span class="hljs-variable">@Nullable</span><br>    <span class="hljs-variable">@Override</span><br>    public View <span class="hljs-built_in">onCreateView</span>(LayoutInflater inflater, <span class="hljs-variable">@Nullable</span> ViewGroup container, <span class="hljs-variable">@Nullable</span> Bundle savedInstanceState) &#123;<br>        <span class="hljs-selector-tag">return</span> <span class="hljs-selector-tag">inflater</span><span class="hljs-selector-class">.inflate</span>(R.layout.fragment_viewpager,container,false);<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Fragment的XML页面:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">RelativeLayout</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">xmlns:tools</span>=<span class="hljs-string">&quot;http://schemas.android.com/tools&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;vertical&quot;</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">TextView</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/textView&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_alignParentTop</span>=<span class="hljs-string">&quot;true&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_centerHorizontal</span>=<span class="hljs-string">&quot;true&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_marginTop</span>=<span class="hljs-string">&quot;218dp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;Page:&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:textSize</span>=<span class="hljs-string">&quot;20sp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:textStyle</span>=<span class="hljs-string">&quot;bold&quot;</span>/&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">TextView</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/titile&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_below</span>=<span class="hljs-string">&quot;@+id/textView&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_centerHorizontal</span>=<span class="hljs-string">&quot;true&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:textSize</span>=<span class="hljs-string">&quot;50sp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;1&quot;</span>/&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">RelativeLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>最终实现的效果如图所示<br><img src="/assets/android/service-life.png" srcset="/img/loading.gif" lazyload alt="效果"></p>
+<h2 id="setUserVisibleHint-boolean-isVisibleToUser"><a href="#setUserVisibleHint-boolean-isVisibleToUser" class="headerlink" title="setUserVisibleHint(boolean isVisibleToUser)"></a>setUserVisibleHint(boolean isVisibleToUser)</h2><p>setUserVisibleHint(boolean isVisibleToUser)是Fragment中的一个回调函数。当前Fragment可见时，setUserVisibleHint()回调，其中isVisibleToUser&#x3D;true。当前Fragment由可见到不可见或实例化时，setUserVisibleHint()回调，其中isVisibleToUser&#x3D;false。</p>
+<h3 id="setUserVisibleHint-boolean-isVIsibleToUser-调用的时机"><a href="#setUserVisibleHint-boolean-isVIsibleToUser-调用的时机" class="headerlink" title="setUserVisibleHint(boolean isVIsibleToUser)调用的时机"></a>setUserVisibleHint(boolean isVIsibleToUser)调用的时机</h3><ol>
+<li>在Fragment实例化，即在ViewPager中，由于ViewPager默认会预加载左右两个页面。此时预加载页面回调的生命周期流程：setUserVisibleHint() –&gt;onAttach() –&gt; onCreate()–&gt;onCreateView()–&gt; onActivityCreate() –&gt; onStart() –&gt; onResume()<blockquote>
+<p>此时参数为false，不可见</p>
+</blockquote>
+</li>
+<li>在Fragmetn可见时，即ViewPager中滑动到当前页面时，因为已经预加载过了，之前生命周期已经走到onResume() <blockquote>
+<p>此时参数为true，可见</p>
+</blockquote>
+</li>
+<li>在Fragment由可见变为不可见，即ViewPager由当前页面滑动到另一个页面，因为还要保持当前页面的预加载过程，所以只会回调：setUserVisibleHint()。<blockquote>
+<p>此时参数为false，不可见</p>
+</blockquote>
+</li>
+<li>由TabLayout直接跳转到一个未预加载的页面，此时生命周期的回调过程：setUserVisibleHint() –&gt;setUserVisibleHint() –&gt;onAttach() –&gt; onCreate()–&gt;onCreateView()–&gt; onActivityCreate() –&gt; onStart()–&gt; onResume()<blockquote>
+<p>回调了两次setUserVisibleHint() ，一次代表初始化时，传入参数是false，一次代表可见时，传入参数是true。这种情况比较特殊</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p>总结<br>无论何时，setUserVisibleHint()都是先于其他生命周期调用的，并且有三种情况，初始化时调用，可见时时调用，由可见转换成不可见时调用。</p>
+</blockquote>
+<h3 id="通过封装实现"><a href="#通过封装实现" class="headerlink" title="通过封装实现"></a>通过封装实现</h3><h4 id="进行网络加载的情况"><a href="#进行网络加载的情况" class="headerlink" title="进行网络加载的情况"></a>进行网络加载的情况</h4><ul>
+<li>setUserVisibleHint()中的参数是true，即fragment可见</li>
+<li>onCreateView()方法调用完毕，返回一个rootview，防止发生空指针异常</li>
+<li>第一次调用网络加载，之前没有执行过.<br>满足以上三个条件，可以进行网络加载</li>
+</ul>
+<h4 id="不进行网络加载"><a href="#不进行网络加载" class="headerlink" title="不进行网络加载"></a>不进行网络加载</h4><ul>
+<li>setUserVisibleHint()中的参数有true变为false，即fragment由可见变成不可见</li>
+<li>不是第一次加载数据，之前加载过<br>满足以上两个条件(其实满足第一个即可)</li>
+</ul>
+<h3 id="分装BaseFragment"><a href="#分装BaseFragment" class="headerlink" title="分装BaseFragment"></a>分装BaseFragment</h3><p>isFragment表示当前fragment是否可见<br>isFirst表示是否是已经加载过<br>onFragmentVisibleChange()是一个可继承的空方法，子类实现，传入true，代表加载网络，传入false,代表取消网络加载。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">setUserVisibleHint</span>(<span class="hljs-params"><span class="hljs-built_in">boolean</span> isVisibleToUser</span>) &#123;<br>        <span class="hljs-variable language_">super</span>.<span class="hljs-title function_">setUserVisibleHint</span>(isVisibleToUser);<br>        <span class="hljs-keyword">if</span> (isVisibleToUser) &#123;<br>            isFragmentVisible = <span class="hljs-literal">true</span>;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (rootView == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>        <span class="hljs-comment">//可见，并且没有加载过</span><br>        <span class="hljs-keyword">if</span> (!isFirst&amp;&amp;isFragmentVisible) &#123;<br>            <span class="hljs-title function_">onFragmentVisibleChange</span>(<span class="hljs-literal">true</span>);<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>        <span class="hljs-comment">//由可见——&gt;不可见 已经加载过</span><br>        <span class="hljs-keyword">if</span> (isFragmentVisible) &#123;<br>            <span class="hljs-title function_">onFragmentVisibleChange</span>(<span class="hljs-literal">false</span>);<br>            isFragmentVisible = <span class="hljs-literal">false</span>;<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">protected</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">onFragmentVisibleChange</span>(<span class="hljs-params"><span class="hljs-built_in">boolean</span> isVisible</span>) &#123;<br><br>    &#125;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>特殊情况：<br>当TabLayout跳转到一个没有预加载过的Fragment，连续调用两次setUserVisibleHint方法，但此时rootView为空，不能进行加载。需要在onCreateView()方法最后判断是否进行网络加载，然后调用onFragmentVisibleChange(true)方法</p>
+</blockquote>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs lasso"><span class="hljs-keyword">public</span> View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) &#123;<br>     <span class="hljs-params">...</span><span class="hljs-params">...</span><span class="hljs-params">...</span><span class="hljs-params">...</span><span class="hljs-params">...</span>..<br>        <span class="hljs-comment">//可见，但是并没有加载过</span><br>        <span class="hljs-keyword">if</span> (isFragmentVisible &amp;&amp; !isFirst) &#123;<br>            onFragmentVisibleChange(<span class="hljs-literal">true</span>);<br>        &#125;<br>        <span class="hljs-keyword">return</span> rootView;<br>    &#125;<br></code></pre></td></tr></table></figure>
+<p>子类中的具体实现</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">@Override<br>    protected void on<span class="hljs-constructor">FragmentVisibleChange(<span class="hljs-params">boolean</span> <span class="hljs-params">isVisible</span>)</span> &#123;<br>        <span class="hljs-keyword">if</span>(isVisible)&#123;<br>            <span class="hljs-comment">//可见，并且是第一次加载</span><br>            mPresenter.request<span class="hljs-constructor">PhotoList(SIZE,<span class="hljs-params">mStartPage</span>)</span>;<br>            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">LoadingDialog</span>.</span></span>show<span class="hljs-constructor">DialogForLoading(<span class="hljs-params">getActivity</span>()</span>);<br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            <span class="hljs-comment">//取消加载</span><br>            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">RxDisposeManager</span>.</span></span>get<span class="hljs-literal">()</span>.cancel(<span class="hljs-string">&quot;photoList&quot;</span>);<br>            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">LoadingDialog</span>.</span></span>cancel<span class="hljs-constructor">DialogForLoading()</span>;<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+<p>暂时先写这么多，后面的内容，以后补充···</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/92afa56aee05">android O 通知渠道</a><br><a target="_blank" rel="noopener" href="http://www.jianshu.com/u/d82bd37b1d29">android support v4支持包</a><br><a target="_blank" rel="noopener" href="https://developer.android.com/samples/index.html?language=java">Android Google sample</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>重拾android路(八) UI</div>
+      <div>http://example.com/2016/05/15/android-8-uiframework/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2016年5月15日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2016/05/30/android-9-selfview/" title="重拾android路(九) 自定义View">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">重拾android路(九) 自定义View</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2016/04/30/android-7-sqlite/" title="重拾Android之路(七) sqlite">
+                        <span class="hidden-mobile">重拾Android之路(七) sqlite</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

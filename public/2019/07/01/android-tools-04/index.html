@@ -1,0 +1,664 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Android自定义Toast">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android奇技淫巧 04 超简单实现Android自定义Toast">
+<meta property="og:url" content="http://example.com/2019/07/01/android-tools-04/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Android自定义Toast">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-07-01T12:44:10.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.109Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>android奇技淫巧 04 超简单实现Android自定义Toast - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="android奇技淫巧 04 超简单实现Android自定义Toast"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-07-01 20:44" pubdate>
+          2019年7月1日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          50 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">android奇技淫巧 04 超简单实现Android自定义Toast</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Android自定义Toast</p>
+<span id="more"></span>
+<p>Bamboy的自定义Toast，（</p>
+<p>以下称作“BToast”）<br>特点在于使用简单，<br>并且自带两种样式：<br>1)普通的文字样式；<br>2)带图标样式。<br>其中图标有√和×两种图标。</p>
+<p>BToast还有另外一个特点就是：<br>系统自带Toast采用的是队列的方式，<br>等当前Toast消失后，<br>下一个Toast才能显示出来；<br>而BToast会把当前Toast顶掉，<br>直接显示最新的Toast。</p>
+<p>简单三步，<br>我们现在就开始自定义一下吧！</p>
+<p>（一）、Layout：<br>要自定义Toast，<br>首先我们需要一个XML布局。</p>
+<p>但是在布局之前我们需要三个资源文件，<br>分别是背景、√和×。</p>
+<p>背景可以用XML画出来：<br>toast_back.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">shape</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span> &gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">corners</span> <span class="hljs-attr">android:radius</span>=<span class="hljs-string">&quot;12dp&quot;</span> /&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">solid</span> <span class="hljs-attr">android:color</span>=<span class="hljs-string">&quot;#CC000000&quot;</span>/&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">shape</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>√和×就最好用图片啦，<br>源码里面有这两张图片，<br>这里就不贴出来了。</p>
+<p>现在就可以写布局了：<br>toast_layout.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">android:background</span>=<span class="hljs-string">&quot;@drawable/toast_back&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">android:gravity</span>=<span class="hljs-string">&quot;center_vertical&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">android:padding</span>=<span class="hljs-string">&quot;13dp&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;vertical&quot;</span> &gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">ImageView</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/toast_img&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;50dp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;50dp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:background</span>=<span class="hljs-string">&quot;@drawable/toast_y&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_gravity</span>=<span class="hljs-string">&quot;center_horizontal&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_marginBottom</span>=<span class="hljs-string">&quot;5dp&quot;</span> /&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">TextView</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/toast_text&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_gravity</span>=<span class="hljs-string">&quot;center_horizontal&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_marginLeft</span>=<span class="hljs-string">&quot;10dp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_marginRight</span>=<span class="hljs-string">&quot;10dp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:textColor</span>=<span class="hljs-string">&quot;#FFFFFF&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:gravity</span>=<span class="hljs-string">&quot;center&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:textSize</span>=<span class="hljs-string">&quot;17sp&quot;</span> /&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>所需要的XML现在已经OK，<br>剩下的就是Java部分了。</p>
+<p>（二）、Java：<br>写一个BToast类，继承Toast、<br>成员变量自身单例、<br>还有构造函数：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs scala">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BToast</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Toast</span> </span>&#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Toast单例</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> static <span class="hljs-type">BToast</span> toast;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 构造</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * @param context</span><br><span class="hljs-comment">     */</span><br>    public <span class="hljs-type">BToast</span>(<span class="hljs-type">Context</span> context) &#123;<br>        <span class="hljs-keyword">super</span>(context);<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>为了实现可以吧当前Toast顶下去的需求，<br>我们需要重写几个方法</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs typescript"> <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 隐藏当前Toast</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">cancelToast</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">if</span> (toast != <span class="hljs-literal">null</span>) &#123;<br>toast.<span class="hljs-title function_">cancel</span>();<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">cancel</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br><span class="hljs-variable language_">super</span>.<span class="hljs-title function_">cancel</span>();<br>        &#125; <span class="hljs-keyword">catch</span> (<span class="hljs-title class_">Exception</span> e) &#123;<br><br>        &#125;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">show</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br><span class="hljs-variable language_">super</span>.<span class="hljs-title function_">show</span>();<br>        &#125; <span class="hljs-keyword">catch</span> (<span class="hljs-title class_">Exception</span> e) &#123;<br><br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>现在我们就可以写我们的逻辑了，</p>
+<p>首先当然是引入我们的布局咯：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 初始化Toast</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * @param context 上下文</span><br><span class="hljs-comment">     * @param text    显示的文本</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> static void init<span class="hljs-constructor">Toast(Context <span class="hljs-params">context</span>, CharSequence <span class="hljs-params">text</span>)</span> &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>cancel<span class="hljs-constructor">Toast()</span>;<br><br>toast = <span class="hljs-keyword">new</span> <span class="hljs-constructor">BToast(<span class="hljs-params">context</span>)</span>;<br><br><span class="hljs-comment">// 获取LayoutInflater对象</span><br>LayoutInflater inflater = <br>    (LayoutInflater) context.get<span class="hljs-constructor">SystemService(Context.LAYOUT_INFLATER_SERVICE)</span>;<br><br><span class="hljs-comment">// 由layout文件创建一个View对象</span><br>View layout = inflater.inflate(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">R</span>.</span></span>layout.toast_layout, null);<br><br><span class="hljs-comment">// 吐司上的图片</span><br>toast_img = (ImageView) layout.find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">toast_img</span>)</span>;<br><br><span class="hljs-comment">// 吐司上的文字</span><br>TextView toast_text = (TextView) layout.find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">toast_text</span>)</span>;<br>toast_text.set<span class="hljs-constructor">Text(<span class="hljs-params">text</span>)</span>;<br>toast.set<span class="hljs-constructor">View(<span class="hljs-params">layout</span>)</span>;<br>toast.set<span class="hljs-constructor">Gravity(Gravity.CENTER, 0, 70)</span>;<br>        &#125; catch (Exception e) &#123;<br>e.print<span class="hljs-constructor">StackTrace()</span>;<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>一切准备工作都已就绪，<br>接下来就是显示Toast的方法了：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 图标状态 不显示图标</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> static final <span class="hljs-built_in">int</span> TYPE_HIDE = -<span class="hljs-number">1</span>;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 图标状态 显示√</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> static final <span class="hljs-built_in">int</span> TYPE_TRUE = <span class="hljs-number">0</span>;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 图标状态 显示×</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> static final <span class="hljs-built_in">int</span> TYPE_FALSE = <span class="hljs-number">1</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 显示Toast</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * @param context 上下文</span><br><span class="hljs-comment">     * @param text    显示的文本</span><br><span class="hljs-comment">     * @param time    显示时长</span><br><span class="hljs-comment">     * @param imgType 图标状态</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> static void show<span class="hljs-constructor">Toast(Context <span class="hljs-params">context</span>, CharSequence <span class="hljs-params">text</span>, <span class="hljs-params">int</span> <span class="hljs-params">time</span>, <span class="hljs-params">int</span> <span class="hljs-params">imgType</span>)</span> &#123;<br>        <span class="hljs-comment">// 初始化一个新的Toast对象</span><br>        init<span class="hljs-constructor">Toast(<span class="hljs-params">context</span>, <span class="hljs-params">text</span>)</span>;<br><br>        <span class="hljs-comment">// 设置显示时长</span><br>        <span class="hljs-keyword">if</span> (time<span class="hljs-operator"> == </span>Toast.LENGTH_LONG) &#123;<br>toast.set<span class="hljs-constructor">Duration(Toast.LENGTH_LONG)</span>;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>toast.set<span class="hljs-constructor">Duration(Toast.LENGTH_SHORT)</span>;<br>        &#125;<br><br>        <span class="hljs-comment">// 判断图标是否该显示，显示√还是×</span><br>        <span class="hljs-keyword">if</span> (imgType<span class="hljs-operator"> == </span>TYPE_HIDE) &#123;<br>toast_img.set<span class="hljs-constructor">Visibility(View.GONE)</span>;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br><span class="hljs-keyword">if</span> (imgType<span class="hljs-operator"> == </span>TYPE_TRUE) &#123;<br>    toast_img.set<span class="hljs-constructor">BackgroundResource(R.<span class="hljs-params">drawable</span>.<span class="hljs-params">toast_y</span>)</span>;<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>    toast_img.set<span class="hljs-constructor">BackgroundResource(R.<span class="hljs-params">drawable</span>.<span class="hljs-params">toast_n</span>)</span>;<br>&#125;<br>toast_img.set<span class="hljs-constructor">Visibility(View.VISIBLE)</span>;<br><br><span class="hljs-comment">// 动画</span><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ObjectAnimator</span>.</span></span><span class="hljs-keyword">of</span><span class="hljs-constructor">Float(<span class="hljs-params">toast_img</span>, <span class="hljs-string">&quot;rotationY&quot;</span>, 0, 360)</span>.set<span class="hljs-constructor">Duration(1700)</span>.start<span class="hljs-literal">()</span>;<br>        &#125;<br><br>        <span class="hljs-comment">// 显示Toast</span><br>        toast.show<span class="hljs-literal">()</span>;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>就是这么简单。</p>
+<p>细心的朋友可能发现了，<br>这个方法是private的，<br>先别产生疑虑，<br>听我慢慢道来。</p>
+<p>写到这里，<br>其实你可以直接把这个方法改成Public，<br>这样的话现在就已经大功告成了，<br>但是这样的话与原生Toast使用起来有什么区别？<br>还是需要写那么长一串参数，<br>唯一的好处就是不用写.show()了。</p>
+<p>咱们现在做的事情叫“自定义”，<br>“自定义”的意思就是我们自己定义规则，<br>既然如此，<br>我们何不提升一下“用户体验”呢？<br>何况这个“用户”还是我们自己。</p>
+<p>废话不多说，<br>我们开始进行最后一步。</p>
+<p>(三）、升华：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">/**</span><br><span class="hljs-comment">    * 显示一个纯文本吐司</span><br><span class="hljs-comment">    *</span><br><span class="hljs-comment">    * @param context 上下文</span><br><span class="hljs-comment">    * @param text    显示的文本</span><br><span class="hljs-comment">    */</span><br>   public static void show<span class="hljs-constructor">Text(Context <span class="hljs-params">context</span>, CharSequence <span class="hljs-params">text</span>)</span> &#123;<br>       show<span class="hljs-constructor">Toast(<span class="hljs-params">context</span>, <span class="hljs-params">text</span>, Toast.LENGTH_SHORT, TYPE_HIDE)</span>;<br>   &#125;<br><br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * 显示一个带图标的吐司</span><br><span class="hljs-comment">    *</span><br><span class="hljs-comment">    * @param context   上下文</span><br><span class="hljs-comment">    * @param text      显示的文本</span><br><span class="hljs-comment">    * @param isSucceed 显示【对号图标】还是【叉号图标】</span><br><span class="hljs-comment">    */</span><br>   public static void show<span class="hljs-constructor">Text(Context <span class="hljs-params">context</span>, CharSequence <span class="hljs-params">text</span>, <span class="hljs-params">boolean</span> <span class="hljs-params">isSucceed</span>)</span> &#123;<br>       show<span class="hljs-constructor">Toast(<span class="hljs-params">context</span>, <span class="hljs-params">text</span>, Toast.LENGTH_SHORT, <span class="hljs-params">isSucceed</span> ? TYPE_TRUE : TYPE_FALSE)</span>;<br>   &#125;<br><br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * 显示一个纯文本吐司</span><br><span class="hljs-comment">    *</span><br><span class="hljs-comment">    * @param context 上下文</span><br><span class="hljs-comment">    * @param text    显示的文本</span><br><span class="hljs-comment">    * @param time    持续的时间</span><br><span class="hljs-comment">    */</span><br>   public static void show<span class="hljs-constructor">Text(Context <span class="hljs-params">context</span>, CharSequence <span class="hljs-params">text</span>, <span class="hljs-params">int</span> <span class="hljs-params">time</span>)</span> &#123;<br>       show<span class="hljs-constructor">Toast(<span class="hljs-params">context</span>, <span class="hljs-params">text</span>, <span class="hljs-params">time</span>, TYPE_HIDE)</span>;<br>   &#125;<br><br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * 显示一个带图标的吐司</span><br><span class="hljs-comment">    *</span><br><span class="hljs-comment">    * @param context   上下文</span><br><span class="hljs-comment">    * @param text      显示的文本</span><br><span class="hljs-comment">    * @param time      持续的时间</span><br><span class="hljs-comment">    * @param isSucceed 显示【对号图标】还是【叉号图标】</span><br><span class="hljs-comment">    */</span><br>   public static void show<span class="hljs-constructor">Text(Context <span class="hljs-params">context</span>, CharSequence <span class="hljs-params">text</span>, <span class="hljs-params">int</span> <span class="hljs-params">time</span>, <span class="hljs-params">boolean</span> <span class="hljs-params">isSucceed</span>)</span> &#123;<br>       show<span class="hljs-constructor">Toast(<span class="hljs-params">context</span>, <span class="hljs-params">text</span>, <span class="hljs-params">time</span>, <span class="hljs-params">isSucceed</span> ? TYPE_TRUE : TYPE_FALSE)</span>;<br>   &#125;<br></code></pre></td></tr></table></figure>
+<p>简简单单几个方法，<br>用户体验瞬间直线飙升，<br>来看一下使用的时候：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">public</span> void click(View view) &#123;<br>        switch (view.getId()) &#123;<br>case R.id.btn_text:<br>    BToast.showText(<span class="hljs-keyword">this</span>, <span class="hljs-string">&quot;简单提示&quot;</span>);<br>    <span class="hljs-keyword">break</span>;<br><br>case R.id.btn_text_true:<br>    BToast.showText(<span class="hljs-keyword">this</span>, <span class="hljs-string">&quot;简单提示 正确图标&quot;</span>, <span class="hljs-literal">true</span>);<br>    <span class="hljs-keyword">break</span>;<br><br>case R.id.btn_text_false:<br>    BToast.showText(<span class="hljs-keyword">this</span>, <span class="hljs-string">&quot;简单提示 错误图标&quot;</span>, <span class="hljs-literal">false</span>);<br>    <span class="hljs-keyword">break</span>;<br><br>case R.id.btn_text_long:<br>    BToast.showText(<span class="hljs-keyword">this</span>, <span class="hljs-string">&quot;简单提示 长~ &quot;</span>, Toast.LENGTH_LONG);<br>    <span class="hljs-keyword">break</span>;<br><br>case R.id.btn_text_true_long:<br>    BToast.showText(<span class="hljs-keyword">this</span>, <span class="hljs-string">&quot;简单提示 正确图标 长~ &quot;</span>, Toast.LENGTH_LONG, <span class="hljs-literal">true</span>);<br>    <span class="hljs-keyword">break</span>;<br><br>case R.id.btn_text_false_long:<br>    BToast.showText(<span class="hljs-keyword">this</span>, <span class="hljs-string">&quot;简单提示 错误图标 长~ &quot;</span>, Toast.LENGTH_LONG, <span class="hljs-literal">false</span>);<br>    <span class="hljs-keyword">break</span>;<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>android奇技淫巧 04 超简单实现Android自定义Toast</div>
+      <div>http://example.com/2019/07/01/android-tools-04/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年7月1日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/07/01/android-tools-05/" title="android奇技淫巧 05 Android targetSdkVersion 升级到 26 总结">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">android奇技淫巧 05 Android targetSdkVersion 升级到 26 总结</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/06/16/android-28-notification/" title="重拾android路(二十七) Notification">
+                        <span class="hidden-mobile">重拾android路(二十七) Notification</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

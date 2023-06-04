@@ -1,0 +1,676 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="现在好多的App中都会有折叠式布局，给用户提供了很好的体验，其实就是通过Coordinatorlayout + AppbarLayout + CollapsingToolbarLayout三个部分组成的。以前自己学习这个技巧的时候，都是拿来主义，能用就好，对于其中的具体内容并不是非常关心，因为毕竟大部分时间还是要出效果，至于原理，项目是不会在乎的。但是别人不在乎，我们不能不在乎，学到的就是自己的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android奇技淫巧 01 Coordinatorlayout+appbarLayout">
+<meta property="og:url" content="http://example.com/2019/06/12/android-tools-01/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="现在好多的App中都会有折叠式布局，给用户提供了很好的体验，其实就是通过Coordinatorlayout + AppbarLayout + CollapsingToolbarLayout三个部分组成的。以前自己学习这个技巧的时候，都是拿来主义，能用就好，对于其中的具体内容并不是非常关心，因为毕竟大部分时间还是要出效果，至于原理，项目是不会在乎的。但是别人不在乎，我们不能不在乎，学到的就是自己的。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/tips/tip_coordinator_01.jpg">
+<meta property="article:published_time" content="2019-06-12T14:40:20.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.108Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/tips/tip_coordinator_01.jpg">
+  
+  
+  
+  <title>android奇技淫巧 01 Coordinatorlayout+appbarLayout - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="android奇技淫巧 01 Coordinatorlayout+appbarLayout"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-06-12 22:40" pubdate>
+          2019年6月12日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          12k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          98 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">android奇技淫巧 01 Coordinatorlayout+appbarLayout</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>现在好多的App中都会有折叠式布局，给用户提供了很好的体验，其实就是通过Coordinatorlayout + AppbarLayout + CollapsingToolbarLayout三个部分组成的。以前自己学习这个技巧的时候，都是拿来主义，能用就好，对于其中的具体内容并不是非常关心，因为毕竟大部分时间还是要出效果，至于原理，项目是不会在乎的。但是别人不在乎，我们不能不在乎，学到的就是自己的。</p>
+<span id="more"></span>
+<p>这里我会把这三个部分一一拆分，逐一分析，尽量一篇文章搞定</p>
+<h1 id="Toolbar"><a href="#Toolbar" class="headerlink" title="Toolbar"></a>Toolbar</h1><p>从android3.0之后出现了ActionBar，但是这个效果不理想，颜色难看，布局也无法定制，还不如自己写一个ActionBar的好，</p>
+<p>使用方式：</p>
+<ol>
+<li>首先在Activity主题里面将默认Actionbar改为NoActionbar<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;style <span class="hljs-attribute">name</span>=<span class="hljs-string">&quot;AppTheme&quot;</span> <span class="hljs-attribute">parent</span>=<span class="hljs-string">&quot;Theme.AppCompat.Light.NoActionBar&quot;</span>&gt;<br></code></pre></td></tr></table></figure></li>
+<li>绑定toolbar，通过setSupportActionBar(toolbar)设置toolbar为标题栏</li>
+<li>设置常用属性：<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">toolbar.set<span class="hljs-constructor">NavigationIcon(<span class="hljs-params">int</span> <span class="hljs-params">resId</span>)</span>;<br>toolbar.set<span class="hljs-constructor">Logo(<span class="hljs-params">int</span> <span class="hljs-params">resId</span>)</span>;<br>toolbar.set<span class="hljs-constructor">Title(<span class="hljs-string">&quot;&quot;</span>)</span>;<br>toolbar.set<span class="hljs-constructor">Subtitle(<span class="hljs-string">&quot;&quot;</span>)</span>;<br>toolbar.set<span class="hljs-constructor">OnMenuItemClickListener(Toolbar.OnMenuItemClickListener <span class="hljs-params">listener</span>)</span>;<br></code></pre></td></tr></table></figure></li>
+<li>引用菜单<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@override</span><br><span class="hljs-keyword">public</span> <span class="hljs-built_in">boolean</span> <span class="hljs-title function_">onCreateOptionsMenu</span>(<span class="hljs-params">Menu menu</span>)&#123;<br>    <span class="hljs-comment">// 引入options菜单</span><br>    <span class="hljs-title function_">getMenuInflater</span>().<span class="hljs-title function_">inflate</span>(R.<span class="hljs-property">menu</span>.<span class="hljs-property">menu</span>,menu);<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li>在menu文件夹中设置菜单<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">menu</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">xmlns:app</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res-auto&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/menu_01&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:title</span>=<span class="hljs-string">&quot;菜单1&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:icon</span>=<span class="hljs-string">&quot;@mipmap/icon_menu_01&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:showAsAction</span>=<span class="hljs-string">&quot;collapseActionView&quot;</span> /&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/menu_02&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:title</span>=<span class="hljs-string">&quot;菜单2&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:icon</span>=<span class="hljs-string">&quot;@mipmap/icon_menu_02&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:showAsAction</span>=<span class="hljs-string">&quot;collapseActionView&quot;</span> /&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">menu</span>&gt;</span><br></code></pre></td></tr></table></figure>
+对于showAsAction的可选参数如下：</li>
+</ol>
+<ul>
+<li>ifRoom 会显示在item中，如果空间不足会将后面的item收起来，如果已经有了4个或者4个以上的item则会隐藏在溢出列表中</li>
+<li>never 永远不会显示，只会在藏出列表中显示，而且只显示标题，所以在定义item的时候，最好把标题都带上</li>
+<li>always 无论是否超出空间都会显示</li>
+<li>withText withText值示意Action bar要显示文本标题。Action bar会尽可能的显示这个标题，但是，如果图标有效并且受到Action bar空间的限制，文本标题有可能显示不全</li>
+<li>collapseActionView 声明了这个操作视窗应该被折叠到一个按钮中，当用户选择这个按钮时，这个操作视窗展开。否则，这个操作视窗在默认的情况下是可见的，并且即便在用于不适用的时候，也要占据操作栏的有效空间<br>或者我们可以直接在布局文件中添加Toolbar标签<figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs vbnet">&lt;android.support.v7.widget.Toolbar<br><span class="hljs-symbol">android:</span>id=<span class="hljs-string">&quot;@+id/toolbar&quot;</span><br><span class="hljs-symbol">android:</span>layout_width=<span class="hljs-string">&quot;match_parent&quot;</span><br><span class="hljs-symbol">android:</span>layout_height=<span class="hljs-string">&quot;?attr/actionBarSize&quot;</span><br><span class="hljs-symbol">app:</span>layout_collapseMode=<span class="hljs-string">&quot;pin&quot;</span><br><span class="hljs-symbol">app:</span>popupTheme=<span class="hljs-string">&quot;@style/ThemeOverlay.AppCompat.Light&quot;</span> &gt;<br><br>&lt;TextView<br><span class="hljs-symbol">android:</span>id=<span class="hljs-string">&quot;@+id/tv1&quot;</span><br><span class="hljs-symbol">android:</span>layout_width=<span class="hljs-string">&quot;wrap_content&quot;</span><br><span class="hljs-symbol">android:</span>layout_height=<span class="hljs-string">&quot;wrap_content&quot;</span><br><span class="hljs-symbol">android:</span><span class="hljs-keyword">text</span>=<span class="hljs-string">&quot;返回&quot;</span><br><span class="hljs-symbol">android:</span>textSize=<span class="hljs-string">&quot;13sp&quot;</span><br><span class="hljs-symbol">android:</span>textColor=<span class="hljs-string">&quot;@android:color/white&quot;</span> /&gt;<br><br>&lt;TextView<br><span class="hljs-symbol">android:</span>id=<span class="hljs-string">&quot;@+id/tv2&quot;</span><br><span class="hljs-symbol">android:</span>layout_width=<span class="hljs-string">&quot;wrap_content&quot;</span><br><span class="hljs-symbol">android:</span>layout_height=<span class="hljs-string">&quot;match_parent&quot;</span><br><span class="hljs-symbol">android:</span>layout_gravity=<span class="hljs-string">&quot;right&quot;</span><br><span class="hljs-symbol">android:</span>layout_centerHorizontal=<span class="hljs-string">&quot;true&quot;</span><br><span class="hljs-symbol">android:</span>layout_marginRight=<span class="hljs-string">&quot;6dp&quot;</span><br><span class="hljs-symbol">android:</span>gravity=<span class="hljs-string">&quot;center&quot;</span><br><span class="hljs-symbol">android:</span>padding=<span class="hljs-string">&quot;4dp&quot;</span><br><span class="hljs-symbol">android:</span>textColor=<span class="hljs-string">&quot;#fff&quot;</span><br><span class="hljs-symbol">android:</span>textSize=<span class="hljs-string">&quot;14sp&quot;</span><br><span class="hljs-symbol">android:</span><span class="hljs-keyword">text</span>=<span class="hljs-string">&quot;菜单&quot;</span>/&gt;<br>&lt;/android.support.v7.widget.Toolbar&gt;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="Coordinatorlayout"><a href="#Coordinatorlayout" class="headerlink" title="Coordinatorlayout"></a>Coordinatorlayout</h1><p>作用：协调子view的相互关系，比如位置、大小，就像有几个调皮孩子的爸爸，要管管孩子的行为<br><img src="/assets/tips/tip_coordinator_01.jpg" srcset="/img/loading.gif" lazyload alt="Behavior"><br>开Coordinatorlayout看，Behavior是CoordinatorLayout的一个泛型抽象内部类,所以给子view添加layout_behavior属性是来自于它</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs avrasm">&lt;android.support.design.widget.CoordinatorLayout xmlns:tools=<span class="hljs-string">&quot;http://schemas.android.com/tools&quot;</span><br><span class="hljs-symbol">xmlns:</span>android=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="hljs-symbol">android:</span>layout_width=<span class="hljs-string">&quot;match_parent&quot;</span><br><span class="hljs-symbol">android:</span>layout_height=<span class="hljs-string">&quot;match_parent&quot;</span><br><span class="hljs-symbol">android:</span>id=<span class="hljs-string">&quot;@+id/coordinatorLayout&quot;</span><br><span class="hljs-symbol">xmlns:</span>app=<span class="hljs-string">&quot;http://schemas.android.com/apk/res-auto&quot;</span><br><span class="hljs-symbol">tools:</span>context=<span class="hljs-string">&quot;com.example.md.mdview.CoordinatorLayoutActivity&quot;</span>&gt;<br><br>&lt;View<br><span class="hljs-symbol">android:</span>id=<span class="hljs-string">&quot;@+id/view_girl&quot;</span><br><span class="hljs-symbol">android:</span>layout_width=<span class="hljs-string">&quot;70dp&quot;</span><br><span class="hljs-symbol">android:</span>layout_height=<span class="hljs-string">&quot;70dp&quot;</span><br><span class="hljs-symbol">android:</span>layout_marginLeft=<span class="hljs-string">&quot;200dp&quot;</span><br><span class="hljs-symbol">android:</span>background=<span class="hljs-string">&quot;@mipmap/make_music_voice_changer_female&quot;</span> /&gt;<br><br>&lt;View<br><span class="hljs-symbol">android:</span>id=<span class="hljs-string">&quot;@+id/view_uncle&quot;</span><br><span class="hljs-symbol">android:</span>layout_width=<span class="hljs-string">&quot;100dp&quot;</span><br><span class="hljs-symbol">android:</span>layout_height=<span class="hljs-string">&quot;100dp&quot;</span><br><span class="hljs-symbol">android:</span>background=<span class="hljs-string">&quot;@mipmap/make_music_voice_changer_uncle&quot;</span><br><span class="hljs-symbol">app:</span>layout_behavior=<span class="hljs-string">&quot;com.paulniu.RunBehavior&quot;</span>/&gt;<br>&lt;/android.support.design.widget.CoordinatorLayout&gt;<br></code></pre></td></tr></table></figure>
+<p>这里提供了一个小例子，布局：两个子view，操作viewgirl，viewuncle也会相应跟着走，这就要写一个联动关系，用自定义Behavior实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RunBehavior</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">CoordinatorLayout</span>.Behavior&lt;View&gt;&#123;<br><br><span class="hljs-keyword">public</span> <span class="hljs-title function_">RunBehavior</span><span class="hljs-params">(Context context, AttributeSet attrs)</span> &#123;<br><span class="hljs-built_in">super</span>(context, attrs);<br>&#125;<br><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">onDependentViewChanged</span><span class="hljs-params">(CoordinatorLayout parent, View child, View dependency)</span> &#123;<br><span class="hljs-type">int</span> <span class="hljs-variable">top</span> <span class="hljs-operator">=</span> dependency.getTop();<br><span class="hljs-type">int</span> <span class="hljs-variable">left</span> <span class="hljs-operator">=</span> dependency.getLeft();<br><br>ViewGroup.<span class="hljs-type">MarginLayoutParams</span> <span class="hljs-variable">params</span> <span class="hljs-operator">=</span> (ViewGroup.MarginLayoutParams) child.getLayoutParams();<br>params.topMargin = top - <span class="hljs-number">400</span>;<br>params.leftMargin = left;<br>child.setLayoutParams(params);<br><span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">layoutDependsOn</span><span class="hljs-params">(CoordinatorLayout parent, View child, View dependency)</span> &#123;<br><span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>public boolean layoutDependsOn(CoordinatorLayout parent, View child, View dependency)  方法：<br>根据条件过滤判断返回值，返回true联动，返回flase不联动，即behavior不生效<br>public boolean onDependentViewChanged(CoordinatorLayout parent, View child, View dependency)<br>当 dependency这个哥哥发生变化时， 另一个child弟弟也要跟着去玩<br>一个view根据另一个view的变化而变化，  dependency被 child监听<br>功能是child的y值永远比dependency大400像素</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs avrasm"><span class="hljs-symbol">app:</span>layout_behavior=<span class="hljs-string">&quot;com.example.md.mdview.RunBehavior&quot;</span><br></code></pre></td></tr></table></figure>
+<p>这里一定要写上带参数的构造方法，因为coordinatorlayout是根据反射（所以是包名.类名路径）获取这个behavior，是从这个构造方法获得对象的，否则会出错</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs csharp">@Override<br><span class="hljs-function"><span class="hljs-keyword">public</span> boolean <span class="hljs-title">onTouch</span>(<span class="hljs-params">View v, MotionEvent <span class="hljs-keyword">event</span></span>)</span> &#123;<br><span class="hljs-keyword">switch</span> (<span class="hljs-keyword">event</span>.getAction())&#123;<br><span class="hljs-keyword">case</span> MotionEvent.ACTION_DOWN:<br><span class="hljs-keyword">params</span>.leftMargin = (<span class="hljs-built_in">int</span>) (<span class="hljs-keyword">event</span>.getX() - viewGirl.getMeasuredWidth() / <span class="hljs-number">2</span>);<br><span class="hljs-keyword">params</span>.topMargin = (<span class="hljs-built_in">int</span>) (<span class="hljs-keyword">event</span>.getY() - viewGirl.getMeasuredHeight() / <span class="hljs-number">2</span>);<br>viewGirl.setLayoutParams(<span class="hljs-keyword">params</span>);<br><span class="hljs-keyword">break</span>;<br><span class="hljs-keyword">case</span> MotionEvent.ACTION_MOVE:<br><span class="hljs-keyword">params</span>.leftMargin = (<span class="hljs-built_in">int</span>) (<span class="hljs-keyword">event</span>.getX() - viewGirl.getMeasuredWidth() / <span class="hljs-number">2</span>);<br><span class="hljs-keyword">params</span>.topMargin = (<span class="hljs-built_in">int</span>) (<span class="hljs-keyword">event</span>.getY() - viewGirl.getMeasuredHeight() / <span class="hljs-number">2</span>);<br>viewGirl.setLayoutParams(<span class="hljs-keyword">params</span>);<br><span class="hljs-keyword">break</span>;<br>&#125;<br><span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>最后是在界面监听手指的位置，给viewGirl设置手指的位置，viewgril变化了，viewuncle也就随之变化了</p>
+<p>好，在会了Coordinatorlayout的用法，最外层父布局有了，该添加两个子view了。这里里面分别加入AppbarLayout和NestedScrollView作子view，给NestedScrollView加上behavior,就可以让AppbarLayout跟随NestedScrollView的Behavior联动。Android已经自带了app:layout_behavior&#x3D;”@string&#x2F;appbar_scrolling_view_behavior”，只要滚动发生，就会给自己的子view（if instance of Appbarlayout）添加滚动事件。不明白这俩控件紧接着看后面讲解。<br>当前布局变为:</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs stylus">&lt;android<span class="hljs-selector-class">.support</span><span class="hljs-selector-class">.design</span><span class="hljs-selector-class">.widget</span><span class="hljs-selector-class">.CoordinatorLayout</span><br>android:layout_width=<span class="hljs-string">&quot;match_parent&quot;</span><br>android:layout_height=<span class="hljs-string">&quot;match_parent&quot;</span><br>xmlns:app=<span class="hljs-string">&quot;http://schemas.android.com/apk/res-auto&quot;</span><br>android:orientation=<span class="hljs-string">&quot;vertical&quot;</span><br>xmlns:android=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span>&gt;<br><br>&lt;android<span class="hljs-selector-class">.support</span><span class="hljs-selector-class">.design</span><span class="hljs-selector-class">.widget</span><span class="hljs-selector-class">.AppBarLayout</span><br>android:layout_width=<span class="hljs-string">&quot;match_parent&quot;</span><br>android:layout_height=<span class="hljs-string">&quot;wrap_content&quot;</span>&gt;<br><br>&lt;android<span class="hljs-selector-class">.support</span><span class="hljs-selector-class">.v7</span><span class="hljs-selector-class">.widget</span><span class="hljs-selector-class">.Toolbar</span><br>android:id=<span class="hljs-string">&quot;@+id/toolbar&quot;</span><br>android:layout_width=<span class="hljs-string">&quot;match_parent&quot;</span><br>android:layout_height=<span class="hljs-string">&quot;50dp&quot;</span><br>android:<span class="hljs-attribute">background</span>=<span class="hljs-string">&quot;#0e932e&quot;</span><br>app:layout_collapseMode=<span class="hljs-string">&quot;pin&quot;</span>/&gt;<br>&lt;/android<span class="hljs-selector-class">.support</span><span class="hljs-selector-class">.design</span><span class="hljs-selector-class">.widget</span>.CollapsingToolbarLayout&gt;<br><br>&lt;/android<span class="hljs-selector-class">.support</span><span class="hljs-selector-class">.design</span><span class="hljs-selector-class">.widget</span>.AppBarLayout&gt;<br><br>&lt;android<span class="hljs-selector-class">.support</span><span class="hljs-selector-class">.v4</span><span class="hljs-selector-class">.widget</span><span class="hljs-selector-class">.NestedScrollView</span><br>android:layout_width=<span class="hljs-string">&quot;match_parent&quot;</span><br>android:layout_height=<span class="hljs-string">&quot;wrap_content&quot;</span><br>app:layout_behavior=<span class="hljs-string">&quot;@string/appbar_scrolling_view_behavior&quot;</span>&gt;<br><br>&lt;TextView<br>android:layout_width=<span class="hljs-string">&quot;match_parent&quot;</span><br>android:layout_height=<span class="hljs-string">&quot;wrap_content&quot;</span><br>android:textSize=<span class="hljs-string">&quot;20sp&quot;</span><br>android:textColor=<span class="hljs-string">&quot;#000&quot;</span><br>android:<span class="hljs-attribute">padding</span>=<span class="hljs-string">&quot;10dp&quot;</span><br>android:text=<span class="hljs-string">&quot;&quot;</span>/&gt;<br>&lt;/android<span class="hljs-selector-class">.support</span><span class="hljs-selector-class">.v4</span><span class="hljs-selector-class">.widget</span>.NestedScrollView&gt;<br><br>&lt;/android<span class="hljs-selector-class">.support</span><span class="hljs-selector-class">.design</span><span class="hljs-selector-class">.widget</span>.CoordinatorLayout&gt;<br></code></pre></td></tr></table></figure>
+
+<h1 id="NestedScrollView"><a href="#NestedScrollView" class="headerlink" title="NestedScrollView"></a>NestedScrollView</h1><p>NestedScrolling机制能够让父View和子View在滚动式进行配合，其基本流程如下：<br>当子view开始滚动之前，可以通知父View，让其先于自己进行滚动；<br>子View自己进行滚动；子view滚动之后，还可以通知父view继续滚动。<br>而要实现这样的交互机制，首先父view要实现NestedScrollingParent接口，而子View需要实现NestedScrollingChild接口，在这套机制中子View是发起者，父view是接受回调并做出响应的<br>下面是几个关键的类和接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment">* NestedScrollView is just like &#123;<span class="hljs-doctag">@link</span> android.widget.ScrollView&#125;, but it supports acting</span><br><span class="hljs-comment">* as both a nested scrolling parent and child on both new and old versions of Android.</span><br><span class="hljs-comment">* Nested scrolling is enabled by default.</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">NestedScrollView</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">FrameLayout</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">NestedScrollingParent</span>,<br>NestedScrollingChild, ScrollingView &#123;<br><span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">ANIMATED_SCROLL_GAP</span> <span class="hljs-operator">=</span> <span class="hljs-number">250</span>;<br><br><span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">float</span> <span class="hljs-variable">MAX_SCROLL_FACTOR</span> <span class="hljs-operator">=</span> <span class="hljs-number">0.5f</span>;<br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">TAG</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;NestedScrollView&quot;</span>;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment">* Interface definition for a callback to be invoked when the scroll</span><br><span class="hljs-comment">* X or Y positions of a view change.</span><br><span class="hljs-comment">*</span><br><span class="hljs-comment">* &lt;p&gt;This version of the interface works on all versions of Android, back to API v4.&lt;/p&gt;</span><br><span class="hljs-comment">*</span><br><span class="hljs-comment">* <span class="hljs-doctag">@see</span> #setOnScrollChangeListener(OnScrollChangeListener)</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">OnScrollChangeListener</span> &#123;<br><span class="hljs-comment">/**</span><br><span class="hljs-comment">* Called when the scroll position of a view changes.</span><br><span class="hljs-comment">*</span><br><span class="hljs-comment">* <span class="hljs-doctag">@param</span> v The view whose scroll position has changed.</span><br><span class="hljs-comment">* <span class="hljs-doctag">@param</span> scrollX Current horizontal scroll origin.</span><br><span class="hljs-comment">* <span class="hljs-doctag">@param</span> scrollY Current vertical scroll origin.</span><br><span class="hljs-comment">* <span class="hljs-doctag">@param</span> oldScrollX Previous horizontal scroll origin.</span><br><span class="hljs-comment">* <span class="hljs-doctag">@param</span> oldScrollY Previous vertical scroll origin.</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">onScrollChange</span><span class="hljs-params">(NestedScrollView v, <span class="hljs-type">int</span> scrollX, <span class="hljs-type">int</span> scrollY,</span><br><span class="hljs-params"><span class="hljs-type">int</span> oldScrollX, <span class="hljs-type">int</span> oldScrollY)</span>;<br>&#125;<br><br><span class="hljs-keyword">private</span> <span class="hljs-type">long</span> mLastScroll;<br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Rect</span> <span class="hljs-variable">mTempRect</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Rect</span>();<br><span class="hljs-keyword">private</span> OverScroller mScroller;<br><span class="hljs-keyword">private</span> EdgeEffect mEdgeGlowTop;<br><span class="hljs-keyword">private</span> EdgeEffect mEdgeGlowBottom;<br>······<br></code></pre></td></tr></table></figure>
+<p>&#x2F;&#x2F;主要接口<br>NestedScrollingChild<br>NestedScrollingParent<br>&#x2F;&#x2F;帮助类<br>NestedScrollingChildHelper<br>NestedScrollingParentHelper</p>
+<h1 id="AppbarLayout"><a href="#AppbarLayout" class="headerlink" title="AppbarLayout"></a>AppbarLayout</h1><p>继承自Linearlayout，且方向是vertical，它可以让你定制当某个可滚动View的滚动手势发生变化时，其内部的子View实现何种动作。<br>AppBarLayout子View的动作<br>内部的子View通过在布局中加app:layout_scrollFlags设置执行的动作</p>
+<ul>
+<li>·scroll  :子view会跟随滚动事件一起滚动，相当于添加到scrollview头部</li>
+<li>·enterAlways  :只要屏幕下滑，view就会立即拉下出来。</li>
+<li>·snap ：这个属性让控件变得有弹性,如果控件下拉了75%的高度，就会自动展开，如果只有25%显示，就会反弹回去关闭。（去试试支付宝首页吧，就是加了弹性这个效果）</li>
+<li>·exitUntilCollapsed  ：当scrollview滑到订部，再将子view折叠起来</li>
+</ul>
+<p>可以给ViewPager设置行为，就不需要使用NestedScrollView的滑动，实现与AppBarLayout联动。<br>app:layout_behavior&#x3D;”@string&#x2F;appbar_scrolling_view_behavior”<br>setExpande(boolean )  设置展开和关闭状态，默认有开关动画</p>
+<h1 id="CollapsingToolbarLayout"><a href="#CollapsingToolbarLayout" class="headerlink" title="CollapsingToolbarLayout"></a>CollapsingToolbarLayout</h1><p>CollapsingToolbarLayout作用是提供了一个可以折叠的Toolbar，它继承自FrameLayout。<br>CollapsingToolbarLayout属性   含义<br>app:title   设置标题<br>app:collapsedTitleGravity&#x3D;”center”  设置标题位置<br>app:contentScrim    设置折叠时toolbar的颜色，默认是colorPrimary的色值<br>app:statusBarScrim  设置折叠时状态栏的颜色 ，默认是colorPrimaryDark的色值<br>app:layout_collapseParallaxMultiplier   设置视差<br>app:layout_collapseMode&#x3D;”parallax”  视差模式，在折叠的时候会有个视差折叠的效果<br>app:layout_collapseMode&#x3D;”pin”   固定模式，在折叠的时候最后固定在顶端<br>使用示例：让图片折叠，让toolbar固定</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs stylus">&lt;android<span class="hljs-selector-class">.support</span><span class="hljs-selector-class">.design</span><span class="hljs-selector-class">.widget</span><span class="hljs-selector-class">.AppBarLayout</span><br>android:layout_width=<span class="hljs-string">&quot;match_parent&quot;</span><br>android:layout_height=<span class="hljs-string">&quot;wrap_content&quot;</span>&gt;<br><br>&lt;android<span class="hljs-selector-class">.support</span><span class="hljs-selector-class">.design</span><span class="hljs-selector-class">.widget</span><span class="hljs-selector-class">.CollapsingToolbarLayout</span><br>android:layout_width=<span class="hljs-string">&quot;match_parent&quot;</span><br>android:layout_height=<span class="hljs-string">&quot;wrap_content&quot;</span><br>app:layout_scrollFlags=<span class="hljs-string">&quot;scroll|exitUntilCollapsed&quot;</span>&gt;<br><br>&lt;ImageView<br>android:layout_width=<span class="hljs-string">&quot;match_parent&quot;</span><br>android:layout_height=<span class="hljs-string">&quot;200dp&quot;</span><br>android:<span class="hljs-attribute">background</span>=<span class="hljs-string">&quot;@mipmap/bg&quot;</span><br>app:layout_collapseMode=<span class="hljs-string">&quot;parallax&quot;</span>/&gt;<br><br>&lt;android<span class="hljs-selector-class">.support</span><span class="hljs-selector-class">.v7</span><span class="hljs-selector-class">.widget</span><span class="hljs-selector-class">.Toolbar</span><br>android:id=<span class="hljs-string">&quot;@+id/toolbar&quot;</span><br>android:layout_width=<span class="hljs-string">&quot;match_parent&quot;</span><br>android:layout_height=<span class="hljs-string">&quot;wrap_content&quot;</span><br>android:minHeight=<span class="hljs-string">&quot;50dp&quot;</span><br>android:<span class="hljs-attribute">background</span>=<span class="hljs-string">&quot;#000&quot;</span><br>app:layout_collapseMode=<span class="hljs-string">&quot;pin&quot;</span>/&gt;<br>&lt;/android<span class="hljs-selector-class">.support</span><span class="hljs-selector-class">.design</span><span class="hljs-selector-class">.widget</span>.CollapsingToolbarLayout&gt;<br><br>&lt;/android<span class="hljs-selector-class">.support</span><span class="hljs-selector-class">.design</span><span class="hljs-selector-class">.widget</span>.AppBarLayout&gt;<br></code></pre></td></tr></table></figure>
+<p>添加flags可以设置系统状态栏为透明，如果最顶上是背景这样用效果更佳</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">get<span class="hljs-constructor">Window()</span>.add<span class="hljs-constructor">Flags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)</span>;<br>set<span class="hljs-constructor">ContentView(R.<span class="hljs-params">layout</span>.<span class="hljs-params">activity_main</span>)</span>;<br></code></pre></td></tr></table></figure>
+<p>实现toolbar渐变颜色：AppbarLayout提供了滑动偏移监听，偏移量除以appbar总高度可以得到当前滑动百分比。注意：这个verticalOffset是0或者负数，需要转绝对值</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">appbarLayout.add<span class="hljs-constructor">OnOffsetChangedListener(<span class="hljs-params">new</span> AppBarLayout.OnOffsetChangedListener()</span> &#123;<br>@Override<br>public void on<span class="hljs-constructor">OffsetChanged(AppBarLayout <span class="hljs-params">appBarLayout</span>, <span class="hljs-params">int</span> <span class="hljs-params">verticalOffset</span>)</span> &#123;<br><span class="hljs-comment">//verticalOffset始终为0以下的负数</span><br><span class="hljs-built_in">float</span> percent = (<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Math</span>.</span></span>abs(verticalOffset<span class="hljs-operator"> * </span><span class="hljs-number">1.0</span>f)/appBarLayout.get<span class="hljs-constructor">TotalScrollRange()</span>);<br>&#125;<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>android奇技淫巧 01 Coordinatorlayout+appbarLayout</div>
+      <div>http://example.com/2019/06/12/android-tools-01/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年6月12日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/06/12/android-tools-02/" title="android奇技淫巧 02 无限循环RecyclerView">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">android奇技淫巧 02 无限循环RecyclerView</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/05/08/android-25-keyboard/" title="重拾android路(二十四) Android自定义键盘">
+                        <span class="hidden-mobile">重拾android路(二十四) Android自定义键盘</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

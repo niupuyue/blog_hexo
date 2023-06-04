@@ -1,0 +1,762 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="最近因为公司业务调整，然后我需要去做ios开发，本来就非常懒的我，被逼着去学一个新的技术，真的很难受，为了打发这些比较难受的时间，将这些学习到的基础知识记录下来，方便自己以后去复习。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="swift">
+<meta property="og:url" content="http://example.com/2018/05/09/swift-01/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="最近因为公司业务调整，然后我需要去做ios开发，本来就非常懒的我，被逼着去学一个新的技术，真的很难受，为了打发这些比较难受的时间，将这些学习到的基础知识记录下来，方便自己以后去复习。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-05-09T11:25:24.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.126Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="swift">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>swift - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="swift"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2018-05-09 19:25" pubdate>
+          2018年5月9日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          69 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">swift</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>最近因为公司业务调整，然后我需要去做ios开发，本来就非常懒的我，被逼着去学一个新的技术，真的很难受，为了打发这些比较难受的时间，将这些学习到的基础知识记录下来，方便自己以后去复习。</p>
+<span id="more"></span>
+<p>首先要学习ios开发，第一个面临的抉择就是使用OC语言还是Swift语言。我自己是做Android的，如果一个新人想要学习Android，然后问我是学习Java语言还是Kotlin语言。我会毫不犹豫的说是Java语言。为什么呢？因为Kotlin语言更像是一个脚本，既然是脚本，那么肯定有比较方便的编程效果，为什么还要学习Java语言呢？这是因为Java语言本身既是一个非常优秀的语言，我们可以使用Java语言编写后台，移动端等等很多应用。而Kotlin语言，就相当于是解释Java语言的。那么换算到OC和Swift语言，我却选择了Swift。这是为了呢？因为我感觉Swift语言更加好理解，书写起来也是比较方便，再加上，这个Swift语言是苹果公司自己搞出来的，而OC是使用别人的语言，所以我觉得，以后肯定会有一场风波，不过照目前的形式来看，应该短期之内，没有危险。<br>所以，对于我来说，IOS入门语言就是Swift了</p>
+<h1 id="欢迎使用Swift"><a href="#欢迎使用Swift" class="headerlink" title="欢迎使用Swift"></a>欢迎使用Swift</h1><blockquote>
+<p>我去，使用不使用，管我什么事？我在这矫情什么劲？</p>
+</blockquote>
+<h2 id="关于Swift"><a href="#关于Swift" class="headerlink" title="关于Swift"></a>关于Swift</h2><p>Swift 是一种新的编程语言，用于编写 iOS，macOS，watchOS 和 tvOS 的应用程序。Swift 结合了 C 和 Objective-C 的优点并且不受 C 兼容性的限制。Swift 采用安全的编程模式并添加了很多新特性，这将使编程更简单，更灵活，也更有趣。Swift 是基于成熟而且倍受喜爱的 Cocoa 和 Cocoa Touch 框架，它的降临将重新定义软件开发。<br>Swift 的开发从很久之前就开始了。为了给 Swift 打好基础，苹果公司改进了编译器，调试器和框架结构。我们使用自动引用计数（Automatic Reference Counting, ARC）来简化内存管理。我们在 Foundation 和 Cocoa 的基础上构建框架栈使其完全现代化和标准化。 Objective-C 本身支持块、集合语法和模块，所以框架可以轻松支持现代编程语言技术。正是得益于这些基础工作，我们现在才能发布这样一个用于未来苹果软件开发的新语言。</p>
+<blockquote>
+<p>好吧，我承认，这个Swift的介绍语言是我直接复制过来的。因为一般情况下，介绍都是在吹嘘自己的语言有多么优秀，算了，不管了，直接往下走</p>
+</blockquote>
+<h2 id="Swift初见"><a href="#Swift初见" class="headerlink" title="Swift初见"></a>Swift初见</h2><p>这里我们会对Swift进行初步的认识，比如Swift的基本数据类型，一些封包操作等等。只是简单介绍，后面应该会再补充的</p>
+<h3 id="简单值"><a href="#简单值" class="headerlink" title="简单值"></a>简单值</h3><p>使用let声明一个常量，使用var声明一个变量(是不是非常像JS，哈哈脚本语言，果然都是一个尿性)<br>一个常量在编译的时候，并不一定要有一个值，但是我们只能赋值一次</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs abnf">var myValue <span class="hljs-operator">=</span> <span class="hljs-number">12</span><br><span class="hljs-attribute">myValue</span> <span class="hljs-operator">=</span> <span class="hljs-number">22</span><br>let myConstant <span class="hljs-operator">=</span> <span class="hljs-number">100</span><br></code></pre></td></tr></table></figure>
+<p>在这个例子中我们可以看到，myValue是一个变量，我们可以为他多次赋值;二myConstant是一个常量，我们只能对他赋值一次<br>我们在声明一个对象的时候，系统会自动根据赋值内容进行类型的声明，比如上面的两个，都是整形，所以类型就是Int<br>如果在声明的时候我们并没有将对象的类型给规定好，那么我们可以通过一下方式再次将数据类型规定好</p>
+<figure class="highlight julia"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs julia"><span class="hljs-keyword">let</span> myValue: <span class="hljs-built_in">String</span> = <span class="hljs-string">&quot;hello world&quot;</span><br><span class="hljs-keyword">let</span> myInt:<span class="hljs-built_in">Int</span> = <span class="hljs-number">12</span><br><span class="hljs-keyword">let</span> myDouble:Double = <span class="hljs-number">12.1</span><br></code></pre></td></tr></table></figure>
+<p>如果我们想要将一个值转换成其他类型，也是可以的，但是我们必须调用响应的方法，不然是无法直接通过隐式的方式实现的</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">let</span> words = <span class="hljs-string">&quot;my age is &quot;</span><br><span class="hljs-keyword">let</span> age = <span class="hljs-number">18</span><br><span class="hljs-keyword">let</span> ss = words + <span class="hljs-constructor">String(<span class="hljs-params">age</span>)</span><br></code></pre></td></tr></table></figure>
+<p>其实我们还有另外一种比较简单的方式</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs swift"><span class="hljs-keyword">let</span> words <span class="hljs-operator">=</span> <span class="hljs-string">&quot;我的年龄是&quot;</span><br><span class="hljs-keyword">let</span> age <span class="hljs-operator">=</span> <span class="hljs-number">22</span><br><span class="hljs-keyword">let</span> ss <span class="hljs-operator">=</span> <span class="hljs-string">&quot;大家好 <span class="hljs-subst">\(words)</span> ，你们猜猜看，对了,<span class="hljs-subst">\(age)</span>&quot;</span><br></code></pre></td></tr></table></figure>
+<p>我们使用[]来表示一个数组或者字典，并且通过下标和key值来访问元素。</p>
+<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs prolog">var shoppingList = [<span class="hljs-string">&quot;catfish&quot;</span>, <span class="hljs-string">&quot;water&quot;</span>, <span class="hljs-string">&quot;tulips&quot;</span>, <span class="hljs-string">&quot;blue paint&quot;</span>]<br>shoppingList[<span class="hljs-number">1</span>] = <span class="hljs-string">&quot;bottle of water&quot;</span><br><br>var occupations = [<br>    <span class="hljs-string">&quot;Malcolm&quot;</span>: <span class="hljs-string">&quot;Captain&quot;</span>,<br>    <span class="hljs-string">&quot;Kaylee&quot;</span>: <span class="hljs-string">&quot;Mechanic&quot;</span>,<br>]<br>occupations[<span class="hljs-string">&quot;Jayne&quot;</span>] = <span class="hljs-string">&quot;Public Relations&quot;</span><br></code></pre></td></tr></table></figure>
+<p>如果我们想要从创建一个空数组或者字典，使用初始化语法</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs gauss"><span class="hljs-keyword">let</span> emptyArray = [<span class="hljs-keyword">String</span>]()<br><span class="hljs-keyword">let</span> emptyDictionary = [<span class="hljs-keyword">String</span>: Float]()<br></code></pre></td></tr></table></figure>
+<h3 id="控制流"><a href="#控制流" class="headerlink" title="控制流"></a>控制流</h3><blockquote>
+<p>所谓的控制流就是逻辑判断，条件循环<br>这个控制流里面也是包括if条件判断和for循环等操作的</p>
+</blockquote>
+<p>那么总的介绍我们就先说这么多，下面我们具体来看看</p>
+<h1 id="Swift教程"><a href="#Swift教程" class="headerlink" title="Swift教程"></a>Swift教程</h1><h2 id="基础部分"><a href="#基础部分" class="headerlink" title="基础部分"></a>基础部分</h2><h3 id="常量和变量"><a href="#常量和变量" class="headerlink" title="常量和变量"></a>常量和变量</h3><p>常量和变量把一个名字（比如 maximumNumberOfLoginAttempts 或者 welcomeMessage ）和一个指定类型的值（比如数字 10 或者字符串 “Hello” ）关联起来。常量的值一旦设定就不能改变，而变量的值可以随意更改。</p>
+<h3 id="声明常量和变量"><a href="#声明常量和变量" class="headerlink" title="声明常量和变量"></a>声明常量和变量</h3><p>常量和变量必须在使用前声明，用 let 来声明常量，用 var 来声明变量。下面的例子展示了如何用常量和变量来记录用户尝试登录的次数：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs abnf">let maximumNumberOfLoginAttempts <span class="hljs-operator">=</span> <span class="hljs-number">10</span><br>var currentLoginAttempt <span class="hljs-operator">=</span> <span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+<p>这两行代码可以被理解为：</p>
+<p>“声明一个名字是 maximumNumberOfLoginAttempts 的新常量，并给它一个值 10 。然后，声明一个名字是 currentLoginAttempt 的变量并将它的值初始化为 0 。”</p>
+<p>在这个例子中，允许的最大尝试登录次数被声明为一个常量，因为这个值不会改变。当前尝试登录次数被声明为一个变量，因为每次尝试登录失败的时候都需要增加这个值。</p>
+<p>你可以在一行中声明多个常量或者多个变量，用逗号隔开</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">var</span> x = <span class="hljs-number">0</span>.<span class="hljs-number">0</span>, y = <span class="hljs-number">0</span>.<span class="hljs-number">0</span>, z = <span class="hljs-number">0</span>.<span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>如果你的代码中有不需要改变的值，请使用 let 关键字将它声明为常量。只将需要改变的值声明为变量。</p>
+</blockquote>
+<h3 id="类型标注"><a href="#类型标注" class="headerlink" title="类型标注"></a>类型标注</h3><p>当你声明常量或者变量的时候可以加上类型标注（type annotation），说明常量或者变量中要存储的值的类型。如果要添加类型标注，需要在常量或者变量名后面加上一个冒号和空格，然后加上类型名称。</p>
+<p>这个例子给 welcomeMessage 变量添加了类型标注，表示这个变量可以存储 String 类型的值：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs dart"><span class="hljs-keyword">var</span> welcomeMessage: <span class="hljs-built_in">String</span><br></code></pre></td></tr></table></figure>
+<p>声明中的冒号代表着“是…类型”，所以这行代码可以被理解为：</p>
+<p>“声明一个类型为 String ，名字为 welcomeMessage 的变量。”</p>
+<p>“类型为 String ”的意思是“可以存储任意 String 类型的值。”</p>
+<p>welcomeMessage 变量现在可以被设置成任意字符串：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">welcomeMessage</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;Hello&quot;</span><br></code></pre></td></tr></table></figure>
+<p>你可以在一行中定义多个同样类型的变量，用逗号分割，并在最后一个变量名之后添加类型标注：</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs processing">var <span class="hljs-built_in">red</span>, <span class="hljs-built_in">green</span>, <span class="hljs-built_in">blue</span>: Double<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>一般来说你很少需要写类型标注。如果你在声明常量或者变量的时候赋了一个初始值，Swift可以推断出这个常量或者变量的类型，请参考类型安全和类型推断。在上面的例子中，没有给 welcomeMessage 赋初始值，所以变量 welcomeMessage 的类型是通过一个类型标注指定的，而不是通过初始值推断的</p>
+</blockquote>
+<h3 id="常量和变量的命名"><a href="#常量和变量的命名" class="headerlink" title="常量和变量的命名"></a>常量和变量的命名</h3><p>你可以用任何你喜欢的字符作为常量和变量名，包括 Unicode 字符</p>
+<figure class="highlight julia"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs julia"><span class="hljs-keyword">let</span> <span class="hljs-literal">π</span> = <span class="hljs-number">3.14159</span><br><span class="hljs-keyword">let</span> 你好 = <span class="hljs-string">&quot;你好世界&quot;</span><br><span class="hljs-keyword">let</span> 🐶🐮 = <span class="hljs-string">&quot;dogcow&quot;</span><br></code></pre></td></tr></table></figure>
+<p>常量与变量名不能包含数学符号，箭头，保留的（或者非法的）Unicode 码位，连线与制表符。也不能以数字开头，但是可以在常量与变量名的其他地方包含数字。</p>
+<p>一旦你将常量或者变量声明为确定的类型，你就不能使用相同的名字再次进行声明，或者改变其存储的值的类型。同时，你也不能将常量与变量进行互转。</p>
+<blockquote>
+<p>如果你需要使用与Swift保留关键字相同的名称作为常量或者变量名，你可以使用反引号（&#96;）将关键字包围的方式将其作为名字使用。无论如何，你应当避免使用关键字作为常量或变量名，除非你别无选择。<br>你可以更改现有的变量值为其他同类型的值，在下面的例子中，friendlyWelcome的值从”Hello!”改为了”Bonjour!”</p>
+</blockquote>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs abnf">var friendlyWelcome <span class="hljs-operator">=</span> <span class="hljs-string">&quot;Hello!&quot;</span><br><span class="hljs-attribute">friendlyWelcome</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;Bonjour!&quot;</span><br>// friendlyWelcome 现在是 <span class="hljs-string">&quot;Bonjour!&quot;</span><br></code></pre></td></tr></table></figure>
+<p>与变量不同，常量的值一旦被确定就不能更改了。尝试这样做会导致编译时报错：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs abnf">let languageName <span class="hljs-operator">=</span> <span class="hljs-string">&quot;Swift&quot;</span><br><span class="hljs-attribute">languageName</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;Swift++&quot;</span><br>// 这会报编译时错误 - languageName 不可改变<br></code></pre></td></tr></table></figure>
+<h3 id="输出常量和变量"><a href="#输出常量和变量" class="headerlink" title="输出常量和变量"></a>输出常量和变量</h3><p>你可以用print(_:separator:terminator:)函数来输出当前常量或变量的值:</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(friendlyWelcome)</span></span><br><span class="hljs-comment">// 输出 &quot;Bonjour!&quot;</span><br></code></pre></td></tr></table></figure>
+<p>print(<em>:separator:terminator:) 是一个用来输出一个或多个值到适当输出区的全局函数。如果你用 Xcode，print(</em>:separator:terminator:) 将会输出内容到“console”面板上。separator 和 terminator 参数具有默认值，因此你调用这个函数的时候可以忽略它们。默认情况下，该函数通过添加换行符来结束当前行。如果不想换行，可以传递一个空字符串给 terminator 参数–例如，print(someValue, terminator:””) 。关于参数默认值的更多信息，请参考默认参数值。</p>
+<p>Swift 用字符串插值（string interpolation）的方式把常量名或者变量名当做占位符加入到长字符串中，Swift 会用当前常量或变量的值替换这些占位符。将常量或变量名放入圆括号中，并在开括号前使用反斜杠将其转义：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">&quot;The current value of friendlyWelcome is \(friendlyWelcome)&quot;</span>)</span></span><br><span class="hljs-comment">// 输出 &quot;The current value of friendlyWelcome is Bonjour!</span><br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>字符串插值所有可用的选项</p>
+</blockquote>
+<h3 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h3><p>整数就是没有小数部分的数字，比如 42 和 -23 。整数可以是 有符号（正、负、零）或者 无符号（正、零）。</p>
+<p>Swift 提供了8，16，32和64位的有符号和无符号整数类型。这些整数类型和 C 语言的命名方式很像，比如8位无符号整数类型是UInt8，32位有符号整数类型是 Int32 。就像 Swift 的其他类型一样，整数类型采用大写命名法。</p>
+<h3 id="整数的范围"><a href="#整数的范围" class="headerlink" title="整数的范围"></a>整数的范围</h3><p>你可以访问不同整数类型的 min 和 max 属性来获取对应类型的最小值和最大值：</p>
+<figure class="highlight julia"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs julia"><span class="hljs-keyword">let</span> minValue = <span class="hljs-built_in">UInt8</span>.min  // minValue 为 <span class="hljs-number">0</span>，是 <span class="hljs-built_in">UInt8</span> 类型<br><span class="hljs-keyword">let</span> maxValue = <span class="hljs-built_in">UInt8</span>.max  // maxValue 为 <span class="hljs-number">255</span>，是 <span class="hljs-built_in">UInt8</span> 类型<br></code></pre></td></tr></table></figure>
+<p>min 和 max 所传回值的类型，正是其所对的整数类型(如上例UInt8, 所传回的类型是UInt8)，可用在表达式中相同类型值旁。</p>
+<h3 id="Int"><a href="#Int" class="headerlink" title="Int"></a>Int</h3><p>一般来说，你不需要专门指定整数的长度。Swift 提供了一个特殊的整数类型Int，长度与当前平台的原生字长相同：</p>
+<ul>
+<li>在32位平台上，Int 和 Int32 长度相同。</li>
+<li>在64位平台上，Int 和 Int64 长度相同。<br>除非你需要特定长度的整数，一般来说使用 Int 就够了。这可以提高代码一致性和可复用性。即使是在32位平台上，Int 可以存储的整数范围也可以达到 -2,147,483,648 ~ 2,147,483,647 ，大多数时候这已经足够大了。</li>
+</ul>
+<h3 id="UInt"><a href="#UInt" class="headerlink" title="UInt"></a>UInt</h3><p>Swift 也提供了一个特殊的无符号类型 UInt，长度与当前平台的原生字长相同：</p>
+<ul>
+<li>在32位平台上，UInt 和 UInt32 长度相同。</li>
+<li>在64位平台上，UInt 和 UInt64 长度相同。<blockquote>
+<p>尽量不要使用UInt，除非你真的需要存储一个和当前平台原生字长相同的无符号整数。除了这种情况，最好使用Int，即使你要存储的值已知是非负的。统一使用Int可以提高代码的可复用性，避免不同类型数字之间的转换，并且匹配数字的类型推断</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h3><p>浮点数是有小数部分的数字，比如 3.14159 ，0.1 和 -273.15。</p>
+<p>浮点类型比整数类型表示的范围更大，可以存储比 Int 类型更大或者更小的数字。Swift 提供了两种有符号浮点数类型：</p>
+<ul>
+<li>Double表示64位浮点数。当你需要存储很大或者很高精度的浮点数时请使用此类型。</li>
+<li>Float表示32位浮点数。精度要求不高的话可以使用此类型。<blockquote>
+<p>Double精确度很高，至少有15位数字，而Float只有6位数字。选择哪个类型取决于你的代码需要处理的值的范围，在两种类型都匹配的情况下，将优先选择 Double。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="类型安全和类型推断"><a href="#类型安全和类型推断" class="headerlink" title="类型安全和类型推断"></a>类型安全和类型推断</h3><p>Swift 是一个类型安全（type safe）的语言。类型安全的语言可以让你清楚地知道代码要处理的值的类型。如果你的代码需要一个String，你绝对不可能不小心传进去一个Int。</p>
+<p>由于 Swift 是类型安全的，所以它会在编译你的代码时进行类型检查（type checks），并把不匹配的类型标记为错误。这可以让你在开发的时候尽早发现并修复错误。</p>
+<p>当你要处理不同类型的值时，类型检查可以帮你避免错误。然而，这并不是说你每次声明常量和变量的时候都需要显式指定类型。如果你没有显式指定类型，Swift 会使用类型推断（type inference）来选择合适的类型。有了类型推断，编译器可以在编译代码的时候自动推断出表达式的类型。原理很简单，只要检查你赋的值即可。</p>
+<p>因为有类型推断，和 C 或者 Objective-C 比起来 Swift 很少需要声明类型。常量和变量虽然需要明确类型，但是大部分工作并不需要你自己来完成。</p>
+<p>当你声明常量或者变量并赋初值的时候类型推断非常有用。当你在声明常量或者变量的时候赋给它们一个字面量（literal value 或 literal）即可触发类型推断。（字面量就是会直接出现在你代码中的值，比如 42 和 3.14159 。）</p>
+<p>例如，如果你给一个新常量赋值 42 并且没有标明类型，Swift 可以推断出常量类型是 Int ，因为你给它赋的初始值看起来像一个整数：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk">let meaningOfLife = <span class="hljs-number">42</span><br><span class="hljs-regexp">//</span> meaningOfLife 会被推测为 Int 类型<br></code></pre></td></tr></table></figure>
+<p>同理，如果你没有给浮点字面量标明类型，Swift 会推断你想要的是 Double：</p>
+<figure class="highlight julia"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs julia"><span class="hljs-keyword">let</span> <span class="hljs-literal">pi</span> = <span class="hljs-number">3.14159</span><br>// <span class="hljs-literal">pi</span> 会被推测为 Double 类型<br></code></pre></td></tr></table></figure>
+<p>当推断浮点数的类型时，Swift 总是会选择 Double 而不是Float。<br>如果表达式中同时出现了整数和浮点数，会被推断为 Double 类型：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk">let anotherPi = <span class="hljs-number">3</span> + <span class="hljs-number">0.14159</span><br><span class="hljs-regexp">//</span> anotherPi 会被推测为 Double 类型<br></code></pre></td></tr></table></figure>
+<p>原始值 3 没有显式声明类型，而表达式中出现了一个浮点字面量，所以表达式会被推断为 Double 类型。</p>
+<h3 id="数值型字面量"><a href="#数值型字面量" class="headerlink" title="数值型字面量"></a>数值型字面量</h3><p>整数字面量可以被写作：</p>
+<ul>
+<li>一个十进制数，没有前缀</li>
+<li>一个二进制数，前缀是0b</li>
+<li>一个八进制数，前缀是0o</li>
+<li>一个十六进制数，前缀是0x<br>下面的所有整数字面量的十进制值都是17:<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs maxima"><span class="hljs-built_in">let</span> decimalInteger = <span class="hljs-number">17</span><br><span class="hljs-built_in">let</span> binaryInteger = <span class="hljs-number">0b10001</span>       // 二进制的<span class="hljs-number">17</span><br><span class="hljs-built_in">let</span> octalInteger = <span class="hljs-number">0o21</span>           // 八进制的<span class="hljs-number">17</span><br><span class="hljs-built_in">let</span> hexadecimalInteger = <span class="hljs-number">0x11</span>     // 十六进制的<span class="hljs-number">17</span><br></code></pre></td></tr></table></figure>
+浮点字面量可以是十进制（没有前缀）或者是十六进制（前缀是 0x ）。小数点两边必须有至少一个十进制数字（或者是十六进制的数字）。十进制浮点数也可以有一个可选的指数（exponent)，通过大写或者小写的 e 来指定；十六进制浮点数必须有一个指数，通过大写或者小写的 p 来指定。<br>如果一个十进制数的指数为 exp，那这个数相当于基数和10^exp的乘积：</li>
+</ul>
+<ol>
+<li><p>1.25e2 表示 1.25 × 10^2，等于 125.0。</p>
+</li>
+<li><p>1.25e-2 表示 1.25 × 10^-2，等于 0.0125。<br>如果一个十六进制数的指数为exp，那这个数相当于基数和2^exp的乘积：</p>
+</li>
+<li><p>0xFp2 表示 15 × 2^2，等于 60.0。</p>
+</li>
+<li><p>0xFp-2 表示 15 × 2^-2，等于 3.75。<br>下面的这些浮点字面量都等于十进制的12.1875：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">let</span> decimalDouble = <span class="hljs-number">12</span>.<span class="hljs-number">1875</span><br><span class="hljs-attribute">let</span> exponentDouble = <span class="hljs-number">1</span>.<span class="hljs-number">21875</span>e1<br><span class="hljs-attribute">let</span> hexadecimalDouble = <span class="hljs-number">0</span>xC.<span class="hljs-number">3</span>p0<br></code></pre></td></tr></table></figure>
+<p>数值类字面量可以包括额外的格式来增强可读性。整数和浮点数都可以添加额外的零并且包含下划线，并不会影响字面量：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">let</span> paddedDouble = <span class="hljs-number">000123</span>.<span class="hljs-number">456</span><br><span class="hljs-attribute">let</span> oneMillion = <span class="hljs-number">1</span>_000_000<br><span class="hljs-attribute">let</span> justOverOneMillion = <span class="hljs-number">1</span>_000_000.<span class="hljs-number">000</span>_000_1<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="数值型类型转换"><a href="#数值型类型转换" class="headerlink" title="数值型类型转换"></a>数值型类型转换</h3><p>通常来讲，即使代码中的整数常量和变量已知非负，也请使用Int类型。总是使用默认的整数类型可以保证你的整数常量和变量可以直接被复用并且可以匹配整数类字面量的类型推断。</p>
+<p>只有在必要的时候才使用其他整数类型，比如要处理外部的长度明确的数据或者为了优化性能、内存占用等等。使用显式指定长度的类型可以及时发现值溢出并且可以暗示正在处理特殊数据。</p>
+<h3 id="整数转换"><a href="#整数转换" class="headerlink" title="整数转换"></a>整数转换</h3><p>不同整数类型的变量和常量可以存储不同范围的数字。Int8类型的常量或者变量可以存储的数字范围是-128<del>127，而UInt8类型的常量或者变量能存储的数字范围是0</del>255。如果数字超出了常量或者变量可存储的范围，编译的时候会报错：</p>
+<figure class="highlight julia"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs julia"><span class="hljs-keyword">let</span> cannotBeNegative: <span class="hljs-built_in">UInt8</span> = -<span class="hljs-number">1</span><br>// <span class="hljs-built_in">UInt8</span> 类型不能存储负数，所以会报错<br><span class="hljs-keyword">let</span> tooBig: <span class="hljs-built_in">Int8</span> = <span class="hljs-built_in">Int8</span>.max + <span class="hljs-number">1</span><br>// <span class="hljs-built_in">Int8</span> 类型不能存储超过最大值的数，所以会报错<br></code></pre></td></tr></table></figure>
+<p>由于每种整数类型都可以存储不同范围的值，所以你必须根据不同情况选择性使用数值型类型转换。这种选择性使用的方式，可以预防隐式转换的错误并让你的代码中的类型转换意图变得清晰。</p>
+<p>要将一种数字类型转换成另一种，你要用当前值来初始化一个期望类型的新数字，这个数字的类型就是你的目标类型。在下面的例子中，常量twoThousand是UInt16类型，然而常量one是UInt8类型。它们不能直接相加，因为它们类型不同。所以要调用UInt16(one)来创建一个新的UInt16数字并用one的值来初始化，然后使用这个新数字来计算：</p>
+<figure class="highlight julia"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs julia"><span class="hljs-keyword">let</span> twoThousand: <span class="hljs-built_in">UInt16</span> = <span class="hljs-number">2_000</span><br><span class="hljs-keyword">let</span> one: <span class="hljs-built_in">UInt8</span> = <span class="hljs-number">1</span><br><span class="hljs-keyword">let</span> twoThousandAndOne = twoThousand + <span class="hljs-built_in">UInt16</span>(one)<br></code></pre></td></tr></table></figure>
+<p>现在两个数字的类型都是 UInt16，可以进行相加。目标常量 twoThousandAndOne 的类型被推断为 UInt16，因为它是两个 UInt16 值的和。</p>
+<p>SomeType(ofInitialValue) 是调用 Swift 构造器并传入一个初始值的默认方法。在语言内部，UInt16 有一个构造器，可以接受一个UInt8类型的值，所以这个构造器可以用现有的 UInt8 来创建一个新的 UInt16。注意，你并不能传入任意类型的值，只能传入 UInt16 内部有对应构造器的值。不过你可以扩展现有的类型来让它可以接收其他类型的值（包括自定义类型）</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/swift/">#swift</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>swift</div>
+      <div>http://example.com/2018/05/09/swift-01/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2018年5月9日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/05/12/swift-02/" title="第一个Swift项目记录">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">第一个Swift项目记录</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/04/16/android-points/" title="android开发知识点">
+                        <span class="hidden-mobile">android开发知识点</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,739 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="从毕业到现在，做android开发已经半年多了，光凭自己在大学时期学到的内容，感觉应付工作已经没有什么问题了，但是，如果想要再次提升自己，我觉得要从基础开始，回过头来，再次学习。所以我决定，重走android开发之路，此文为据。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重拾android路(一) 服务(Service)">
+<meta property="og:url" content="http://example.com/2015/12/07/Android-1-service/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="从毕业到现在，做android开发已经半年多了，光凭自己在大学时期学到的内容，感觉应付工作已经没有什么问题了，但是，如果想要再次提升自己，我觉得要从基础开始，回过头来，再次学习。所以我决定，重走android开发之路，此文为据。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/android/service-life.png">
+<meta property="article:published_time" content="2015-12-07T12:31:58.000Z">
+<meta property="article:modified_time" content="2023-06-04T12:28:42.374Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/android/service-life.png">
+  
+  
+  
+  <title>重拾android路(一) 服务(Service) - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="重拾android路(一) 服务(Service)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2015-12-07 20:31" pubdate>
+          2015年12月7日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          22k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          183 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">重拾android路(一) 服务(Service)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>从毕业到现在，做android开发已经半年多了，光凭自己在大学时期学到的内容，感觉应付工作已经没有什么问题了，但是，如果想要再次提升自己，我觉得要从基础开始，回过头来，再次学习。所以我决定，重走android开发之路，此文为据。</p>
+<span id="more"></span>
+<p>此次从新学习不会像以前那样，按部就班的走，如果还是那样，基本收效甚微，所以我决定以自己的实际经验，在自己需要着重学习的地方再下功夫。</p>
+<h1 id="Service介绍"><a href="#Service介绍" class="headerlink" title="Service介绍"></a>Service介绍</h1><p>Service是android四大组件之一，和Activity最为相似，他们都代表可执行程序，两者的区别在于：service只能在后台运行，他没有用户界面，决不允许到前台来，同时他也有自己的声明周期。</p>
+<h1 id="Service使用"><a href="#Service使用" class="headerlink" title="Service使用"></a>Service使用</h1><h2 id="创建，配置Service"><a href="#创建，配置Service" class="headerlink" title="创建，配置Service"></a>创建，配置Service</h2><p>开发需要两个步骤:</p>
+<ol>
+<li>定义一个继承Service的子类</li>
+<li>在android配置文件中配置该Service</li>
+</ol>
+<p>Service和Activity还有一个共同之处，他们都是从Context中派生出来的，所以都可以调佣Context中的方法，例如getResources(),getContextResolver()</p>
+<p>在Service中也定义了一些生命周期方法:</p>
+<ul>
+<li>IBinder onBind(Intent intent): 子类必须实现，返回一个IBinder对象，可以通过该对象在Service组件中通信</li>
+<li>void onCreate(): 该方法在Service第一次被创建的时候立即回调该方法</li>
+<li>void onDestory(): 在该Service被关闭之前将会调用该方法</li>
+<li>void onStartCommand(Intent intent,int flags,int startId): 该方法的早期版本是onStart()方法。在用户调用startService(Intent)方法启动Service时都会回调该方法</li>
+<li>boolean onUnbind(Intent intent): 当该Service上绑定的所有客户端都断开连接是将会回调该方法</li>
+</ul>
+<h5 id="Service类源码"><a href="#Service类源码" class="headerlink" title="Service类源码"></a>Service类源码</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Service</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">ContextWrapper</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">ComponentCallbacks2</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">START_CONTINUATION_MASK</span> <span class="hljs-operator">=</span> <span class="hljs-number">15</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">START_FLAG_REDELIVERY</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">START_FLAG_RETRY</span> <span class="hljs-operator">=</span> <span class="hljs-number">2</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">START_NOT_STICKY</span> <span class="hljs-operator">=</span> <span class="hljs-number">2</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">START_REDELIVER_INTENT</span> <span class="hljs-operator">=</span> <span class="hljs-number">3</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">START_STICKY</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">START_STICKY_COMPATIBILITY</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">STOP_FOREGROUND_DETACH</span> <span class="hljs-operator">=</span> <span class="hljs-number">2</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">STOP_FOREGROUND_REMOVE</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Service</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-built_in">super</span>((Context)<span class="hljs-literal">null</span>);<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> Application <span class="hljs-title function_">getApplication</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onCreate</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-comment">/** <span class="hljs-doctag">@deprecated</span> */</span><br>    <span class="hljs-meta">@Deprecated</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onStart</span><span class="hljs-params">(Intent intent, <span class="hljs-type">int</span> startId)</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">onStartCommand</span><span class="hljs-params">(Intent intent, <span class="hljs-type">int</span> flags, <span class="hljs-type">int</span> startId)</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onDestroy</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onConfigurationChanged</span><span class="hljs-params">(Configuration newConfig)</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onLowMemory</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onTrimMemory</span><span class="hljs-params">(<span class="hljs-type">int</span> level)</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> IBinder <span class="hljs-title function_">onBind</span><span class="hljs-params">(Intent var1)</span>;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">onUnbind</span><span class="hljs-params">(Intent intent)</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onRebind</span><span class="hljs-params">(Intent intent)</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onTaskRemoved</span><span class="hljs-params">(Intent rootIntent)</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">stopSelf</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">stopSelf</span><span class="hljs-params">(<span class="hljs-type">int</span> startId)</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">stopSelfResult</span><span class="hljs-params">(<span class="hljs-type">int</span> startId)</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">startForeground</span><span class="hljs-params">(<span class="hljs-type">int</span> id, Notification notification)</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">stopForeground</span><span class="hljs-params">(<span class="hljs-type">boolean</span> removeNotification)</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">stopForeground</span><span class="hljs-params">(<span class="hljs-type">int</span> flags)</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">dump</span><span class="hljs-params">(FileDescriptor fd, PrintWriter writer, String[] args)</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs aspectj"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyService</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Service</span> </span>&#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-function">IBinder <span class="hljs-title">onBind</span><span class="hljs-params">(Intent intent)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * service被创建时回调该方法</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">super</span>.onCreate();<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 通过startService()方法启动Service时回调该方法</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> intent</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> flags</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> startId</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">onStartCommand</span><span class="hljs-params">(Intent intent, <span class="hljs-keyword">int</span> flags, <span class="hljs-keyword">int</span> startId)</span> </span>&#123;<br>        <span class="hljs-function"><span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.<span class="hljs-title">onStartCommand</span><span class="hljs-params">(intent, flags, startId)</span></span>;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Service被关闭时回调该方法</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">onDestroy</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">super</span>.onDestroy();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>还需要在清单配置文件中书写如下代码</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">application</span></span><br><span class="hljs-tag">     <span class="hljs-attr">android:allowBackup</span>=<span class="hljs-string">&quot;true&quot;</span></span><br><span class="hljs-tag">     <span class="hljs-attr">android:icon</span>=<span class="hljs-string">&quot;@mipmap/ic_launcher&quot;</span></span><br><span class="hljs-tag">     <span class="hljs-attr">android:label</span>=<span class="hljs-string">&quot;@string/app_name&quot;</span></span><br><span class="hljs-tag">     <span class="hljs-attr">android:roundIcon</span>=<span class="hljs-string">&quot;@mipmap/ic_launcher_round&quot;</span></span><br><span class="hljs-tag">     <span class="hljs-attr">android:supportsRtl</span>=<span class="hljs-string">&quot;true&quot;</span></span><br><span class="hljs-tag">     <span class="hljs-attr">android:theme</span>=<span class="hljs-string">&quot;@style/AppTheme&quot;</span>&gt;</span><br>     <span class="hljs-tag">&lt;<span class="hljs-name">activity</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;.MainActivity&quot;</span>&gt;</span><br>         <span class="hljs-tag">&lt;<span class="hljs-name">intent-filter</span>&gt;</span><br>             <span class="hljs-tag">&lt;<span class="hljs-name">action</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.intent.action.MAIN&quot;</span> /&gt;</span><br><br>             <span class="hljs-tag">&lt;<span class="hljs-name">category</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.intent.category.LAUNCHER&quot;</span> /&gt;</span><br>         <span class="hljs-tag">&lt;/<span class="hljs-name">intent-filter</span>&gt;</span><br>     <span class="hljs-tag">&lt;/<span class="hljs-name">activity</span>&gt;</span><br>     <span class="hljs-tag">&lt;<span class="hljs-name">service</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;.MyService&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">service</span>&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">application</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="启动和停止Service"><a href="#启动和停止Service" class="headerlink" title="启动和停止Service"></a>启动和停止Service</h2><p>两种方法：</p>
+<ol>
+<li>通过Context的startService(Intent)方法，访问者和Service没有关联，即使访问者退出了，Service依然可以运行</li>
+<li>通过Context的bindService()方法，访问者和Service绑定在一起，访问者退出，Service也退出</li>
+</ol>
+<h3 id="第一种情况"><a href="#第一种情况" class="headerlink" title="第一种情况"></a>第一种情况</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> MyActivity extends Activity &#123;<br><br>    Button start,stop;<br><br>    @Override<br>    public void on<span class="hljs-constructor">Create(@Nullable Bundle <span class="hljs-params">savedInstanceState</span>, @Nullable PersistableBundle <span class="hljs-params">persistentState</span>)</span> &#123;<br>        super.on<span class="hljs-constructor">Create(<span class="hljs-params">savedInstanceState</span>, <span class="hljs-params">persistentState</span>)</span>;<br><br>        set<span class="hljs-constructor">ContentView(R.<span class="hljs-params">layout</span>.<span class="hljs-params">activity_main</span>)</span>;<br><br>        start = find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">start</span>)</span>;<br>        stop = find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">stop</span>)</span>;<br><br>        <span class="hljs-comment">//启动Service的Intent</span><br>        <span class="hljs-comment">//google 5.0以后必须显示启动Service组件</span><br>        final Intent intent = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Intent(<span class="hljs-params">this</span>,MyService.<span class="hljs-params">class</span>)</span>;<br><br>        start.set<span class="hljs-constructor">OnClickListener(<span class="hljs-params">new</span> View.OnClickListener()</span> &#123;<br>            @Override<br>            public void on<span class="hljs-constructor">Click(View <span class="hljs-params">view</span>)</span> &#123;<br>                start<span class="hljs-constructor">Service(<span class="hljs-params">intent</span>)</span>;<br>            &#125;<br>        &#125;);<br><br>        stop.set<span class="hljs-constructor">OnClickListener(<span class="hljs-params">new</span> View.OnClickListener()</span> &#123;<br>            @Override<br>            public void on<span class="hljs-constructor">Click(View <span class="hljs-params">view</span>)</span> &#123;<br>                stop<span class="hljs-constructor">Service(<span class="hljs-params">intent</span>)</span>;<br>            &#125;<br>        &#125;);<br><br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>由于通过startService和stopService来操作Service，这时候，Service和访问者的关系并不大，所以无法进行通信，如果想要进行通信，就必须使用第二种方式bindService()</p>
+<h3 id="第二种情况"><a href="#第二种情况" class="headerlink" title="第二种情况"></a>第二种情况</h3><p>Context中的bindService()的完整写法是:</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs aspectj"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">bindService</span><span class="hljs-params">(Intent intent, ServiceConnection conn, <span class="hljs-keyword">int</span> flags)</span></span>;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">unbindService</span><span class="hljs-params">(ServiceConnection conn)</span></span>;    <br></code></pre></td></tr></table></figure>
+<p>参数分析：</p>
+<ol>
+<li>intent：改参数指定需要启动的Service</li>
+<li>conn:是一个ServiceConnection连接对象，该对象用于监听访问者和Service之间的连接情况，当访问者和Service连接成功的时候，就会回调onServiceConnected(ComponentName name,IBinder service)方法，当访问者和Service之间断开连接的时候，就会回调onServiceDisconnected(ComponentName name)方法<blockquote>
+<p>注意：如果访问者调用unBindService()方法断开连接的时候，并不会调用onServiceDisconnected(ComponentName name)方法，只有Service宿主所在的进程由于异常终止，才会调用</p>
+</blockquote>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs aspectj"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">ServiceConnection</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">onServiceConnected</span><span class="hljs-params">(ComponentName var1, IBinder var2)</span></span>;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">onServiceDisconnected</span><span class="hljs-params">(ComponentName var1)</span></span>;<br><br>    <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">onBindingDied</span><span class="hljs-params">(ComponentName name)</span> </span>&#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">&quot;Stub!&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li>flags:指定绑定时是否自动创建Service(如果Service还没有被创建),0 不自定创建；BIND_AUTO_CREATE 自动创建</li>
+</ol>
+<p>其中在onServiceConnected(ComponentName name,IBinder service)中有一个IBinder对象service，该对象可以实现和Service之间的通信。这时候Service类中的onBind方法就会获取到这个值，并且完成通信。</p>
+<h2 id="Service的生命周期"><a href="#Service的生命周期" class="headerlink" title="Service的生命周期"></a>Service的生命周期</h2><p><img src="/assets/android/service-life.png" srcset="/img/loading.gif" lazyload alt="Service生命周期图"></p>
+<p>在Service的生命周期中，有一个特殊的情况:</p>
+<blockquote>
+<p>如果Service已经有某个客户端通过startService的方法启动了，接下来其他客户端调用bindService方法绑定后，在调用unBindService方法解除绑定，最后在调用bindService()方法再次绑定到Service，这个过程的生命周期，应该是:onCreate()&gt;&gt;onStartCommand()&gt;&gt;onBind()&gt;&gt;onUnbind()&gt;&gt;onRebind()</p>
+</blockquote>
+<h2 id="IntentService"><a href="#IntentService" class="headerlink" title="IntentService"></a>IntentService</h2><p>IntentService是Service的子类，因此他并不是普通的Service，他比普通的Service增加了额外的功能，首先我们应该知道Service的两个缺点：</p>
+<ol>
+<li>Service不会专门启动一个单独的进程，Service和他所在的应用程序在同一个进程中</li>
+<li>Service不是一个新的线程，因此不能在Service中处理耗时操作</li>
+</ol>
+<p>除非我们特别为某个操作指定特定的线程，否则大部分在前台UI界面上的操作任务都执行在一个叫做UI Thread的特殊线程中。这可能存在某些隐患，因为部分在UI界面上的耗时操作可能会影响界面的响应性能。UI界面的性能问题会容易惹恼用户，甚至可能导致系统ANR错误。为了避免这样的问题，Android Framework提供了几个类，用来帮助你把那些耗时操作移动到后台线程中执行。那些类中最常用的就是IntentService.</p>
+<h3 id="创建IntentService"><a href="#创建IntentService" class="headerlink" title="创建IntentService"></a>创建IntentService</h3><p>IntentService为在单一后台线程中执行任务提供了一种直接的实现方式。它可以处理一个耗时的任务并确保不影响到UI的响应性。另外IntentService的执行还不受UI生命周期的影响，以此来确保AsyncTask能够顺利运行。</p>
+<p>但是IntentService依然存在着一下几个问题</p>
+<ol>
+<li>不可以直接和UI做交互。为了把他执行的结果体现在UI上，需要把结果返回给Activity</li>
+<li>工作任务队列是顺序执行的，如果一个任务正在IntentService中执行，此时你再发送一个新的任务请求，这个新的任务会一直等待直到前面一个任务执行完毕才开始执行</li>
+<li>正在执行的任务无法打断</li>
+</ol>
+<p>虽然有上面那些限制，然而在在大多数情况下，IntentService都是执行简单后台任务操作的理想选择</p>
+<p>创建一个IntentService组件，需要自定义一个新的类，它继承自IntentService，并重写onHandleIntent()方法</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs scala">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyIntentService</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">IntentService</span> </span>&#123;<br>    public <span class="hljs-type">MyIntentService</span>(<span class="hljs-type">String</span> name) &#123;<br>        <span class="hljs-keyword">super</span>(name);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">protected</span> void onHandleIntent(<span class="hljs-meta">@Nullable</span> <span class="hljs-type">Intent</span> intent) &#123;<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>注意一个普通Service组件的其他回调，例如onStartCommand()会被IntentService自动调用。在IntentService中，要避免重写那些回调</p>
+<p>IntentService需要在manifest文件添加相应的条目，将此条目<service>作为<application>元素的子元素下进行定义</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">application</span></span><br><span class="hljs-tag">       <span class="hljs-attr">android:allowBackup</span>=<span class="hljs-string">&quot;true&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">android:icon</span>=<span class="hljs-string">&quot;@mipmap/ic_launcher&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">android:label</span>=<span class="hljs-string">&quot;@string/app_name&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">android:roundIcon</span>=<span class="hljs-string">&quot;@mipmap/ic_launcher_round&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">android:supportsRtl</span>=<span class="hljs-string">&quot;true&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">android:theme</span>=<span class="hljs-string">&quot;@style/AppTheme&quot;</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">activity</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;.MainActivity&quot;</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">intent-filter</span>&gt;</span><br>               <span class="hljs-tag">&lt;<span class="hljs-name">action</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.intent.action.MAIN&quot;</span> /&gt;</span><br><br>               <span class="hljs-tag">&lt;<span class="hljs-name">category</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.intent.category.LAUNCHER&quot;</span> /&gt;</span><br>           <span class="hljs-tag">&lt;/<span class="hljs-name">intent-filter</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">activity</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">service</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;.MyService&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">service</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">service</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;.MyIntentService&quot;</span></span><br><span class="hljs-tag">           <span class="hljs-attr">android:exported</span>=<span class="hljs-string">&quot;false&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">service</span>&gt;</span><br>   <span class="hljs-tag">&lt;/<span class="hljs-name">application</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>android:name属性指明了IntentService的名字。</p>
+<p>注意<service>标签并没有包含任何intent filter。因为发送任务给IntentService的Activity需要使用显式Intent，所以不需要filter。这也意味着只有在同一个app或者其他使用同一个UserID的组件才能够访问到这个Service。</p>
+<p>至此，你已经有了一个基本的IntentService类，你可以通过构造Intent对象向它发送操作请求。构造这些对象以及发送它们到你的IntentService的方式，将在接下来的课程中描述</p>
+<h3 id="向后台服务发送任务请求"><a href="#向后台服务发送任务请求" class="headerlink" title="向后台服务发送任务请求"></a>向后台服务发送任务请求</h3><p>为了创建一个任务请求并发送到IntentService。需要先创建一个显式Intent，并将请求数据添加到intent中，然后通过调用 startService() 方法把任务请求数据发送到IntentService</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * Creates a new Intent to start the RSSPullService</span><br><span class="hljs-comment"> * IntentService. Passes a URI in the</span><br><span class="hljs-comment"> * Intent&#x27;s &quot;data&quot; field.</span><br><span class="hljs-comment"> */</span><br>mServiceIntent = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Intent(<span class="hljs-params">getActivity</span>()</span>, <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">RSSPullService</span>.</span></span><span class="hljs-keyword">class</span>);<br>mServiceIntent.set<span class="hljs-constructor">Data(Uri.<span class="hljs-params">parse</span>(<span class="hljs-params">dataUrl</span>)</span>);<br></code></pre></td></tr></table></figure>
+<p>执行startService()方法</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">// Starts the IntentService</span><br>get<span class="hljs-constructor">Activity()</span>.start<span class="hljs-constructor">Service(<span class="hljs-params">mServiceIntent</span>)</span>;<br></code></pre></td></tr></table></figure>
+
+<p>注意可以在Activity或者Fragment的任何位置发送任务请求。例如，如果你先获取用户输入，您可以从响应按钮单击或类似手势的回调方法里面发送任务请求。</p>
+<p>一旦执行了startService()，IntentService在自己本身的onHandleIntent()方法里面开始执行这个任务，任务结束之后，会自动停止这个Service。</p>
+<p>下一步是如何把工作任务的执行结果返回给发送任务的Activity或者Fragment。下节课会演示如何使用BroadcastReceiver来完成这个任务</p>
+<h3 id="返回任务执行状态"><a href="#返回任务执行状态" class="headerlink" title="返回任务执行状态"></a>返回任务执行状态</h3><p>为了在IntentService中向其他组件发送任务状态，首先创建一个Intent并在data字段中包含需要传递的信息。作为一个可选项，还可以给这个Intent添加一个action与data URI。</p>
+<p>下一步，通过执行LocalBroadcastManager.sendBroadcast() 来发送Intent。Intent被发送到任何有注册接受它的组件中。为了获取到LocalBroadcastManager的实例，可以执行getInstance()</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs scala">public <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Constants</span> </span>&#123;<br>    ...<br>    <span class="hljs-comment">// Defines a custom Intent action</span><br>    public static <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-type">BROADCAST_ACTION</span> =<br>        <span class="hljs-string">&quot;com.example.android.threadsample.BROADCAST&quot;</span>;<br>    ...<br>    <span class="hljs-comment">// Defines the key for the status &quot;extra&quot; in an Intent</span><br>    public static <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-type">EXTENDED_DATA_STATUS</span> =<br>        <span class="hljs-string">&quot;com.example.android.threadsample.STATUS&quot;</span>;<br>    ...<br>&#125;<br>public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RSSPullService</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">IntentService</span> </span>&#123;<br>...<br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">     * Creates a new Intent containing a Uri object</span><br><span class="hljs-comment">     * BROADCAST_ACTION is a custom Intent action</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-type">Intent</span> localIntent =<br>            <span class="hljs-keyword">new</span> <span class="hljs-type">Intent</span>(<span class="hljs-type">Constants</span>.<span class="hljs-type">BROADCAST_ACTION</span>)<br>            <span class="hljs-comment">// Puts the status into the Intent</span><br>            .putExtra(<span class="hljs-type">Constants</span>.<span class="hljs-type">EXTENDED_DATA_STATUS</span>, status);<br>    <span class="hljs-comment">// Broadcasts the Intent to receivers in this app.</span><br>    <span class="hljs-type">LocalBroadcastManager</span>.getInstance(<span class="hljs-keyword">this</span>).sendBroadcast(localIntent);<br>...<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>下一步是在发送任务的组件中接收发送出来的broadcast数据</p>
+<p>为了接受广播的数据对象，需要使用BroadcastReceiver的子类并实现BroadcastReceiver.onReceive() 的方法，这里可以接收LocalBroadcastManager发出的广播数据</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs scala"><span class="hljs-comment">// Broadcast receiver for receiving status updates from the IntentService</span><br><span class="hljs-keyword">private</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ResponseReceiver</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BroadcastReceiver</span></span><br>&#123;<br>    <span class="hljs-comment">// Prevents instantiation</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">DownloadStateReceiver</span>() &#123;<br>    &#125;<br>    <span class="hljs-comment">// Called when the BroadcastReceiver gets an Intent it&#x27;s registered to receive</span><br>    @<br>    public void onReceive(<span class="hljs-type">Context</span> context, <span class="hljs-type">Intent</span> intent) &#123;<br>...<br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">         * Handle Intents here.</span><br><span class="hljs-comment">         */</span><br>...<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>一旦定义了BroadcastReceiver，也应该定义actions，categories与data用过滤广播。为了实现这些，需要使用IntentFilter</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs scala"><span class="hljs-comment">// Class that displays photos</span><br>public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DisplayActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">FragmentActivity</span> </span>&#123;<br>    ...<br>    public void onCreate(<span class="hljs-type">Bundle</span> stateBundle) &#123;<br>        ...<br>        <span class="hljs-keyword">super</span>.onCreate(stateBundle);<br>        ...<br>        <span class="hljs-comment">// The filter&#x27;s action is BROADCAST_ACTION</span><br>        <span class="hljs-type">IntentFilter</span> mStatusIntentFilter = <span class="hljs-keyword">new</span> <span class="hljs-type">IntentFilter</span>(<br>                <span class="hljs-type">Constants</span>.<span class="hljs-type">BROADCAST_ACTION</span>);<br><br>        <span class="hljs-comment">// Adds a data filter for the HTTP scheme</span><br>        mStatusIntentFilter.addDataScheme(<span class="hljs-string">&quot;http&quot;</span>);<br>        ...<br></code></pre></td></tr></table></figure>
+
+<p>为了给系统注册这个BroadcastReceiver和IntentFilter，需要通过LocalBroadcastManager执行registerReceiver()的方法</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs haxe"><span class="hljs-comment">// Instantiates a new DownloadStateReceiver</span><br>DownloadStateReceiver mDownloadStateReceiver =<br>        <span class="hljs-keyword">new</span> <span class="hljs-type">DownloadStateReceiver</span>();<br><span class="hljs-comment">// Registers the DownloadStateReceiver and its intent filters</span><br>LocalBroadcastManager.getInstance(<span class="hljs-built_in">this</span>).registerReceiver(<br>        mDownloadStateReceiver,<br>        mStatusIntentFilter);<br><br></code></pre></td></tr></table></figure>
+
+<p>一个BroadcastReceiver可以处理多种类型的广播数据。每个广播数据都有自己的ACTION。这个功能使得不用定义多个不同的BroadcastReceiver来分别处理不同的ACTION数据。为BroadcastReceiver定义另外一个IntentFilter，只需要创建一个新的IntentFilter并重复执行registerReceiver()即可</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs haxe"><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * Instantiates a new action filter.</span><br><span class="hljs-comment"> * No data filter is needed.</span><br><span class="hljs-comment"> */</span><br>statusIntentFilter = <span class="hljs-keyword">new</span> <span class="hljs-type">IntentFilter</span>(Constants.ACTION_ZOOM_IMAGE);<br>...<br><span class="hljs-comment">// Registers the receiver with the new filter</span><br>LocalBroadcastManager.getInstance(getActivity()).registerReceiver(<br>        mDownloadStateReceiver,<br>        mIntentFilter);<br></code></pre></td></tr></table></figure>
+
+<p>发送一个广播Intent并不会启动或重启一个Activity。即使是你的app在后台运行，Activity的BroadcastReceiver也可以接收、处理Intent对象。但是这不会迫使你的app进入前台。当你的app不可见时，如果想通知用户一个发生在后台的事件，建议使用Notification。永远不要为了响应一个广播Intent而去启动Activity</p>
+<h2 id="几个简单的小例子"><a href="#几个简单的小例子" class="headerlink" title="几个简单的小例子"></a>几个简单的小例子</h2><h3 id="电话管理器"><a href="#电话管理器" class="headerlink" title="电话管理器"></a>电话管理器</h3><p>TelephonyManager是一个管理手机通话状态，电话网络信息的服务类，通过该类，我们可以获取电话网络的相关信息</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><code class="hljs processing"><span class="hljs-keyword">package</span> WangLi.<span class="hljs-property">Service</span>.<span class="hljs-property">TelephonyStatus</span>;  <br>  <br><span class="hljs-keyword">import</span> java.<span class="hljs-property">util</span>.<span class="hljs-property">ArrayList</span>;  <br><span class="hljs-keyword">import</span> java.<span class="hljs-property">util</span>.<span class="hljs-property">HashMap</span>;  <br><span class="hljs-keyword">import</span> java.<span class="hljs-property">util</span>.<span class="hljs-property">Map</span>;  <br>  <br><span class="hljs-keyword">import</span> android.<span class="hljs-property">app</span>.<span class="hljs-property">Activity</span>;  <br><span class="hljs-keyword">import</span> android.<span class="hljs-property">content</span>.<span class="hljs-property">Context</span>;  <br><span class="hljs-keyword">import</span> android.<span class="hljs-property">os</span>.<span class="hljs-property">Bundle</span>;  <br><span class="hljs-keyword">import</span> android.<span class="hljs-property">telephony</span>.<span class="hljs-property">TelephonyManager</span>;  <br><span class="hljs-keyword">import</span> android.<span class="hljs-property">widget</span>.<span class="hljs-property">ListView</span>;  <br><span class="hljs-keyword">import</span> android.<span class="hljs-property">widget</span>.<span class="hljs-property">SimpleAdapter</span>;  <br>  <br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TelephonyStatus</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">Activity</span> &#123;  <br>    ListView showView;  <br>    <span class="hljs-comment">// 声明代表状态名的数组  </span><br>    <span class="hljs-built_in">String</span>[] statusNames;  <br>    <span class="hljs-comment">// 声明代表手机状态的集合  </span><br>    <span class="hljs-built_in">ArrayList</span>&lt;<span class="hljs-built_in">String</span>&gt; statusValues = <span class="hljs-keyword">new </span><span class="hljs-class title_">ArrayList</span>&lt;<span class="hljs-built_in">String</span>&gt;();  <br>  <br>    <span class="hljs-comment">/** Called when the activity is first created. */</span>  <br>    @Override  <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onCreate</span>(Bundle savedInstanceState) &#123;  <br>        <span class="hljs-variable">super</span>.<span class="hljs-property">onCreate</span>(savedInstanceState);  <br>        <span class="hljs-title function_">setContentView</span>(R.<span class="hljs-property">layout</span>.<span class="hljs-property">main</span>);  <br>        <span class="hljs-comment">// 获到系统的TelephonyManager对象  </span><br>        TelephonyManager tManager = (TelephonyManager) <span class="hljs-title function_">getSystemService</span>(Context.<span class="hljs-property">TELEPHONY_SERVICE</span>);  <br>        <span class="hljs-comment">// 获取各种状态名称的数组  </span><br>        statusNames = <span class="hljs-title function_">getResources</span>().<span class="hljs-property">getStringArray</span>(R.<span class="hljs-property">array</span>.<span class="hljs-property">statusNames</span>);  <br>        <span class="hljs-comment">// 获取代表SIM卡状态的数组  </span><br>        <span class="hljs-built_in">String</span>[] simState = <span class="hljs-title function_">getResources</span>().<span class="hljs-property">getStringArray</span>(R.<span class="hljs-property">array</span>.<span class="hljs-property">simState</span>);  <br>        <span class="hljs-comment">// 获取代表电话网络类型的数组  </span><br>        <span class="hljs-built_in">String</span>[] phoneType = <span class="hljs-title function_">getResources</span>().<span class="hljs-property">getStringArray</span>(R.<span class="hljs-property">array</span>.<span class="hljs-property">phoneType</span>);  <br>        <span class="hljs-comment">// 获取设备编号  </span><br>        statusValues.<span class="hljs-property">add</span>(tManager.<span class="hljs-property">getDeviceId</span>());  <br>        <span class="hljs-comment">// 获取系统平台的版本  </span><br>        statusValues.<span class="hljs-property">add</span>(tManager.<span class="hljs-property">getDeviceSoftwareVersion</span>() != <span class="hljs-literal">null</span> ? tManager  <br>                .<span class="hljs-property">getDeviceSoftwareVersion</span>() : <span class="hljs-string">&quot;未知&quot;</span>);  <br>        <span class="hljs-comment">// 获取网络运营商代号  </span><br>        statusValues.<span class="hljs-property">add</span>(tManager.<span class="hljs-property">getNetworkOperator</span>());  <br>        <span class="hljs-comment">// 获取网络运营商名称  </span><br>        statusValues.<span class="hljs-property">add</span>(tManager.<span class="hljs-property">getNetworkOperatorName</span>());  <br>        <span class="hljs-comment">// 获取手机网络类型  </span><br>        statusValues.<span class="hljs-property">add</span>(phoneType[tManager.<span class="hljs-property">getPhoneType</span>()]);  <br>        <span class="hljs-comment">// 获取设备所在位置  </span><br>        statusValues.<span class="hljs-property">add</span>(tManager.<span class="hljs-property">getCellLocation</span>() != <span class="hljs-literal">null</span> ? tManager  <br>                .<span class="hljs-property">getCellLocation</span>().<span class="hljs-property">toString</span>() : <span class="hljs-string">&quot;未知位置&quot;</span>);  <br>        <span class="hljs-comment">// 获取SIM卡的国别  </span><br>        statusValues.<span class="hljs-property">add</span>(tManager.<span class="hljs-property">getSimCountryIso</span>());  <br>        <span class="hljs-comment">// 获取SIM卡的序列号  </span><br>        statusValues.<span class="hljs-property">add</span>(tManager.<span class="hljs-property">getSimSerialNumber</span>());  <br>        <span class="hljs-comment">// 获取SIM卡的状态  </span><br>        statusValues.<span class="hljs-property">add</span>(simState[tManager.<span class="hljs-property">getSimState</span>()]);  <br>        <span class="hljs-comment">// 获取ListView对象  </span><br>        showView = (ListView) <span class="hljs-title function_">findViewById</span>(R.<span class="hljs-property">id</span>.<span class="hljs-property">show</span>);  <br>        <span class="hljs-built_in">ArrayList</span>&lt;Map&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">String</span>&gt;&gt; status = <span class="hljs-keyword">new </span><span class="hljs-class title_">ArrayList</span>&lt;Map&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">String</span>&gt;&gt;();  <br>        <span class="hljs-comment">// 遍历statusValues集合,将statusNames,statusValues  </span><br>        <span class="hljs-comment">// 的数据封装到List&lt;Map&lt;String,String&gt;&gt;集合中  </span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; statusValues.<span class="hljs-property">size</span>(); i++) &#123;  <br>            <span class="hljs-built_in">HashMap</span>&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">String</span>&gt; <span class="hljs-built_in">map</span> = <span class="hljs-keyword">new </span><span class="hljs-class title_">HashMap</span>&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">String</span>&gt;();  <br>            <span class="hljs-built_in">map</span>.<span class="hljs-property">put</span>(<span class="hljs-string">&quot;name&quot;</span>, statusNames[i]);  <br>            <span class="hljs-built_in">map</span>.<span class="hljs-property">put</span>(<span class="hljs-string">&quot;value&quot;</span>, statusValues.<span class="hljs-property">get</span>(i));  <br>            status.<span class="hljs-property">add</span>(<span class="hljs-built_in">map</span>);  <br>        &#125;  <br>        <span class="hljs-comment">// 使用SimpleAdapter封装List数据  </span><br>        SimpleAdapter adapter = <span class="hljs-keyword">new </span><span class="hljs-class title_">SimpleAdapter</span>(<span class="hljs-variable">this</span>, status, R.<span class="hljs-property">layout</span>.<span class="hljs-property">line</span>,  <br>                <span class="hljs-keyword">new </span><span class="hljs-class title_">String</span>[] &#123; <span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-string">&quot;value&quot;</span> &#125;, <span class="hljs-keyword">new </span><span class="hljs-class title_">int</span>[] &#123; R.<span class="hljs-property">id</span>.<span class="hljs-property">name</span>,  <br>                        R.<span class="hljs-property">id</span>.<span class="hljs-property">value</span> &#125;);  <br>        showView.<span class="hljs-property">setAdapter</span>(adapter);  <br>    &#125;  <br>&#125; <br></code></pre></td></tr></table></figure>
+<p>主页面布局文件</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span>  <br><span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span>  </span><br><span class="hljs-tag">    <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;vertical&quot;</span>  </span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;fill_parent&quot;</span>  </span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;fill_parent&quot;</span>  </span><br><span class="hljs-tag">    &gt;</span>  <br><span class="hljs-tag">&lt;<span class="hljs-name">ListView</span>   </span><br><span class="hljs-tag">    <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/show&quot;</span>  </span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;fill_parent&quot;</span>   </span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;fill_parent&quot;</span>   </span><br><span class="hljs-tag">    <span class="hljs-attr">android:entries</span>=<span class="hljs-string">&quot;@array/statusNames&quot;</span>  </span><br><span class="hljs-tag">    /&gt;</span>  <br><span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span> <br></code></pre></td></tr></table></figure>
+<p>创建数组文件</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span>  <br><span class="hljs-tag">&lt;<span class="hljs-name">resources</span>&gt;</span>  <br>    <span class="hljs-comment">&lt;!-- 声明一个名为statusNames的字符串数组 --&gt;</span>  <br>    <span class="hljs-tag">&lt;<span class="hljs-name">string-array</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;statusNames&quot;</span>&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>设备编号<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>软件版本<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>网络运营商代号<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>网络运营商名称<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>手机制式<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>设备当前位置<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>SIM卡的国别<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>SIM卡序列号<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>SIM卡状态<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span>       <br>    <span class="hljs-tag">&lt;/<span class="hljs-name">string-array</span>&gt;</span>  <br>    <span class="hljs-comment">&lt;!-- 声明一个名为simState的字符串数组 --&gt;</span>  <br>    <span class="hljs-tag">&lt;<span class="hljs-name">string-array</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;simState&quot;</span>&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>状态未知<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>无SIM卡<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>被PIN加锁<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>被PUK加锁<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>被NetWork PIN加锁<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>已准备好<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span>  <br>    <span class="hljs-tag">&lt;/<span class="hljs-name">string-array</span>&gt;</span>  <br>    <span class="hljs-comment">&lt;!-- 声明一个名为phoneType的字符串数组 --&gt;</span>  <br>    <span class="hljs-tag">&lt;<span class="hljs-name">string-array</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;phoneType&quot;</span>&gt;</span>     <br>        <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>未知<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>GSM<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>CDMA<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span>  <br>    <span class="hljs-tag">&lt;/<span class="hljs-name">string-array</span>&gt;</span>     <br><span class="hljs-tag">&lt;/<span class="hljs-name">resources</span>&gt;</span>  <br></code></pre></td></tr></table></figure>
+<p>别忘了声明权限</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!--  添加访问手机位置的权限  --&gt;</span>   <br><span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.permission.ACCESS_COARSE_LOCATION&quot;</span> /&gt;</span>   <br><span class="hljs-comment">&lt;!--  添加访问手机状态的权限  --&gt;</span>   <br><span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.permission.READ_PHONE_STATE&quot;</span> /&gt;</span>   <br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>android 6.0 为了保护用户权限，做出了一件保护用户信息的事情，一些权限需要动态申请，关于动态权限声明的问题，后面再解决</p>
+</blockquote>
+<h3 id="监听手机来电"><a href="#监听手机来电" class="headerlink" title="监听手机来电"></a>监听手机来电</h3><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-comment">/** </span><br><span class="hljs-comment"> * Describe:&lt;/br&gt; </span><br><span class="hljs-comment"> * 监视手机来电 </span><br><span class="hljs-comment"> * 本实例实现了监视当前手机的来电状态， </span><br><span class="hljs-comment"> * 并将来电与接听纪录写入log_phone文件中 </span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> paulniu </span><br><span class="hljs-comment"> * Date:2015.12.07 </span><br><span class="hljs-comment"> * */</span>  <br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MonitorPhone</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">Activity</span> &#123;  <br>    <span class="hljs-title class_">TelephonyManager</span> tManager;  <br>    <span class="hljs-keyword">private</span> <span class="hljs-title class_">String</span> incomingNumber;  <br>    <span class="hljs-meta">@Override</span>  <br>    <span class="hljs-keyword">protected</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">onCreate</span>(<span class="hljs-params">Bundle savedInstanceState</span>) &#123;  <br>        <span class="hljs-variable language_">super</span>.<span class="hljs-title function_">onCreate</span>(savedInstanceState);  <br>        <span class="hljs-title function_">setContentView</span>(R.<span class="hljs-property">layout</span>.<span class="hljs-property">main</span>);  <br>        <span class="hljs-comment">//获取系统的TelephonyManager对象  </span><br>        tManager=(<span class="hljs-title class_">TelephonyManager</span>) <span class="hljs-title function_">getSystemService</span>(<span class="hljs-title class_">Context</span>.<span class="hljs-property">TELEPHONY_SERVICE</span>);  <br>        <span class="hljs-comment">//创建一个通话状态监听器  </span><br>        <span class="hljs-title class_">PhoneStateListener</span> pListener=<span class="hljs-keyword">new</span> <span class="hljs-title class_">PhoneStateListener</span>()&#123;  <br>            <span class="hljs-meta">@Override</span>  <br>            <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">onCallStateChanged</span>(<span class="hljs-params">int state, <span class="hljs-built_in">String</span> <span class="hljs-built_in">number</span></span>) &#123;  <br>                <span class="hljs-comment">// TODO Auto-generated method stub  </span><br>                <span class="hljs-keyword">switch</span> (state) &#123;  <br>                <span class="hljs-keyword">case</span> <span class="hljs-title class_">TelephonyManager</span>.<span class="hljs-property">CALL_STATE_IDLE</span>:<span class="hljs-comment">//无任何状态                     </span><br>                    <span class="hljs-keyword">break</span>;  <br>                <span class="hljs-keyword">case</span> <span class="hljs-title class_">TelephonyManager</span>.<span class="hljs-property">CALL_STATE_OFFHOOK</span>:<span class="hljs-comment">//接听来电   </span><br>                    <span class="hljs-title function_">writeFile</span>(state,<span class="hljs-built_in">number</span>);  <br>                    <span class="hljs-keyword">break</span>;  <br>                <span class="hljs-keyword">case</span> <span class="hljs-title class_">TelephonyManager</span>.<span class="hljs-property">CALL_STATE_RINGING</span>:<span class="hljs-comment">//来电     </span><br>                    incomingNumber=<span class="hljs-built_in">number</span>;  <br>                    <span class="hljs-title function_">writeFile</span>(state,<span class="hljs-built_in">number</span>);  <br>                    <span class="hljs-keyword">break</span>;  <br>                <span class="hljs-attr">default</span>:  <br>                    <span class="hljs-keyword">break</span>;  <br>                &#125;                 <br>                <span class="hljs-variable language_">super</span>.<span class="hljs-title function_">onCallStateChanged</span>(state, incomingNumber);  <br>            &#125;             <br>        &#125;;  <br>        <span class="hljs-comment">//为tManager添加监听器  </span><br>        tManager.<span class="hljs-title function_">listen</span>(pListener, <span class="hljs-title class_">PhoneStateListener</span>.<span class="hljs-property">LISTEN_CALL_STATE</span>);  <br>    &#125;  <br>   <span class="hljs-comment">//将接听电话，与来电信息写入到文件  </span><br>    <span class="hljs-keyword">protected</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">writeFile</span>(<span class="hljs-params">int state, <span class="hljs-built_in">String</span> <span class="hljs-built_in">number</span></span>) &#123;  <br>        <span class="hljs-comment">// TODO Auto-generated method stub  </span><br>        <span class="hljs-title class_">StringBuffer</span> sb=<span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuffer</span>();  <br>        <span class="hljs-title class_">SimpleDateFormat</span> sdf=<span class="hljs-keyword">new</span> <span class="hljs-title class_">SimpleDateFormat</span>(<span class="hljs-string">&quot;yyyy-MM-dd hh.mm.ss&quot;</span>);  <br>        sb.<span class="hljs-title function_">append</span>(<span class="hljs-string">&quot;时间：&quot;</span>+sdf.<span class="hljs-title function_">format</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>())+<span class="hljs-string">&quot;\n&quot;</span>);  <br>        <span class="hljs-keyword">switch</span> (state) &#123;          <br>        <span class="hljs-keyword">case</span> <span class="hljs-title class_">TelephonyManager</span>.<span class="hljs-property">CALL_STATE_OFFHOOK</span>:<span class="hljs-comment">//接听来电   </span><br>            sb.<span class="hljs-title function_">append</span>(<span class="hljs-string">&quot;接听了电话号为：&quot;</span>+incomingNumber+<span class="hljs-string">&quot;的电话&quot;</span>);  <br>            <span class="hljs-keyword">break</span>;  <br>        <span class="hljs-keyword">case</span> <span class="hljs-title class_">TelephonyManager</span>.<span class="hljs-property">CALL_STATE_RINGING</span>:<span class="hljs-comment">//来电     </span><br>            sb.<span class="hljs-title function_">append</span>(<span class="hljs-built_in">number</span>+<span class="hljs-string">&quot;来电&quot;</span>);  <br>            <span class="hljs-keyword">break</span>;        <br>        &#125;  <br>        sb.<span class="hljs-title function_">append</span>(<span class="hljs-string">&quot;\n-----------------------\n&quot;</span>);  <br>        <span class="hljs-title class_">FileOutputStream</span> fos=<span class="hljs-literal">null</span>;  <br>        <span class="hljs-keyword">try</span> &#123;  <br>            <span class="hljs-comment">//以追加的方式打开输出流  </span><br>            fos=<span class="hljs-title function_">openFileOutput</span>(<span class="hljs-string">&quot;log_phone&quot;</span>, <span class="hljs-variable constant_">MODE_APPEND</span>);  <br>              <br>        &#125; <span class="hljs-keyword">catch</span> (<span class="hljs-title class_">FileNotFoundException</span> e) &#123;  <br>            <span class="hljs-comment">// TODO Auto-generated catch block  </span><br>            e.<span class="hljs-title function_">printStackTrace</span>();  <br>        &#125;         <br>        <span class="hljs-comment">//将输出流封装成PrintStream对象  </span><br>        <span class="hljs-title class_">PrintStream</span> ps=<span class="hljs-keyword">new</span> <span class="hljs-title class_">PrintStream</span>(fos);  <br>        <span class="hljs-comment">//输入文件内容  </span><br>        ps.<span class="hljs-title function_">println</span>(sb.<span class="hljs-title function_">toString</span>());  <br>        <span class="hljs-comment">//关闭输出流  </span><br>        ps.<span class="hljs-title function_">close</span>();  <br>    &#125;  <br>&#125;  <br></code></pre></td></tr></table></figure>
+<p>权限声明</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- 授予应用读取通话状态的权限 --&gt;</span>  <br><span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.permission.READ_PHONE_STATE&quot;</span>/&gt;</span>  <br></code></pre></td></tr></table></figure>
+
+<h3 id="短信管理器"><a href="#短信管理器" class="headerlink" title="短信管理器"></a>短信管理器</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 发送短信实例</span><br><span class="hljs-comment"> */</span><br>public <span class="hljs-keyword">class</span> SendSmsActivity extends AppCompatActivity &#123;<br><br>EditText phone,content;<br>    Button send;<br><br>    @Override<br>    protected void on<span class="hljs-constructor">Create(Bundle <span class="hljs-params">savedInstanceState</span>)</span> &#123;<br>        super.on<span class="hljs-constructor">Create(<span class="hljs-params">savedInstanceState</span>)</span>;<br>        set<span class="hljs-constructor">ContentView(R.<span class="hljs-params">layout</span>.<span class="hljs-params">activity_send_sms</span>)</span>;<br><br>        <span class="hljs-comment">//获取 SMSManager 管理器</span><br>        final SmsManager smsManager = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">SmsManager</span>.</span></span>get<span class="hljs-constructor">Default()</span>;<br><br>        <span class="hljs-comment">//初始化控件</span><br>        phone = (EditText) find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">et_phone</span>)</span>;<br>        content = (EditText) find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">et_content</span>)</span>;<br>        send = (Button) find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">btn_send</span>)</span>;<br><br>        send.set<span class="hljs-constructor">OnClickListener(<span class="hljs-params">new</span> View.OnClickListener()</span> &#123;<br>            @Override<br>            public void on<span class="hljs-constructor">Click(View <span class="hljs-params">v</span>)</span> &#123;<br><br>                <span class="hljs-comment">//创建一个 android.app.PendingIntent 对象</span><br>                PendingIntent pi = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">PendingIntent</span>.</span></span>get<span class="hljs-constructor">Activity(SendSmsActivity.<span class="hljs-params">this</span>,0,<span class="hljs-params">new</span> Intent()</span>,<span class="hljs-number">0</span>);<br><br>                <span class="hljs-comment">//发送短信</span><br>                smsManager.send<span class="hljs-constructor">TextMessage(<span class="hljs-params">phone</span>.<span class="hljs-params">getText</span>()</span>.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>,null,content.get<span class="hljs-constructor">Text()</span>.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>,<br>                        pi,null);<br><br>                <span class="hljs-comment">//提示短信发送完成</span><br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Toast</span>.</span></span>make<span class="hljs-constructor">Text(SendSmsActivity.<span class="hljs-params">this</span>, <span class="hljs-string">&quot;短信发送完成&quot;</span>, Toast.LENGTH_SHORT)</span>.show<span class="hljs-literal">()</span>;<br>            &#125;<br>        &#125;);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>布局文件</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span></span><br><span class="hljs-tag">    <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">xmlns:tools</span>=<span class="hljs-string">&quot;http://schemas.android.com/tools&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;vertical&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">tools:context</span>=<span class="hljs-string">&quot;com.test.smsmanagerdemo.SendSmsActivity&quot;</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;horizontal&quot;</span>&gt;</span><br><br>        <span class="hljs-tag">&lt;<span class="hljs-name">TextView</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;收件人&quot;</span>/&gt;</span><br><br>        <span class="hljs-tag">&lt;<span class="hljs-name">EditText</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/et_phone&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:layout_marginLeft</span>=<span class="hljs-string">&quot;10dp&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span><br><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_marginTop</span>=<span class="hljs-string">&quot;10dp&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;horizontal&quot;</span>&gt;</span><br><br>        <span class="hljs-tag">&lt;<span class="hljs-name">TextView</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;发送内容&quot;</span>/&gt;</span><br><br>        <span class="hljs-tag">&lt;<span class="hljs-name">EditText</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/et_content&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:layout_marginLeft</span>=<span class="hljs-string">&quot;10dp&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:gravity</span>=<span class="hljs-string">&quot;top&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:lines</span>=<span class="hljs-string">&quot;5&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;你好&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_gravity</span>=<span class="hljs-string">&quot;center_horizontal&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;发送&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/btn_send&quot;</span></span><br><span class="hljs-tag">    /&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>权限声明</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;uses-permission android:<span class="hljs-attribute">name</span>=<span class="hljs-string">&quot;android.permission.SEND_SMS&quot;</span>/&gt;<br></code></pre></td></tr></table></figure>
+
+<p>未完，待续</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a target="_blank" rel="noopener" href="http://hukai.me/android-training-course-in-chinese/index.html">android官方培训课-胡凯大神翻译整理</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>重拾android路(一) 服务(Service)</div>
+      <div>http://example.com/2015/12/07/Android-1-service/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2015年12月7日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2016/01/09/Android-2-adaptation/" title="重拾android路(二) 手机适配">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">重拾android路(二) 手机适配</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

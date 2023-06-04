@@ -1,0 +1,704 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="在进行项目开发的过程中，我们往往需要应用程序的各个组件，线程之间进行通信，比如子线程中进行请求数据，当数据请求完毕之后，通过Handler或者广播的方式通知UI更新，或者一个Activity中包含两个Fragment，当Activity进行一些操作的饿时候可以通知Fragment进行更新数据。当我们的项目越来越复杂的时候，我们所使用的Intent，Handler，广播就会非常多，然后我们管理起来非">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重拾Android之路(二十二) eventbus">
+<meta property="og:url" content="http://example.com/2018/04/12/android-23-eventbus/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在进行项目开发的过程中，我们往往需要应用程序的各个组件，线程之间进行通信，比如子线程中进行请求数据，当数据请求完毕之后，通过Handler或者广播的方式通知UI更新，或者一个Activity中包含两个Fragment，当Activity进行一些操作的饿时候可以通知Fragment进行更新数据。当我们的项目越来越复杂的时候，我们所使用的Intent，Handler，广播就会非常多，然后我们管理起来非">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/event/overview.png">
+<meta property="og:image" content="http://example.com/assets/event/regist.png">
+<meta property="article:published_time" content="2018-04-12T12:24:39.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.084Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/event/overview.png">
+  
+  
+  
+  <title>重拾Android之路(二十二) eventbus - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="重拾Android之路(二十二) eventbus"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2018-04-12 20:24" pubdate>
+          2018年4月12日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          79 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">重拾Android之路(二十二) eventbus</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>在进行项目开发的过程中，我们往往需要应用程序的各个组件，线程之间进行通信，比如子线程中进行请求数据，当数据请求完毕之后，通过Handler或者广播的方式通知UI更新，或者一个Activity中包含两个Fragment，当Activity进行一些操作的饿时候可以通知Fragment进行更新数据。当我们的项目越来越复杂的时候，我们所使用的Intent，Handler，广播就会非常多，然后我们管理起来非常不方便，这样就催生了EventBust的产生。目前使用的EventBus版本是3.0(官方已经更新到了3.1.1).</p>
+<span id="more"></span>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p>EventBus就是能够简化组件之间通信，让我们的代码书写变得更加简单，能够有效的分离事件发送方和接收方，更够避免复杂和容易出错的依赖性和生命周期问题的框架</p>
+<h1 id="关于EventBus"><a href="#关于EventBus" class="headerlink" title="关于EventBus"></a>关于EventBus</h1><h2 id="要素"><a href="#要素" class="headerlink" title="要素"></a>要素</h2><ol>
+<li>Event 事件，可以是任意类型</li>
+<li>Subscribe() 事件订阅者，或者说是事件接受者。在EventBus3之前，使用的时候，我们必须定义以onEvent开头的那几个方法，<strong>onEvent</strong>,<strong>onEventMainThread</strong>,<strong>onEventBackgroundThread</strong>和<strong>onEventAsync</strong>。但是在EventBus3之后我们处理事件的方法名可以随意取，只要加上响应的注解@subscribe()即可，并且指定了线程模型是POSTING</li>
+<li>Publisher 事件发布者，就是事件是由他发布的，他通知别人去做什么事情。我们可以在任意地方发布事件，一般情况下，使用EventBus.getDefault()就可以得到一个EventBus对象，然后调用post(object)方法即可</li>
+</ol>
+<h2 id="四种线程模型"><a href="#四种线程模型" class="headerlink" title="四种线程模型"></a>四种线程模型</h2><ol>
+<li>POSTING（默认） 表示事件处理函数的线程跟发布事件的线程是同一个线程(不管之前发布的消息的事主线程还是子线程，都使用发布事件对象所处的线程)</li>
+<li>MAIN 表示事件处理函数的线程是主线程，也就是UI线程，如果我们需要执行UI更新，则需要适用这样的方式，但是注意不能执行耗时操作</li>
+<li>BACKGOUND 表示事件处理函数的线程在后台线程，因此不能执行UI操作，如果发布时间的线程就是主线程，那么事件处理函数将会开启一个子线程，如果发布事件的线程就是子线程，那么事件处理的线程就直接使用该线程</li>
+<li>ASYNC 表示无论时间发布的线程是哪一个，都会创建一个新的线程，这样我们是不能更新UI的</li>
+</ol>
+<h1 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h1><p>这里我们举个例子，我们需要在一个Activity钟注册EventBus时间，然后定义接收方法，这有点像广播。所以我们的步骤如下</p>
+<ol>
+<li>定义一个事件类 表示我们当前需要传递的数据类型</li>
+<li>注册事件 表示当前的Activity需要监听某一个事件，如果事件发生了，则需要执行相依的操作，所以一般我们会在onCreate方法中注册事件</li>
+<li>解除事件 一般会在onDestroy方法中</li>
+<li>发送事件</li>
+<li>处理事件</li>
+</ol>
+<h1 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h1><p>引入依赖</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">compile</span> &#x27;org.greenrobot:eventbus:<span class="hljs-number">3</span>.<span class="hljs-number">1</span>.<span class="hljs-number">1</span>&#x27;<br></code></pre></td></tr></table></figure>
+<p>定义一个事件类，比如这里我们需要发送一个学生对象</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><code class="hljs typescript">package c.<span class="hljs-property">niupule</span>.<span class="hljs-property">eventbus_demo</span>;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Created: niupule</span><br><span class="hljs-comment"> * Date: 2018/4/12  下午8:49</span><br><span class="hljs-comment"> * E-mail:niupuyue<span class="hljs-doctag">@aliyun</span>.com</span><br><span class="hljs-comment"> * des:</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Student</span> &#123;<br>    <br>    <span class="hljs-keyword">private</span> int stu_id;<br>    <span class="hljs-keyword">private</span> <span class="hljs-title class_">String</span> stu_name;<br>    <span class="hljs-keyword">private</span> <span class="hljs-title class_">String</span> stu_school;<br>    <span class="hljs-keyword">private</span> int stu_age;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">Student</span>() &#123;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">Student</span>(int stu_id, <span class="hljs-title class_">String</span> stu_name, <span class="hljs-title class_">String</span> stu_school, int stu_age) &#123;<br>    <br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">stu_id</span> = stu_id;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">stu_name</span> = stu_name;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">stu_school</span> = stu_school;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">stu_age</span> = stu_age;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> int <span class="hljs-title function_">getStu_id</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> stu_id;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">setStu_id</span>(<span class="hljs-params">int stu_id</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">stu_id</span> = stu_id;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">String</span> <span class="hljs-title function_">getStu_name</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> stu_name;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">setStu_name</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> stu_name</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">stu_name</span> = stu_name;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">String</span> <span class="hljs-title function_">getStu_school</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> stu_school;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">setStu_school</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> stu_school</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">stu_school</span> = stu_school;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> int <span class="hljs-title function_">getStu_age</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> stu_age;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">setStu_age</span>(<span class="hljs-params">int stu_age</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">stu_age</span> = stu_age;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">String</span> <span class="hljs-title function_">toString</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Student&#123;&quot;</span> +<br>                <span class="hljs-string">&quot;stu_id=&quot;</span> + stu_id +<br>                <span class="hljs-string">&quot;, stu_name=&#x27;&quot;</span> + stu_name + <span class="hljs-string">&#x27;\&#x27;&#x27;</span> +<br>                <span class="hljs-string">&quot;, stu_school=&#x27;&quot;</span> + stu_school + <span class="hljs-string">&#x27;\&#x27;&#x27;</span> +<br>                <span class="hljs-string">&quot;, stu_age=&quot;</span> + stu_age +<br>                <span class="hljs-string">&#x27;&#125;&#x27;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>接着在onDestroy方法和onCreate方法中分别注册和解除事件对象</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">package c.niupule.eventbus_demo;<br><br>import android.content.Intent;<br>import android.support.v7.app.AppCompatActivity;<br>import android.os.Bundle;<br>import android.view.View;<br>import android.widget.Button;<br>import android.widget.TextView;<br><br>import org.greenrobot.eventbus.EventBus;<br>import org.greenrobot.eventbus.Subscribe;<br>import org.greenrobot.eventbus.ThreadMode;<br><br>public <span class="hljs-keyword">class</span> MainActivity extends AppCompatActivity &#123;<br><br>    <span class="hljs-keyword">private</span> TextView textView;<br>    <span class="hljs-keyword">private</span> Button btn;<br><br>    @Override<br>    protected void on<span class="hljs-constructor">Create(Bundle <span class="hljs-params">savedInstanceState</span>)</span> &#123;<br>        super.on<span class="hljs-constructor">Create(<span class="hljs-params">savedInstanceState</span>)</span>;<br>        set<span class="hljs-constructor">ContentView(R.<span class="hljs-params">layout</span>.<span class="hljs-params">activity_main</span>)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">EventBus</span>.</span></span>get<span class="hljs-constructor">Default()</span>.register(this);<br><br>        textView = find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">text</span>)</span>;<br><br>        btn = find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">btn</span>)</span>;<br><br>        btn.set<span class="hljs-constructor">OnClickListener(<span class="hljs-params">new</span> View.OnClickListener()</span> &#123;<br>            @Override<br>            public void on<span class="hljs-constructor">Click(View <span class="hljs-params">v</span>)</span> &#123;<br>                start<span class="hljs-constructor">Activity(<span class="hljs-params">new</span> Intent(MainActivity.<span class="hljs-params">this</span>,SecondActivity.<span class="hljs-params">class</span>)</span>);<br>            &#125;<br>        &#125;);<br><br>    &#125;<br><br>    @<span class="hljs-constructor">Subscribe(<span class="hljs-params">threadMode</span> = ThreadMode.MAIN)</span><br>    public void get<span class="hljs-constructor">Text(Student <span class="hljs-params">ss</span>)</span>&#123;<br>        textView.set<span class="hljs-constructor">Text(<span class="hljs-params">ss</span>.<span class="hljs-params">toString</span>()</span>);<br>    &#125;<br><br>    @Override<br>    protected void on<span class="hljs-constructor">Destroy()</span> &#123;<br>        super.on<span class="hljs-constructor">Destroy()</span>;<br>        <span class="hljs-keyword">if</span>(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">EventBus</span>.</span></span>get<span class="hljs-constructor">Default()</span>.is<span class="hljs-constructor">Registered(<span class="hljs-params">this</span>)</span>)&#123;<br>            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">EventBus</span>.</span></span>get<span class="hljs-constructor">Default()</span>.unregister(this);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>事件处理，这里由于我们处理的是主线程中的数据，所以直接发送消息就可以了,在第二个Activity中发送消息</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs scala"><span class="hljs-keyword">package</span> c.niupule.eventbus_demo;<br><br><span class="hljs-keyword">import</span> android.os.<span class="hljs-type">Bundle</span>;<br><span class="hljs-keyword">import</span> android.support.annotation.<span class="hljs-type">Nullable</span>;<br><span class="hljs-keyword">import</span> android.support.v7.app.<span class="hljs-type">AppCompatActivity</span>;<br><span class="hljs-keyword">import</span> android.view.<span class="hljs-type">View</span>;<br><br><span class="hljs-keyword">import</span> org.greenrobot.eventbus.<span class="hljs-type">EventBus</span>;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Created: niupule</span><br><span class="hljs-comment"> * Date: 2018/4/12  下午8:58</span><br><span class="hljs-comment"> * E-mail:niupuyue@aliyun.com</span><br><span class="hljs-comment"> * des:</span><br><span class="hljs-comment"> */</span><br><br>public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SecondActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AppCompatActivity</span></span>&#123;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">protected</span> void onCreate(<span class="hljs-meta">@Nullable</span> <span class="hljs-type">Bundle</span> savedInstanceState) &#123;<br>        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);<br>        setContentView(<span class="hljs-type">R</span>.layout.activity_second);<br><br>        findViewById(<span class="hljs-type">R</span>.id.btn2).setOnClickListener(<span class="hljs-keyword">new</span> <span class="hljs-type">View</span>.<span class="hljs-type">OnClickListener</span>() &#123;<br>            <span class="hljs-meta">@Override</span><br>            public void onClick(<span class="hljs-type">View</span> v) &#123;<br>                <span class="hljs-type">EventBus</span>.getDefault().post(<span class="hljs-keyword">new</span> <span class="hljs-type">Student</span>(<span class="hljs-number">100</span>,<span class="hljs-string">&quot;张三&quot;</span>,<span class="hljs-string">&quot;北京大学&quot;</span>,<span class="hljs-number">22</span>));<br>                finish();<br>            &#125;<br>        &#125;);<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>之后就可以实现了。</p>
+<p>2021年06月21日17:27:37 补充<br>除了会用，还要明白各种各样的原理，至少知道为什么要这么用。<br>这几天同事问了我一句话：“为什么我们页面之间数据传递的时候，大部分是使用回调的方式，为什么不直接使用EventBus？”<br>当时他这么一说，我还有点蒙，毕竟从我开始写代码就一直使用回调的方式实现数据传递，可是为什么不适用EventBus 我还真没有想过，有不懂，看源码</p>
+<p>首先这张图应该很多人都看过，我在网上随便找的</p>
+<p><img src="/assets/event/overview.png" srcset="/img/loading.gif" lazyload alt="EventBus概述图片"></p>
+<p>下面的是关于regist和post的流程</p>
+<p><img src="/assets/event/regist.png" srcset="/img/loading.gif" lazyload alt="EventBus注册流程图"></p>
+<h4 id="观察者注册"><a href="#观察者注册" class="headerlink" title="观察者注册"></a>观察者注册</h4><p>在观察者注册时，我们通过源码可以发现，使用双重锁声明了一个Event对象(唯一一个)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/** Convenience singleton for apps using a process-wide EventBus instance. */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> EventBus <span class="hljs-title function_">getDefault</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">EventBus</span> <span class="hljs-variable">instance</span> <span class="hljs-operator">=</span> defaultInstance;<br>        <span class="hljs-keyword">if</span> (instance == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">synchronized</span> (EventBus.class) &#123;<br>                instance = EventBus.defaultInstance;<br>                <span class="hljs-keyword">if</span> (instance == <span class="hljs-literal">null</span>) &#123;<br>                    instance = EventBus.defaultInstance = <span class="hljs-keyword">new</span> <span class="hljs-title class_">EventBus</span>();<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> instance;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>通过regist注册观察者</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Registers the given subscriber to receive events. Subscribers must call &#123;<span class="hljs-doctag">@link</span> #unregister(Object)&#125; once they</span><br><span class="hljs-comment"> * are no longer interested in receiving events.</span><br><span class="hljs-comment"> * &lt;p/&gt;</span><br><span class="hljs-comment"> * Subscribers have event handling methods that must be annotated by &#123;<span class="hljs-doctag">@link</span> Subscribe&#125;.</span><br><span class="hljs-comment"> * The &#123;<span class="hljs-doctag">@link</span> Subscribe&#125; annotation also allows configuration like &#123;<span class="hljs-doctag">@link</span></span><br><span class="hljs-comment"> * ThreadMode&#125; and priority.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">register</span><span class="hljs-params">(Object subscriber)</span> &#123;<br>    Class&lt;?&gt; subscriberClass = subscriber.getClass();<br>    List&lt;SubscriberMethod&gt; subscriberMethods = subscriberMethodFinder.findSubscriberMethods(subscriberClass);<br>    <span class="hljs-keyword">synchronized</span> (<span class="hljs-built_in">this</span>) &#123;<br>        <span class="hljs-keyword">for</span> (SubscriberMethod subscriberMethod : subscriberMethods) &#123;<br>            subscribe(subscriber, subscriberMethod);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在这个方法中，我们调用register方法时，传递的一般都是当前对象，也就是说，subscriber是当前类的持有对象。通过<strong>subscriber.getClass()<strong>方法拿到的是类的反射对象，然后通过</strong>subscriberMethodFinder.findSubscriberMethods()<strong>方法找到该类中所有的通过注解</strong>@Subscribe</strong>来实现的方法。然后在通过<strong>synchronized</strong>来完成数据的执行，执行的时候也是通过遍历实现的</p>
+<p>其中**subscribe()**方法就是具体调用方法的执行</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">subscribe</span><span class="hljs-params">(Object subscriber, SubscriberMethod subscriberMethod)</span> &#123;<br>    ...<br>    Class&lt;?&gt; eventType = subscriberMethod.eventType;<br>    <span class="hljs-type">Subscription</span> <span class="hljs-variable">newSubscription</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Subscription</span>(subscriber, subscriberMethod);<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="发送消息"><a href="#发送消息" class="headerlink" title="发送消息"></a>发送消息</h4><p>消息发送通过Post方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/** Posts the given event to the event bus. */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">post</span><span class="hljs-params">(Object event)</span> &#123;<br>    <span class="hljs-type">PostingThreadState</span> <span class="hljs-variable">postingState</span> <span class="hljs-operator">=</span> currentPostingThreadState.get();<br>    List&lt;Object&gt; eventQueue = postingState.eventQueue;<br>    eventQueue.add(event);<br><br>    <span class="hljs-keyword">if</span> (!postingState.isPosting) &#123;<br>        postingState.isMainThread = isMainThread();<br>        postingState.isPosting = <span class="hljs-literal">true</span>;<br>        <span class="hljs-keyword">if</span> (postingState.canceled) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">EventBusException</span>(<span class="hljs-string">&quot;Internal error. Abort state was not reset&quot;</span>);<br>        &#125;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">while</span> (!eventQueue.isEmpty()) &#123;<br>                postSingleEvent(eventQueue.remove(<span class="hljs-number">0</span>), postingState);<br>            &#125;<br>        &#125; <span class="hljs-keyword">finally</span> &#123;<br>            postingState.isPosting = <span class="hljs-literal">false</span>;<br>            postingState.isMainThread = <span class="hljs-literal">false</span>;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>在这个方法里，<strong>currentPostingThreadState</strong>是一个ThreadLocal对象，<strong>PostingThreadState</strong>是一个静态类，可以帮助我们更快的实现设置数据的操作，其中就包括了我们需要使用的<strong>eventQueue</strong>，这个<strong>eventQueue</strong>是一个Object类型的ArrayList集合，但是它的操作是一个队列(后面我们会说到)。</p>
+<p>在这个方法中，我们会循环执行**postSingleEvent()**方法来发送单个事件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">postSingleEvent</span><span class="hljs-params">(Object event, PostingThreadState postingState)</span> <span class="hljs-keyword">throws</span> Error &#123;<br>     Class&lt;?&gt; eventClass = event.getClass(); <span class="hljs-comment">//重点在这里，按消息类型发送到相应的对象</span><br>     <span class="hljs-type">boolean</span> <span class="hljs-variable">subscriptionFound</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>     <span class="hljs-keyword">if</span> (eventInheritance) &#123;<br>         List&lt;Class&lt;?&gt;&gt; eventTypes = lookupAllEventTypes(eventClass);<br>         <span class="hljs-type">int</span> <span class="hljs-variable">countTypes</span> <span class="hljs-operator">=</span> eventTypes.size();<br>         <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">h</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; h &lt; countTypes; h++) &#123;<br>             Class&lt;?&gt; clazz = eventTypes.get(h);<br>             subscriptionFound |= postSingleEventForEventType(event, postingState, clazz);<br>         &#125;<br>     &#125; <span class="hljs-keyword">else</span> &#123;<br>         subscriptionFound = postSingleEventForEventType(event, postingState, eventClass);<br>     &#125;<br>     <span class="hljs-keyword">if</span> (!subscriptionFound) &#123;<br>         <span class="hljs-keyword">if</span> (logNoSubscriberMessages) &#123;<br>             logger.log(Level.FINE, <span class="hljs-string">&quot;No subscribers registered for event &quot;</span> + eventClass);<br>         &#125;<br>         <span class="hljs-keyword">if</span> (sendNoSubscriberEvent &amp;&amp; eventClass != NoSubscriberEvent.class &amp;&amp;<br>                 eventClass != SubscriberExceptionEvent.class) &#123;<br>             post(<span class="hljs-keyword">new</span> <span class="hljs-title class_">NoSubscriberEvent</span>(<span class="hljs-built_in">this</span>, event));<br>         &#125;<br>     &#125;<br> &#125;<br></code></pre></td></tr></table></figure>
+
+<p>通过反射的invoke()方法唤起观察者的监听方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">invokeSubscriber</span><span class="hljs-params">(Subscription subscription, Object event)</span> &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        subscription.subscriberMethod.method.invoke(subscription.subscriber, event);<span class="hljs-comment">//最后用反射唤起对象的监听方法</span><br>    &#125; <span class="hljs-keyword">catch</span> (InvocationTargetException e) &#123;<br>        handleSubscriberException(subscription, event, e.getCause());<br>    &#125; <span class="hljs-keyword">catch</span> (IllegalAccessException e) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalStateException</span>(<span class="hljs-string">&quot;Unexpected exception&quot;</span>, e);<br>    &#125;<br>&#125;	<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="注销"><a href="#注销" class="headerlink" title="注销"></a>注销</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">unregister</span><span class="hljs-params">(Object subscriber)</span> &#123;<br>    List&lt;Class&lt;?&gt;&gt; subscribedTypes = typesBySubscriber.get(subscriber);<br>    <span class="hljs-keyword">if</span> (subscribedTypes != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">for</span> (Class&lt;?&gt; eventType : subscribedTypes) &#123;<br>            unsubscribeByEventType(subscriber, eventType);<br>        &#125;<br>        typesBySubscriber.remove(subscriber);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        logger.log(Level.WARNING, <span class="hljs-string">&quot;Subscriber to unregister was not registered before: &quot;</span> + subscriber.getClass());<br>    &#125;<br>&#125;	<br></code></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>通过上面的源码，我们发现，EventBus是通过反射，注解和观察者模式实现的消息通知机制。这样的机制方便我们可以对一些操作进行快速的反应。</p>
+<p>但是同样它存在这样的问题</p>
+<ul>
+<li>使用注解的方式监听事件消息，在实际项目中debug调试并不是非常的方便</li>
+<li>关键代码大量使用反射，这就导致效率较低</li>
+</ul>
+</blockquote>
+<p>这样也能回答同事的问题了，为什么不能大量使用EventBus，特别是当需要传递数据类型更加复杂的时候，使用EventBus是非常耗时的。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这里只是简单的实现EventBus的简单实现，所以暂时先说到这里</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>重拾Android之路(二十二) eventbus</div>
+      <div>http://example.com/2018/04/12/android-23-eventbus/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2018年4月12日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/04/16/android-points/" title="android开发知识点">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">android开发知识点</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/04/09/android-27-media/" title="重拾android路(二十六) Android多媒体">
+                        <span class="hidden-mobile">重拾android路(二十六) Android多媒体</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

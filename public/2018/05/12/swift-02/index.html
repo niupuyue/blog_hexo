@@ -1,0 +1,695 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="到今天学习Swift已经有一个星期了，一直再做一些看视频，看书，看文档的操作，今天趁着这个机会，自己写一个小项目，然后把之前学到的知识做一个总结。那么既然是第一个小项目，那就有可能失败，但是我会坚持下来">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第一个Swift项目记录">
+<meta property="og:url" content="http://example.com/2018/05/12/swift-02/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="到今天学习Swift已经有一个星期了，一直再做一些看视频，看书，看文档的操作，今天趁着这个机会，自己写一个小项目，然后把之前学到的知识做一个总结。那么既然是第一个小项目，那就有可能失败，但是我会坚持下来">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_01.png">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_02.png">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_03.png">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_04.png">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_05.png">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_06.jpeg">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_07.jpeg">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_08.jpeg">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_09.jpeg">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_10.png">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_11.png">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_12.png">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_13.png">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_14.png">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_15.png">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_16.png">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_17.png">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_18.png">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_19.png">
+<meta property="og:image" content="http://example.com/assets/swift_project/sp_20.png">
+<meta property="article:published_time" content="2018-05-12T08:13:15.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.126Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="swift">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/swift_project/sp_01.png">
+  
+  
+  
+  <title>第一个Swift项目记录 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="第一个Swift项目记录"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2018-05-12 16:13" pubdate>
+          2018年5月12日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          77 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">第一个Swift项目记录</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>到今天学习Swift已经有一个星期了，一直再做一些看视频，看书，看文档的操作，今天趁着这个机会，自己写一个小项目，然后把之前学到的知识做一个总结。那么既然是第一个小项目，那就有可能失败，但是我会坚持下来</p>
+<span id="more"></span>
+<p>多余的废话，我就不多说了，直接开始</p>
+<h1 id="项目介绍"><a href="#项目介绍" class="headerlink" title="项目介绍"></a>项目介绍</h1><p>这是之前我做过的一个Android项目的IOS版本–豆瓣电影。<br>为什么要去写这个呢？<br>因为豆瓣电影的API是公开的<br>嗯，听起来很有道理，但是猫眼电影也可以通过抓包获取到API啊<br>因为豆瓣API比较简单<br>好了，就这么愉快的决定了<br>(瞬间，戏精上线)</p>
+<h1 id="使用的工具和环境"><a href="#使用的工具和环境" class="headerlink" title="使用的工具和环境"></a>使用的工具和环境</h1><p>xcode: Version 9.3 (9E145)<br>Swift:4.0<br>MacBook pro: 10.13.4</p>
+<h1 id="具体操作"><a href="#具体操作" class="headerlink" title="具体操作"></a>具体操作</h1><p>所有的步骤，我都尽量以截图和粘贴代码的方式去完成，这样方便以后查看(新人学IOS真的感觉好痛苦，因为网上很多例子都是Swift1，2，3的，而Swift4改变比较多)</p>
+<h2 id="1-创建项目"><a href="#1-创建项目" class="headerlink" title="1.创建项目"></a>1.创建项目</h2><p>打开Xcode，通过shift+command+N的快捷键创建一个新的项目<br><img src="/assets/swift_project/sp_01.png" srcset="/img/loading.gif" lazyload alt="软件面板"><br>在下面的页面中选择单一的App项目，也就是我选中额蓝色的对象，点击next<br><img src="/assets/swift_project/sp_02.png" srcset="/img/loading.gif" lazyload alt="选择项目"><br>在这里需要输入项目的一些基本信息，里面有我自己的，因为目前来说都是一些测试的，所以没有什么可以掩饰的，没有马赛克。填写完成之后，点击next按钮<br><img src="/assets/swift_project/sp_03.png" srcset="/img/loading.gif" lazyload alt="项目一些基本配置"><br>系统会让你选择需要将项目存储的位置，选择一个位置存放即可<br><img src="/assets/swift_project/sp_04.png" srcset="/img/loading.gif" lazyload alt="项目存放路径"><br>点击完成，就会显示项目的全局配置，如果是第一次创建，直接默认不用更改就可以了<br><img src="/assets/swift_project/sp_05.png" srcset="/img/loading.gif" lazyload alt="项目全局配置"><br>到此，所有的创建项目就搞定了</p>
+<h2 id="2-项目的分析"><a href="#2-项目的分析" class="headerlink" title="2.项目的分析"></a>2.项目的分析</h2><p>我们通过查看豆瓣电影官方的App，可以发现里面包含了较多内容，那么下面就分析一下</p>
+<h3 id="1-引导页面"><a href="#1-引导页面" class="headerlink" title="1.引导页面"></a>1.引导页面</h3><p>这里一般都是一个图片展示，这个图片可以随意，不用做太多，如果实在不行，我们可以通过Launch直接创建一个动画就可以</p>
+<h3 id="2-主要页面"><a href="#2-主要页面" class="headerlink" title="2.主要页面"></a>2.主要页面</h3><p>这里主要分为三个部分，分别是热映，找片和我的。这里我们对其中的内容进行更进一步的分析</p>
+<h4 id="1-热映模块"><a href="#1-热映模块" class="headerlink" title="1.热映模块"></a>1.热映模块</h4><p>该模块中分为两个大模块，分别是正在热映，即将上映。两个模块的内容有区别，但是我们可以先看做是当前只有列表展示。每个列表项中包含了电影图片，电影名称，电影评分，电影导演，主演，购票，看过该电影的人数等信息，那么我们这里是需要自定义tableView cell的。除了两个大模块之外，还有定位和搜索功能，这两个功能，暂时不在我们的考虑范围<br><img src="/assets/swift_project/sp_06.jpeg" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<h4 id="2-找片模块"><a href="#2-找片模块" class="headerlink" title="2.找片模块"></a>2.找片模块</h4><p>该模块也是分为了两个大模块分别是电影，电视剧。这两个里面的布局相对而言内容较多，以后写到的时候，在具体分析<br><img src="/assets/swift_project/sp_07.jpeg" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<h4 id="3-我的模块"><a href="#3-我的模块" class="headerlink" title="3.我的模块"></a>3.我的模块</h4><p>包括了自己的一些基本信息<br><img src="/assets/swift_project/sp_08.jpeg" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<h4 id="4-电影详情"><a href="#4-电影详情" class="headerlink" title="4.电影详情"></a>4.电影详情</h4><p>点击某个电影cell之后跳转到电影详情页面，显示电影的更多信息<br><img src="/assets/swift_project/sp_09.jpeg" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<p>额，好像分析的有点草率，不过毕竟第一次吗，以后多来几次好了。。。😏</p>
+<h2 id="3-项目的分包"><a href="#3-项目的分包" class="headerlink" title="3.项目的分包"></a>3.项目的分包</h2><p>为了能够更好的开发，我们需要将项目进行分包操作，我们这里先按照功能分吧<br>分包之后的结果如下所示<br><img src="/assets/swift_project/sp_10.png" srcset="/img/loading.gif" lazyload alt="分包结果"></p>
+<ul>
+<li>工具：主要是用来放置一些动画效果，全局属性等内容</li>
+<li>Main：主要用来存放一些全局都会用到的自定义View</li>
+<li>Hotting：正在热映</li>
+<li>Looking：找片</li>
+<li>Profile: 我的</li>
+<li>Detail: 电影详情</li>
+</ul>
+<h2 id="4-项目全局配置文件"><a href="#4-项目全局配置文件" class="headerlink" title="4.项目全局配置文件"></a>4.项目全局配置文件</h2><p>这里，我们需要把数据进行一下修改</p>
+<ol>
+<li>修改bundle display name 为豆瓣电影<br><img src="/assets/swift_project/sp_11.png" srcset="/img/loading.gif" lazyload alt="修改info.plist文件"></li>
+<li>为项目添加team</li>
+<li>修改当前开发状态下的IOS版本</li>
+<li>修改设备是手机</li>
+<li>要求当前应用只支持竖屏显示<br><img src="/assets/swift_project/sp_12.png" srcset="/img/loading.gif" lazyload alt="修改全局配置文件"></li>
+</ol>
+<h2 id="5-设置main文件夹内的组件"><a href="#5-设置main文件夹内的组件" class="headerlink" title="5.设置main文件夹内的组件"></a>5.设置main文件夹内的组件</h2><ol>
+<li>修改main.storyboard。这个main.storyborad是程序的主页面的内容，也就是说，所有页面的都是从这个地方开始的。我们首先把原来系统自动为我们声明的viewcontroller视图删除掉，因为我们后面需要添加新的内容，所以删除掉原始图，在创建一个Tab Bar Controller视图。<br><img src="/assets/swift_project/sp_13.png" srcset="/img/loading.gif" lazyload alt="创建Tab bar Controller"></li>
+<li>拉取三个Navigation Controller对象，并且每个对象对应的是不同的模块。并且修改item的文字和图标<br>修改文字直接修改就可以了<br><img src="/assets/swift_project/sp_14.png" srcset="/img/loading.gif" lazyload alt="修改tabbar的item的值和图标"></li>
+<li>创建了三个Navigation Controller之后，我们需要对这三个Controller进行优化。选中当前的一个NavigationController对象，选择Editor中的reFactor to StoryBoard，这样就可以把这个对象分理处一个新的storyboard<br><img src="/assets/swift_project/sp_15.png" srcset="/img/loading.gif" lazyload alt="提取模块storyboard"><br>每一个子模块的详情如下所示：<br><img src="/assets/swift_project/sp_16.png" srcset="/img/loading.gif" lazyload alt="正在热映模块"><br>并且为每一个模块添加一个swift文件<br><img src="/assets/swift_project/sp_17.png" srcset="/img/loading.gif" lazyload alt="正在热映模块"></li>
+<li>为各个模块创建各自对应的swift文件，并且每一个对象都要继承UITableViewController<br>之后的效果如图所示<br><img src="/assets/swift_project/sp_18.png" srcset="/img/loading.gif" lazyload alt="创建"><br>代码如下：<br>正在热映：<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">import UIKit<br><br><span class="hljs-keyword">class</span> HottingViewController: UITableViewController &#123;<br><br>    <span class="hljs-comment">//懒加载创建自定义导航栏左侧定位按钮</span><br>    <span class="hljs-keyword">lazy</span> var locationBtn:HottingLeftLocationButton = <span class="hljs-constructor">HottingLeftLocationButton()</span><br>    <span class="hljs-comment">//懒加载声明一个不能使用的搜索框</span><br>    <span class="hljs-keyword">lazy</span> var searchBar:EnableSearchBar = <span class="hljs-constructor">EnableSearchBar()</span><br>    <br>    override func view<span class="hljs-constructor">DidLoad()</span> &#123;<br>        super.view<span class="hljs-constructor">DidLoad()</span><br><br>       setup<span class="hljs-constructor">NavigationBar()</span><br>    &#125;<br><br>&#125;<br>extension HottingViewController&#123;<br>    <span class="hljs-keyword">private</span> func setup<span class="hljs-constructor">NavigationBar()</span>&#123;<br>        <span class="hljs-comment">//设置导航栏左侧图标样式</span><br>        <span class="hljs-comment">//设置标题</span><br>        locationBtn.leftBtn.set<span class="hljs-constructor">Title(<span class="hljs-string">&quot;定位&quot;</span>, <span class="hljs-params">for</span>: .<span class="hljs-params">normal</span>)</span><br>        <span class="hljs-comment">//设置定位按钮点击之后的操作</span><br>        locationBtn.leftBtn.add<span class="hljs-constructor">Target(<span class="hljs-params">self</span>, <span class="hljs-params">action</span>: #<span class="hljs-params">selector</span>(HottingViewController.<span class="hljs-params">gotoLocationView</span>)</span>, <span class="hljs-keyword">for</span>: .touchUpInside)<br>        navigationItem.leftBarButtonItem = locationBtn<br>        <span class="hljs-comment">//设置title,因为title本身只有一个文字，为了显示更多的内容，我们需要自己写一个布局</span><br>        navigationItem.titleView = searchBar<br>        <span class="hljs-comment">//给搜索框添加点击事件</span><br><span class="hljs-comment">//        searchBar.searchBar.addOnClickListener(target: self, action: #selector(HottingViewController.gotoSearchView))</span><br>        <span class="hljs-keyword">let</span> singleTapGesture = <span class="hljs-constructor">UITapGestureRecognizer(<span class="hljs-params">target</span>: <span class="hljs-params">self</span>, <span class="hljs-params">action</span>: #<span class="hljs-params">selector</span>(<span class="hljs-params">gotoSearchView</span>)</span>)<br>        searchBar.add<span class="hljs-constructor">GestureRecognizer(<span class="hljs-params">singleTapGesture</span>)</span><br>        searchBar.isUserInteractionEnabled = <span class="hljs-literal">true</span><br>        <br>    &#125;<br>&#125;<br><br>extension HottingViewController&#123;<br>    <span class="hljs-comment">//跳转到定位页面</span><br>    @objc <span class="hljs-keyword">private</span> func goto<span class="hljs-constructor">LocationView()</span>&#123;<br>        print(<span class="hljs-string">&quot;点击了定位按钮&quot;</span>)<br>    &#125;<br>    <span class="hljs-comment">//调转到搜索页面</span><br>    @objc <span class="hljs-keyword">private</span> func goto<span class="hljs-constructor">SearchView()</span>&#123;<br>        print(<span class="hljs-string">&quot;点击了搜索页面&quot;</span>)<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+找片模块：<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><code class="hljs fsharp">import UIKit<br><br><span class="hljs-keyword">class</span> LookingViewController<span class="hljs-operator">:</span> UITableViewController &#123;<br><br>    <span class="hljs-keyword">override</span> func viewDidLoad() &#123;<br>        super.viewDidLoad()<br><br>        <span class="hljs-comment">// Uncomment the following line to preserve selection between presentations</span><br>        <span class="hljs-comment">// self.clearsSelectionOnViewWillAppear = false</span><br><br>        <span class="hljs-comment">// Uncomment the following line to display an Edit button in the navigation bar for this view controller.</span><br>        <span class="hljs-comment">// self.navigationItem.rightBarButtonItem = self.editButtonItem</span><br>    &#125;<br><br>    <span class="hljs-keyword">override</span> func didReceiveMemoryWarning() &#123;<br>        super.didReceiveMemoryWarning()<br>        <span class="hljs-comment">// Dispose of any resources that can be recreated.</span><br>    &#125;<br><br>    <span class="hljs-comment">// MARK: - Table view data source</span><br><br>    <span class="hljs-keyword">override</span> func numberOfSections(<span class="hljs-keyword">in</span> tableView<span class="hljs-operator">:</span> UITableView) <span class="hljs-operator">-&gt;</span> Int &#123;<br>        <span class="hljs-comment">// #warning Incomplete implementation, return the number of sections</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span><br>    &#125;<br><br>    <span class="hljs-keyword">override</span> func tableView(_ tableView<span class="hljs-operator">:</span> UITableView, numberOfRowsInSection section<span class="hljs-operator">:</span> Int) <span class="hljs-operator">-&gt;</span> Int &#123;<br>        <span class="hljs-comment">// #warning Incomplete implementation, return the number of rows</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span><br>    &#125;<br><br>    <span class="hljs-operator">/*</span><br>    <span class="hljs-keyword">override</span> func tableView(_ tableView<span class="hljs-operator">:</span> UITableView, cellForRowAt indexPath<span class="hljs-operator">:</span> IndexPath) <span class="hljs-operator">-&gt;</span> UITableViewCell &#123;<br>        <span class="hljs-keyword">let</span> cell <span class="hljs-operator">=</span> tableView.dequeueReusableCell(withIdentifier<span class="hljs-operator">:</span> <span class="hljs-string">&quot;reuseIdentifier&quot;</span>, <span class="hljs-keyword">for</span><span class="hljs-operator">:</span> indexPath)<br><br>        <span class="hljs-comment">// Configure the cell...</span><br><br>        <span class="hljs-keyword">return</span> cell<br>    &#125;<br>    <span class="hljs-operator">*/</span><br><br>    <span class="hljs-operator">/*</span><br>    <span class="hljs-comment">// Override to support conditional editing of the table view.</span><br>    <span class="hljs-keyword">override</span> func tableView(_ tableView<span class="hljs-operator">:</span> UITableView, canEditRowAt indexPath<span class="hljs-operator">:</span> IndexPath) <span class="hljs-operator">-&gt;</span> Bool &#123;<br>        <span class="hljs-comment">// Return false if you do not want the specified item to be editable.</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>    &#125;<br>    <span class="hljs-operator">*/</span><br><br>    <span class="hljs-operator">/*</span><br>    <span class="hljs-comment">// Override to support editing the table view.</span><br>    <span class="hljs-keyword">override</span> func tableView(_ tableView<span class="hljs-operator">:</span> UITableView, commit editingStyle<span class="hljs-operator">:</span> UITableViewCellEditingStyle, forRowAt indexPath<span class="hljs-operator">:</span> IndexPath) &#123;<br>        <span class="hljs-keyword">if</span> editingStyle <span class="hljs-operator">==</span> .<span class="hljs-keyword">delete</span> &#123;<br>            <span class="hljs-comment">// Delete the row from the data source</span><br>            tableView.deleteRows(at<span class="hljs-operator">:</span> [indexPath], <span class="hljs-keyword">with</span><span class="hljs-operator">:</span> .fade)<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> editingStyle <span class="hljs-operator">==</span> .<span class="hljs-keyword">insert</span> &#123;<br>            <span class="hljs-comment">// Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view</span><br>        &#125;    <br>    &#125;<br>    <span class="hljs-operator">*/</span><br><br>    <span class="hljs-operator">/*</span><br>    <span class="hljs-comment">// Override to support rearranging the table view.</span><br>    <span class="hljs-keyword">override</span> func tableView(_ tableView<span class="hljs-operator">:</span> UITableView, moveRowAt fromIndexPath<span class="hljs-operator">:</span> IndexPath, <span class="hljs-keyword">to</span><span class="hljs-operator">:</span> IndexPath) &#123;<br><br>    &#125;<br>    <span class="hljs-operator">*/</span><br><br>    <span class="hljs-operator">/*</span><br>    <span class="hljs-comment">// Override to support conditional rearranging of the table view.</span><br>    <span class="hljs-keyword">override</span> func tableView(_ tableView<span class="hljs-operator">:</span> UITableView, canMoveRowAt indexPath<span class="hljs-operator">:</span> IndexPath) <span class="hljs-operator">-&gt;</span> Bool &#123;<br>        <span class="hljs-comment">// Return false if you do not want the item to be re-orderable.</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>    &#125;<br>    <span class="hljs-operator">*/</span><br><br>    <span class="hljs-operator">/*</span><br>    <span class="hljs-comment">// MARK: - Navigation</span><br><br>    <span class="hljs-comment">// In a storyboard-based application, you will often want to do a little preparation before navigation</span><br>    <span class="hljs-keyword">override</span> func prepare(<span class="hljs-keyword">for</span> segue<span class="hljs-operator">:</span> UIStoryboardSegue, sender<span class="hljs-operator">:</span> Any<span class="hljs-operator">?</span>) &#123;<br>        <span class="hljs-comment">// Get the new view controller using segue.destinationViewController.</span><br>        <span class="hljs-comment">// Pass the selected object to the new view controller.</span><br>    &#125;<br>    <span class="hljs-operator">*/</span><br><br>&#125;<br></code></pre></td></tr></table></figure>
+我的模块：<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs swift"><br><span class="hljs-keyword">import</span> UIKit<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ProfileViewController</span>: <span class="hljs-title class_">UITableViewController</span> &#123;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">viewDidLoad</span>() &#123;<br>        <span class="hljs-keyword">super</span>.viewDidLoad()<br><br>        <span class="hljs-comment">// Uncomment the following line to preserve selection between presentations</span><br>        <span class="hljs-comment">// self.clearsSelectionOnViewWillAppear = false</span><br><br>        <span class="hljs-comment">// Uncomment the following line to display an Edit button in the navigation bar for this view controller.</span><br>        <span class="hljs-comment">// self.navigationItem.rightBarButtonItem = self.editButtonItem</span><br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">didReceiveMemoryWarning</span>() &#123;<br>        <span class="hljs-keyword">super</span>.didReceiveMemoryWarning()<br>        <span class="hljs-comment">// Dispose of any resources that can be recreated.</span><br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+mainController模块：<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs swift"><span class="hljs-keyword">import</span> UIKit<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MainViewController</span>: <span class="hljs-title class_">UITabBarController</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">lazy</span> <span class="hljs-keyword">var</span> imagesName <span class="hljs-operator">=</span> [<br>    <span class="hljs-string">&quot;hotting&quot;</span>,<span class="hljs-string">&quot;looking&quot;</span>,<span class="hljs-string">&quot;profile&quot;</span><br>    ]<br>    <span class="hljs-comment">//页面已经加载完成</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">viewDidLoad</span>() &#123;<br>        <span class="hljs-keyword">super</span>.viewDidLoad()<br>        <br>        <br>    &#125;<br>    <span class="hljs-comment">//页面即将显示</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">viewWillAppear</span>(<span class="hljs-keyword">_</span> <span class="hljs-params">animated</span>: <span class="hljs-type">Bool</span>) &#123;<br>        <span class="hljs-keyword">super</span>.viewWillAppear(animated)<br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-number">0</span><span class="hljs-operator">..&lt;</span>tabBar.items<span class="hljs-operator">!</span>.count&#123;<br>            <span class="hljs-keyword">let</span> item <span class="hljs-operator">=</span> tabBar.items<span class="hljs-operator">!</span>[i]<br>            item.selectedImage <span class="hljs-operator">=</span> <span class="hljs-type">UIImage</span>(named: imagesName[i]<span class="hljs-operator">+</span><span class="hljs-string">&quot;selected&quot;</span>)<br>        &#125;<br>    &#125;<br>    <br>&#125;<br><span class="hljs-keyword">extension</span> <span class="hljs-title class_">MainViewController</span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">setupTabbarItems</span>()&#123;<br>       <br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+这里我们需要将AppDelegate.swift文件进行修改<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs swift"><span class="hljs-keyword">import</span> UIKit<br><br><span class="hljs-keyword">@UIApplicationMain</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">AppDelegate</span>: <span class="hljs-title class_">UIResponder</span>, <span class="hljs-title class_">UIApplicationDelegate</span> &#123;<br><br>    <span class="hljs-keyword">var</span> window: <span class="hljs-type">UIWindow</span>?<br><br><br>    <span class="hljs-keyword">func</span> <span class="hljs-title function_">application</span>(<span class="hljs-keyword">_</span> <span class="hljs-params">application</span>: <span class="hljs-type">UIApplication</span>, <span class="hljs-params">didFinishLaunchingWithOptions</span> <span class="hljs-params">launchOptions</span>: [<span class="hljs-params">UIApplicationLaunchOptionsKey</span>: <span class="hljs-keyword">Any</span>]<span class="hljs-operator">?</span>) -&gt; <span class="hljs-type">Bool</span> &#123;<br>        <span class="hljs-type">UITabBar</span>.appearance().tintColor <span class="hljs-operator">=</span> <span class="hljs-type">UIColor</span>.red<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="5-生成自定义组件"><a href="#5-生成自定义组件" class="headerlink" title="5.生成自定义组件"></a>5.生成自定义组件</h2><p>这里因为我们需要对导航栏的内容进行显示，所以我们需要对导航栏的组件进行修改<br>创建了三个组件，为不同的内容添加响应的效果<br><img src="/assets/swift_project/sp_19.png" srcset="/img/loading.gif" lazyload alt="自定义组件"></p>
+<ul>
+<li>HottingLeftLocationButton.swift<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs swift"><span class="hljs-keyword">import</span> UIKit<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">HottingLeftLocationButton</span>: <span class="hljs-title class_">UIBarButtonItem</span> &#123;<br><br>    <span class="hljs-comment">//懒加载设置按钮样式</span><br>    <span class="hljs-keyword">var</span> leftBtn:<span class="hljs-type">HottingLeftButton</span> <span class="hljs-operator">=</span> <span class="hljs-type">HottingLeftButton</span>()<br>    <br>    <span class="hljs-keyword">override</span> <span class="hljs-keyword">init</span>() &#123;<br>        <span class="hljs-keyword">super</span>.<span class="hljs-keyword">init</span>()<br>        <span class="hljs-comment">//将customView设置成btn，这样btn的样式就会给到UIBarButtongItem对象</span><br>        customView <span class="hljs-operator">=</span> leftBtn<br>    &#125;<br>    <br>    <span class="hljs-keyword">required</span> <span class="hljs-keyword">init?</span>(<span class="hljs-params">coder</span> <span class="hljs-params">aDecoder</span>: <span class="hljs-type">NSCoder</span>) &#123;<br>        <span class="hljs-built_in">fatalError</span>(<span class="hljs-string">&quot;init(coder:) has not been implemented&quot;</span>)<br>    &#125;<br>    <br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li>HottingLeftButton<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs swift"><span class="hljs-keyword">import</span> UIKit<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">HottingLeftButton</span>: <span class="hljs-title class_">UIButton</span> &#123;<br><br>    <br>     <span class="hljs-comment">//初始化设置</span><br>     <span class="hljs-keyword">override</span> <span class="hljs-keyword">init</span>(<span class="hljs-params">frame</span>: <span class="hljs-type">CGRect</span>) &#123;<br>        <span class="hljs-keyword">super</span>.<span class="hljs-keyword">init</span>(frame: frame)<br>        <span class="hljs-comment">//给左侧定位添加向下的图片</span><br>        setImage(<span class="hljs-type">UIImage</span>(named: <span class="hljs-string">&quot;navigation_down&quot;</span>), for: .normal)<br>        setTitleColor(<span class="hljs-type">UIColor</span>.black, for: .normal)<br>        <span class="hljs-comment">//设置字体大小</span><br>        titleLabel<span class="hljs-operator">?</span>.font <span class="hljs-operator">=</span> <span class="hljs-type">UIFont</span>.systemFont(ofSize: <span class="hljs-number">14</span>)<br>        sizeToFit()<br>        <span class="hljs-comment">//设置文字紧贴着左侧显示，图片在文字的3个像素的位置</span><br>        imageView<span class="hljs-operator">!</span>.frame.origin.x <span class="hljs-operator">=</span> titleLabel<span class="hljs-operator">!</span>.frame.origin.x <span class="hljs-operator">+</span> <span class="hljs-number">10</span><br>        titleLabel<span class="hljs-operator">!</span>.frame.origin.x <span class="hljs-operator">=</span> <span class="hljs-number">0</span><br>     &#125;<br>     <br>     <span class="hljs-keyword">required</span> <span class="hljs-keyword">init?</span>(<span class="hljs-params">coder</span> <span class="hljs-params">aDecoder</span>: <span class="hljs-type">NSCoder</span>) &#123;<br>        <span class="hljs-built_in">fatalError</span>(<span class="hljs-string">&quot;init(coder:) has not been implemented&quot;</span>)<br>     &#125;<br>     <br>     <span class="hljs-comment">//设置当前图片和文字的位置</span><br>     <span class="hljs-keyword">override</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">layoutSubviews</span>() &#123;<br>        <span class="hljs-keyword">super</span>.layoutSubviews()<br>     &#125;<br>    <br><br>&#125;<br><br></code></pre></td></tr></table></figure></li>
+<li>EnableSearchBar<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs swift"><span class="hljs-keyword">import</span> UIKit<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">EnableSearchBar</span>: <span class="hljs-title class_">UIView</span> &#123;<br><br>    <span class="hljs-keyword">lazy</span> <span class="hljs-keyword">var</span> searchBar:<span class="hljs-type">UISearchBar</span> <span class="hljs-operator">=</span> <span class="hljs-type">UISearchBar</span>()<br>    <span class="hljs-keyword">lazy</span> <span class="hljs-keyword">var</span> coverView:<span class="hljs-type">UIView</span> <span class="hljs-operator">=</span> <span class="hljs-type">UIView</span>()<br>    <br>  <span class="hljs-comment">//不可点击的searchbar</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-keyword">init</span>(<span class="hljs-params">frame</span>: <span class="hljs-type">CGRect</span>) &#123;<br>        <span class="hljs-keyword">super</span>.<span class="hljs-keyword">init</span>(frame: frame)<br>        setupCoverView()<br>    &#125;<br>    <br>    <span class="hljs-keyword">required</span> <span class="hljs-keyword">init?</span>(<span class="hljs-params">coder</span> <span class="hljs-params">aDecoder</span>: <span class="hljs-type">NSCoder</span>) &#123;<br>        <span class="hljs-built_in">fatalError</span>(<span class="hljs-string">&quot;init(coder:) has not been implemented&quot;</span>)<br>    &#125;<br>    <span class="hljs-comment">//设置UI布局</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">layoutSubviews</span>() &#123;<br>        <br>    &#125;<br>    <br>&#125;<br><span class="hljs-keyword">extension</span> <span class="hljs-title class_">EnableSearchBar</span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">setupCoverView</span>()&#123;<br>        <span class="hljs-comment">//设置搜索框和蒙板的大小和位置</span><br>        searchBar.frame <span class="hljs-operator">=</span> <span class="hljs-type">CGRect</span>.<span class="hljs-keyword">init</span>(x: <span class="hljs-operator">-</span><span class="hljs-number">120</span>, y: <span class="hljs-operator">-</span><span class="hljs-number">20</span>, width: <span class="hljs-number">300</span>, height: <span class="hljs-number">40</span>)<br>        coverView.frame <span class="hljs-operator">=</span> <span class="hljs-type">CGRect</span>.<span class="hljs-keyword">init</span>(x: <span class="hljs-operator">-</span><span class="hljs-number">120</span>, y: <span class="hljs-operator">-</span><span class="hljs-number">20</span>, width: <span class="hljs-number">300</span>, height: <span class="hljs-number">40</span>)<br>        <span class="hljs-comment">//设置searchbar的placeholder</span><br>        searchBar.placeholder <span class="hljs-operator">=</span> <span class="hljs-string">&quot;电影/电视剧/影人&quot;</span><br>        <span class="hljs-comment">//设置蒙板的背景</span><br>        coverView.backgroundColor <span class="hljs-operator">=</span> <span class="hljs-type">UIColor</span>(white: <span class="hljs-number">0.9</span>, alpha: <span class="hljs-number">0.0</span>)<br>        <span class="hljs-comment">//将两个组件添加到页面中</span><br>        <span class="hljs-keyword">self</span>.addSubview(searchBar)<br>        <span class="hljs-keyword">self</span>.addSubview(coverView)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+最终实现的效果是：<br><img src="/assets/swift_project/sp_20.png" srcset="/img/loading.gif" lazyload alt="自定义组件"></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/swift/">#swift</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>第一个Swift项目记录</div>
+      <div>http://example.com/2018/05/12/swift-02/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2018年5月12日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/05/14/ios-framework4swift/" title="ios项目开发框架总结(Swift)">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ios项目开发框架总结(Swift)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/05/09/swift-01/" title="swift">
+                        <span class="hidden-mobile">swift</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

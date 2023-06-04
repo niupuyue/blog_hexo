@@ -1,0 +1,711 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="在编写Android布局时总会遇到这样那样的痛点，如下：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android奇技淫巧 12 Android布局优化 include+merge+viewStub">
+<meta property="og:url" content="http://example.com/2019/08/13/android-tools-12/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在编写Android布局时总会遇到这样那样的痛点，如下：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/tools/tools-merge-01.png">
+<meta property="article:published_time" content="2019-08-13T06:34:10.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.112Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/tools/tools-merge-01.png">
+  
+  
+  
+  <title>android奇技淫巧 12 Android布局优化 include+merge+viewStub - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="android奇技淫巧 12 Android布局优化 include+merge+viewStub"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-08-13 14:34" pubdate>
+          2019年8月13日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          14k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          114 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">android奇技淫巧 12 Android布局优化 include+merge+viewStub</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>在编写Android布局时总会遇到这样那样的痛点，如下：</p>
+<span id="more"></span>
+<ol>
+<li>有些布局在很多页面都会用到，而且样式都一样，每次都要复制粘贴大量的代码</li>
+<li>在解决1中的问题之后，发现复用的布局外面总是要额外的再套上一层布局，要知道布局嵌套会影响性能</li>
+<li>有些布局只有用到的时候才会显示，但是又必须提前写好，虽然设置了invisible或者gone，但是多多少少会占有内存</li>
+</ol>
+<p>要解决这些痛点，我们可以使用include，merge和ViewStub三个标签，先来看一下实现的效果<br><img src="/assets/tools/tools-merge-01.png" srcset="/img/loading.gif" lazyload alt="布局优化实现效果"></p>
+<h2 id="include"><a href="#include" class="headerlink" title="include"></a>include</h2><p>当我们在一个主页面中使用include标签是，会表示当前的主布局包含标签中的布局，这样一来，就能很好的起到复用布局的效果，在那些常用的布局比如标题栏或者分割线等上面使用它可以减少大量代码<br>主要属性有两个最重要的</p>
+<ol>
+<li>layout:必填属性，为我们需要插入当前主布局的不具名称，通过R.layout.xx的方式引入</li>
+<li>id：当我们想通过include添加进来的布局设置id的时候，可以使用该属性，他可以重写插入主布局的布局id</li>
+</ol>
+<h3 id="常规使用"><a href="#常规使用" class="headerlink" title="常规使用"></a>常规使用</h3><p>我们先创建一个ViewOptimizationActivity，然后再创建一个layout_include.xml布局文件，它的内容非常简单，就一个TextView</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">TextView</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:gravity</span>=<span class="hljs-string">&quot;center_vertical&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:textSize</span>=<span class="hljs-string">&quot;14sp&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:background</span>=<span class="hljs-string">&quot;@android:color/holo_red_light&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;40dp&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">TextView</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>现在我们就用include标签，将其添加到ViewOptimizationActivity的布局中：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">xmlns:app</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res-auto&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">xmlns:tools</span>=<span class="hljs-string">&quot;http://schemas.android.com/tools&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;vertical&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">tools:context</span>=<span class="hljs-string">&quot;.ViewOptimizationActivity&quot;</span>&gt;</span><br> <span class="hljs-comment">&lt;!--include标签的使用--&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">TextView</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:textSize</span>=<span class="hljs-string">&quot;18sp&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;1、include标签的使用&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span> /&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">include</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/tv_include1&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">layout</span>=<span class="hljs-string">&quot;@layout/layout_include&quot;</span>/&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>这样我们就将include试用完了，只需要知名包含布局的id即可。除此之外，我们还给这个include标签设置了一个id，为了验证它就是layout_include.xml的根布局TextView的id，我们可以在ViewOptiomizationActivity中初始化TextView，并给他设置文字</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs abnf">TextView tvInClude1 <span class="hljs-operator">=</span> findViewById(R.id.tv_include1)<span class="hljs-comment">;</span><br><span class="hljs-attribute">tvInclude1</span> <span class="hljs-operator">=</span> setText(<span class="hljs-string">&quot;常规下的include布局&quot;</span>)<br></code></pre></td></tr></table></figure>
+<p>这样只要能显示相应的代码，就表示我们设置的layout和id是成功的。不过你可能会对这个id属性有疑问：id我们直接在TextView中设置，为什么还要重写他呢？别忘了，我们的作用是复用，那么如果我们在一个主布局中添加了两个include标签，添加两个以上的相同布局，id相同则会造成冲突，所以重写他可以让我们更好的调用它和它里面的空间，还有一种情况，假如你的主布局是RelateLayout，这是为了设置相对位置，我们也需要设置不同的id</p>
+<h3 id="重写根布局的布局属性"><a href="#重写根布局的布局属性" class="headerlink" title="重写根布局的布局属性"></a>重写根布局的布局属性</h3><p>除了id之外，我们还可以重写宽高，边距和可见性这些布局属性。但是我们一定要注意，单单重写android:layout_height或者android:layout_width是不行的，必须两个同时重写才能起作用，包括边距也是这样。如果我们想要给一个include进来的布局添加右边距，完整的写法如下：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;include<br>  andorid:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;math_parent&quot;</span><br>  android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span><br>  android:<span class="hljs-attribute">layout_marginEnd</span>=<span class="hljs-string">&quot;40dp&quot;</span><br>  android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/tv_include2&quot;</span><br>  <span class="hljs-attribute">layout</span>=<span class="hljs-string">&quot;@layout/layout_include&quot;</span> /&gt;<br></code></pre></td></tr></table></figure>
+
+<h3 id="空间ID相同时处理"><a href="#空间ID相同时处理" class="headerlink" title="空间ID相同时处理"></a>空间ID相同时处理</h3><p>在”常规使用”中我们知道id的属性可以重写include布局的根布局id，但对于根布局里面的布局和空间是无能为力的。如果这是一个布局中在主布局中多次include布局，怎么才能区分里面的子控件呢？</p>
+<p>我们首先创建一个layout_include2.xml的布局，他的根布局时FrameLayout，里面有一个TextView，他的id是tv_same:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">FrameLayout</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:background</span>=<span class="hljs-string">&quot;@android:color/holo_orange_light&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">TextView</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:gravity</span>=<span class="hljs-string">&quot;center_vertical&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/tv_same&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;50dp&quot;</span> /&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">FrameLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>在主布局中添加进去：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">xmlns:app</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res-auto&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">xmlns:tools</span>=<span class="hljs-string">&quot;http://schemas.android.com/tools&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;vertical&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">tools:context</span>=<span class="hljs-string">&quot;.ViewOptimizationActivity&quot;</span>&gt;</span><br> <span class="hljs-comment">&lt;!--include标签的使用--&gt;</span><br> ……<br> <span class="hljs-tag">&lt;<span class="hljs-name">include</span> <span class="hljs-attr">layout</span>=<span class="hljs-string">&quot;@layout/layout_include2&quot;</span>/&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">include</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/view_same&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">layout</span>=<span class="hljs-string">&quot;@layout/layout_include2&quot;</span>/&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>为了区分，这里给第二个layout_include2设置了id，这就是我们要创建根布局的对象，然后再去初始化里面的控件</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">// 这是默认的第一个include的中的TextView</span><br>TextView tvSame = find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">tv_same</span>)</span>;<br><span class="hljs-comment">// 这是id=view_same的include中的TextView</span><br>FrameLayout viewSame = find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">view_same</span>)</span>;<br>TextView tvSame2 = viewSame.find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">view_same</span>)</span>;<br></code></pre></td></tr></table></figure>
+
+<h1 id="merge"><a href="#merge" class="headerlink" title="merge"></a>merge</h1><p>include标签虽然能够解决布局重用的问题，但是也会带来另一个问题：布局嵌套。因为把需要重用的布局放在一个自布局之后，就必须加上一个根布局，如果我们的主布局的根布局和我们需要include的根布局都一样，那么相当于在中间添加了一层多余的布局，这样会造成我们的布局嵌套越来越多。</p>
+<p>使用merge标签要注意一点：必须是一个布局文件中的根节点。看起来和其他布局并没有什么两样，但是他的特别之处在于页面加载时他不会被绘制。如：它就像是布局或者控件的搬运工，把“货物”搬到主布局之后就会功成身退，不会占用任何空间，因此也就不会增加布局层级了。这正如它的名字一样，只起“合并”作用</p>
+<h3 id="常规使用-1"><a href="#常规使用-1" class="headerlink" title="常规使用"></a>常规使用</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">merge</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">TextView</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/tv_merge1&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;我是merge中的TextView1&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:background</span>=<span class="hljs-string">&quot;@android:color/holo_green_light&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:gravity</span>=<span class="hljs-string">&quot;center&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;40dp&quot;</span> /&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">TextView</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_toEndOf</span>=<span class="hljs-string">&quot;@+id/tv_merge1&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/tv_merge2&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;我是merge中的TextView2&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:background</span>=<span class="hljs-string">&quot;@android:color/holo_blue_light&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:gravity</span>=<span class="hljs-string">&quot;center&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;40dp&quot;</span> /&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">merge</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>这里我使用了一些相对布局的属性，原因后面你就知道了。我们接着在ViewOptimizationActivity的布局添加RelativeLayout，然后使用include标签将layout_merge.xml添加进去：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">RelativeLayout</span></span><br><span class="hljs-tag"><span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag"><span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">include</span></span><br><span class="hljs-tag"><span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/view_merge&quot;</span></span><br><span class="hljs-tag"><span class="hljs-attr">layout</span>=<span class="hljs-string">&quot;@layout/layout_merge&quot;</span>/&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">RelativeLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="merge标签对布局层级的影响"><a href="#merge标签对布局层级的影响" class="headerlink" title="merge标签对布局层级的影响"></a>merge标签对布局层级的影响</h3><p> 在layout_merge.xml中，我们使用相对布局的属性android:layout_toEndOf将蓝色TextView设置到绿色TextView的右边，而layout_merge.xml的父布局是RelativeLayout，所以这个属性是起了作用，merge标签不会影响里面的空间，也不会增加布局层级</p>
+<h3 id="merge的ID"><a href="#merge的ID" class="headerlink" title="merge的ID"></a>merge的ID</h3><p> 在学习include标签时我们知道，它的android:id属性可以重写被include的根布局id，但如果根节点是merge呢？前面说了merge并不会作为一个布局绘制出来，所以这里给它设置id是不起作用的。我们可以在它的父布局RelativeLayout中再加一个TextView，使用android:layout_below属性把设置到layout_merge下面:</p>
+ <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">RelativeLayout</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">include</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/view_merge&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">layout</span>=<span class="hljs-string">&quot;@layout/layout_merge&quot;</span>/&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">TextView</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;我不是merge中的布局&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_below</span>=<span class="hljs-string">&quot;@+id/view_merge&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:background</span>=<span class="hljs-string">&quot;@android:color/holo_purple&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:gravity</span>=<span class="hljs-string">&quot;center&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;40dp&quot;</span>/&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">RelativeLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p> 运行之后你会发现新加的TextView会把merge布局盖住，没有像预期那样在其下方。如果把android:layout_below中的id改为layout_merge.xml中任一TextView的id（比如tv_merge1）</p>
+<h1 id="ViewStub"><a href="#ViewStub" class="headerlink" title="ViewStub"></a>ViewStub</h1><p> 在开发过程中我们会遇到这样的问题，页面中有些布局在初始化的时候，没有必要显示，但又不得不事先在布局文件中写好，虽然设置成了invisible或者gone，但在初始化的时候还是会加载，这样无疑会影响加载速度。针对这样的情况，Android为我们提供了一个利器–ViewStub。这是一个不可见，大小为0的视图，具有懒加载功能。它存在于视图层级中，到那时会在setVisibility()和inflate()方法调用才会填充视图，所以不会影响初始化加载速度，他有三个重要属性</p>
+<ol>
+<li>android:layout  ViewStub需要填充视图名称，为R.layout.xx的形式</li>
+<li>android:inflated    重写被填充的视图的父布局id</li>
+</ol>
+<p> 与include标签不同，ViewStub的android:id属性是设置ViewStub本身的id，而不是重写布局的id，这一点不能搞错。另外ViewStub还提供了OnInflateListener接口用于监听布局是否已经加载</p>
+<h3 id="填充布局的正确方式"><a href="#填充布局的正确方式" class="headerlink" title="填充布局的正确方式"></a>填充布局的正确方式</h3><p> 这里我们创建一个layout_view_stub.xml，里面放置一个Switch开关</p>
+ <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">FrameLayout</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:background</span>=<span class="hljs-string">&quot;@android:color/holo_blue_dark&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;100dp&quot;</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">Switch</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/sw&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_gravity</span>=<span class="hljs-string">&quot;center&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span> /&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">FrameLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>然后在Activity的布局中修改如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">xmlns:app</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res-auto&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">xmlns:tools</span>=<span class="hljs-string">&quot;http://schemas.android.com/tools&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;vertical&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">tools:context</span>=<span class="hljs-string">&quot;.ViewOptimizationActivity&quot;</span>&gt;</span><br> <span class="hljs-comment">&lt;!--ViewStub标签的使用--&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">TextView</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:textSize</span>=<span class="hljs-string">&quot;18sp&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;3、ViewStub标签的使用&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span> /&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">ViewStub</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/view_stub&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:inflatedId</span>=<span class="hljs-string">&quot;@+id/view_inflate&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout</span>=<span class="hljs-string">&quot;@layout/layout_view_stub&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;100dp&quot;</span> /&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;horizontal&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;显示&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/btn_show&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_weight</span>=<span class="hljs-string">&quot;1&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;0dp&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span> /&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;隐藏&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/btn_hide&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_weight</span>=<span class="hljs-string">&quot;1&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;0dp&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span> /&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">Button</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;操作父布局控件&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/btn_control&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag"> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span> /&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>在ViewOptimizationActivity中监听ViewStub的填充事件</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">viewStub.set<span class="hljs-constructor">OnInflateListener(<span class="hljs-params">new</span> ViewStub.OnInflateListener()</span>&#123;<br>  @Override<br>  public void on<span class="hljs-constructor">Inflate(ViewStb <span class="hljs-params">viewStub</span>,View <span class="hljs-params">view</span>)</span>&#123;<br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Toast</span>.</span></span>make<span class="hljs-constructor">Text(ViewOptimizationActivity.<span class="hljs-params">this</span>,<span class="hljs-string">&quot;viewStub加载了&quot;</span>,Toast.LENGTH_SHORT)</span>.show<span class="hljs-literal">()</span>;<br>  &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+<p>然后通过按钮事件来填充和显示layout_view_stub:</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs aspectj"><span class="hljs-meta">@Override</span><br> <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span><span class="hljs-params">(View view)</span> </span>&#123;<br> <span class="hljs-keyword">switch</span> (view.getId()) &#123;<br> <span class="hljs-keyword">case</span> R.id.btn_show:<br> viewStub.inflate();<br> <span class="hljs-keyword">break</span>;<br> <span class="hljs-keyword">case</span> R.id.btn_hide:<br> viewStub.setVisibility(View.GONE);<br> <span class="hljs-keyword">break</span>;<br> <span class="hljs-keyword">default</span>:<br> <span class="hljs-keyword">break</span>;<br> &#125;<br> &#125;<br></code></pre></td></tr></table></figure>
+<p>运行之后，点击“显示”按钮，layout_view_stub显示了，并弹出”ViewStub加载了”的Toast；点击“隐藏”按钮，布局又隐藏掉了，但是再点击一下“显示”按钮，页面居然却闪退了，查看日志，发现抛出了一个异常：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">java<span class="hljs-selector-class">.lang</span><span class="hljs-selector-class">.IllegalStateException</span>: ViewStub must have <span class="hljs-selector-tag">a</span> non-null ViewGroup viewParent<br></code></pre></td></tr></table></figure>
+
+<p>我们打开ViewStub的源码，看看是在哪里抛出的异常</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> View <span class="hljs-title function_">inflate</span><span class="hljs-params">()</span> &#123;<br> <span class="hljs-keyword">final</span> <span class="hljs-type">ViewParent</span> <span class="hljs-variable">viewParent</span> <span class="hljs-operator">=</span> getParent();<br> <span class="hljs-keyword">if</span> (viewParent != <span class="hljs-literal">null</span> &amp;&amp; viewParent <span class="hljs-keyword">instanceof</span> ViewGroup) &#123;<br> <span class="hljs-keyword">if</span> (mLayoutResource != <span class="hljs-number">0</span>) &#123;<br> <span class="hljs-keyword">final</span> <span class="hljs-type">ViewGroup</span> <span class="hljs-variable">parent</span> <span class="hljs-operator">=</span> (ViewGroup) viewParent;<br> <span class="hljs-keyword">final</span> <span class="hljs-type">View</span> <span class="hljs-variable">view</span> <span class="hljs-operator">=</span> inflateViewNoAdd(parent);<br> replaceSelfWithView(view, parent);<br> mInflatedViewRef = <span class="hljs-keyword">new</span> <span class="hljs-title class_">WeakReference</span>&lt;&gt;(view);<br> <span class="hljs-keyword">if</span> (mInflateListener != <span class="hljs-literal">null</span>) &#123;<br> mInflateListener.onInflate(<span class="hljs-built_in">this</span>, view);<br> &#125;<br> <span class="hljs-keyword">return</span> view;<br> &#125; <span class="hljs-keyword">else</span> &#123;<br> <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalArgumentException</span>(<span class="hljs-string">&quot;ViewStub must have a valid layoutResource&quot;</span>);<br> &#125;<br> &#125; <span class="hljs-keyword">else</span> &#123;<br> <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalStateException</span>(<span class="hljs-string">&quot;ViewStub must have a non-null ViewGroup viewParent&quot;</span>);<br> &#125;<br> &#125;<br></code></pre></td></tr></table></figure>
+<p>注意到if语句中有一个replaceSelfWithView()方法，听这名字就让人有一种不祥的预感了，点进去一看：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">private</span> void replace<span class="hljs-constructor">SelfWithView(View <span class="hljs-params">view</span>, ViewGroup <span class="hljs-params">parent</span>)</span> &#123;<br> final <span class="hljs-built_in">int</span> index = parent.index<span class="hljs-constructor">OfChild(<span class="hljs-params">this</span>)</span>;<br> parent.remove<span class="hljs-constructor">ViewInLayout(<span class="hljs-params">this</span>)</span>;<br> final ViewGroup.LayoutParams layoutParams = get<span class="hljs-constructor">LayoutParams()</span>;<br> <span class="hljs-keyword">if</span> (layoutParams != null) &#123;<br> parent.add<span class="hljs-constructor">View(<span class="hljs-params">view</span>, <span class="hljs-params">index</span>, <span class="hljs-params">layoutParams</span>)</span>;<br> &#125; <span class="hljs-keyword">else</span> &#123;<br> parent.add<span class="hljs-constructor">View(<span class="hljs-params">view</span>, <span class="hljs-params">index</span>)</span>;<br> &#125;<br> &#125;<br></code></pre></td></tr></table></figure>
+<p>果然，ViewStub在这里调用了removeViewInLayout()方法把自己从布局移除了。到这里我们就明白了，ViewStub在填充布局成功之后就会自我销毁，再次调用inflate()方法就会抛出IllegalStateException异常了。此时如果想要再次显示布局，可以调用setVisibility()方法。</p>
+<p>为了避免inflate()方法多次调用，我们可以采用如下三种方式</p>
+<h4 id="捕获异常"><a href="#捕获异常" class="headerlink" title="捕获异常"></a>捕获异常</h4><p>我们可以通过捕获异常，同时调用setVisibility()方法显示布局</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">try</span> &#123;<br> viewStub.inflate<span class="hljs-literal">()</span>;<br> &#125; catch (IllegalStateException e) &#123;<br> <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>e(<span class="hljs-string">&quot;Tag&quot;</span>,e.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>);<br> view.set<span class="hljs-constructor">Visibility(View.VISIBLE)</span>;<br> &#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="通过监听ViewStub的填充事件"><a href="#通过监听ViewStub的填充事件" class="headerlink" title="通过监听ViewStub的填充事件"></a>通过监听ViewStub的填充事件</h4><p>声明一个布尔值变量isViewStubShow,默认值是false，布局填充成功之后，在监听事件onInflate方法中将其设置为true</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs scss">if (isViewStubShow)&#123;<br> viewStub<span class="hljs-selector-class">.setVisibility</span>(View.VISIBLE);<br> &#125;else &#123;<br> viewStub<span class="hljs-selector-class">.inflate</span>();<br> &#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="直接调用setVisibility-方法"><a href="#直接调用setVisibility-方法" class="headerlink" title="直接调用setVisibility()方法"></a>直接调用setVisibility()方法</h4><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-built_in">public</span> <span class="hljs-type">void</span> setVisibility(<span class="hljs-type">int</span> visibility) &#123;<br> <span class="hljs-keyword">if</span> (mInflatedViewRef != <span class="hljs-keyword">null</span>) &#123;<br> <span class="hljs-keyword">View</span> <span class="hljs-keyword">view</span> = mInflatedViewRef.<span class="hljs-keyword">get</span>();<br> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">view</span> != <span class="hljs-keyword">null</span>) &#123;<br> <span class="hljs-keyword">view</span>.setVisibility(visibility);<br> &#125; <span class="hljs-keyword">else</span> &#123;<br> throw <span class="hljs-built_in">new</span> IllegalStateException(&quot;setVisibility called on un-referenced view&quot;);<br> &#125;<br> &#125; <span class="hljs-keyword">else</span> &#123;<br> super.setVisibility(visibility);<br> <span class="hljs-keyword">if</span> (visibility == VISIBLE || visibility == INVISIBLE) &#123;<br> inflate();<br> &#125;<br> &#125;<br> &#125;<br></code></pre></td></tr></table></figure>
+<p>这里我们可以看到，在inflate()初始化mInflatedVIewRef之前，如果设置visibility为VISIBLE的话，是会调用inflate()方法的，在mInflatedViewRef不为null之后就不会再去调用inflate()了</p>
+<h3 id="viewStub-getVisibility-为什么一直为0"><a href="#viewStub-getVisibility-为什么一直为0" class="headerlink" title="viewStub.getVisibility()为什么一直为0"></a>viewStub.getVisibility()为什么一直为0</h3><p>在显示ViewStub中的布局时，我们可能会采用如下的方法</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs abnf">if(viewStub.getVisibility() <span class="hljs-operator">=</span><span class="hljs-operator">=</span> View.GONE)&#123;<br>  viewStub.setVisibility(View.VISIBLE)<span class="hljs-comment">;</span><br>&#125;else&#123;<br>  viewStub.setVisibility(View.GONE)<span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这真的是是一个大坑。这样写你会发现点击“显示”按钮后ViewStub里面的布局不会再显示出来，也就是说if语句里面的代码没有执行。如果你将viewStub.getVisibility()的值打印出来，就会看到它始终为0，这恰恰是View.VISIBLE的值。奇怪，我们明明写了viewStub.setVisibility(View.GONE)，layout_view_stub也隐藏了，为什么ViewStub的状态还是可见呢？</p>
+<p>重新回到”直接调用setVisibility()方法”中，看看ViewStub中的setVisibility()源码，首先判断弱引用对象mInflatedViewRef是否为空，不为空则取出存放进去的对象，也就是我们ViewStub中的View，然后调用了view的setVisibility()方法，mInflatedViewRef为空时，则判断visibility为VISIBLE或INVISIBLE时调用inflate()方法填充布局，如果为GONE的话则不予处理。这样一来，在mInflatedViewRef不为空，也就是已经填充了布局的情况下，ViewStub中的setVisibility()方法实际上是在设置内部视图的可见性，而不是ViewStub本身。这样的设计其实也符合ViewStub的特性，即填充布局之后就自我销毁了，给其设置可见性是没有意义的</p>
+<h3 id="操作布局控件"><a href="#操作布局控件" class="headerlink" title="操作布局控件"></a>操作布局控件</h3><p>其实我们可以这样认为，ViewStub就是一个懒惰的include，我们需要他加载时才会加载，要操作布局里面的控件也跟include一样，我们可以先初始化ViewStub中的布局，然后在初始化控件</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">// 1. 初始化inflate的布局后在初始化其中的控件</span><br>FrameLayout frameLayout = find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">view_inflate</span>)</span>;<span class="hljs-comment">// android:inflatedId设置id</span><br>switch sw = frameLayout.find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">sw</span>)</span>;<br>sw.toggle<span class="hljs-literal">()</span>;<br></code></pre></td></tr></table></figure>
+
+<p>如果主布局中控件id没有冲突，可以直接初始化控件即可</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">// 2. 直接初始化控件</span><br>Switch sw = find<span class="hljs-constructor">ViewById(R.<span class="hljs-params">id</span>.<span class="hljs-params">sw</span>)</span>;<br>sw.toggle<span class="hljs-literal">()</span>;<br></code></pre></td></tr></table></figure>
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>android奇技淫巧 12 Android布局优化 include+merge+viewStub</div>
+      <div>http://example.com/2019/08/13/android-tools-12/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年8月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/08/13/android-tools-13/" title="android奇技淫巧 13 Android内部存储和外部存储">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">android奇技淫巧 13 Android内部存储和外部存储</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/08/12/android-media-05/" title="android 音视频开发(五)">
+                        <span class="hidden-mobile">android 音视频开发(五)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

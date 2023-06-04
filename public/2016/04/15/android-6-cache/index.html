@@ -1,0 +1,735 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Android中的缓存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重拾android路(六) 缓存">
+<meta property="og:url" content="http://example.com/2016/04/15/android-6-cache/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Android中的缓存">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/cache/cache01.png">
+<meta property="og:image" content="http://example.com/assets/cache/cache02.png">
+<meta property="og:image" content="http://example.com/assets/cache/cache03.png">
+<meta property="og:image" content="http://example.com/assets/cache/cache04.png">
+<meta property="og:image" content="http://example.com/assets/cache/cache05.png">
+<meta property="article:published_time" content="2016-04-15T15:23:34.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.094Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/cache/cache01.png">
+  
+  
+  
+  <title>重拾android路(六) 缓存 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="重拾android路(六) 缓存"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2016-04-15 23:23" pubdate>
+          2016年4月15日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          16k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          134 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">重拾android路(六) 缓存</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Android中的缓存</p>
+<span id="more"></span>
+<h1 id="LruCache"><a href="#LruCache" class="headerlink" title="LruCache"></a>LruCache</h1><p>LruCache 位于 android.util 包下，属于 SDK 自动的工具类。Lru 的英文为 Least recently used，近期最少使用算法。设计的思路大致是这样的，在一个特定的缓存大小限制下，最近被使用的内容，很可能在未来再次被使用，而越长时间没被使用的内容，被使用的概率越底，基于这样的思路，最近被使用的内容被放在缓存的头部，这样减少了下次使用的查找时间，很长时间不被使用的内容被放在缓存的尾部，甚至在缓存超出预设的大小的时候，把尾部的内容从缓存中清楚掉</p>
+<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>根据LRU算法的思想，要实现LRU最核心的是要有一种数据结构能够基于访问顺序来保存缓存中的对象，这样我们就能够很方便的知道哪个对象是最近访问的，哪个对象是最长时间未访问的。LruCache选择的是LinkedHashMap这个数据结构，LinkedHashMap是一个双向循环链表，在构造LinkedHashMap时，通过一个boolean值来指定LinkedHashMap中保存数据的方式，LinkedHashMap的一个构造方法如下：    </p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs aspectj"><span class="hljs-comment">/* </span><br><span class="hljs-comment">     * 初始化LinkedHashMap </span><br><span class="hljs-comment">     * 第一个参数：initialCapacity，初始大小 </span><br><span class="hljs-comment">     * 第二个参数：loadFactor，负载因子=0.75f </span><br><span class="hljs-comment">     * 第三个参数：accessOrder=true，基于访问顺序；accessOrder=false，基于插入顺序 </span><br><span class="hljs-comment">     */</span>  <br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">LinkedHashMap</span><span class="hljs-params">(<span class="hljs-keyword">int</span> initialCapacity, <span class="hljs-keyword">float</span> loadFactor, <span class="hljs-keyword">boolean</span> accessOrder)</span> </span>&#123;  <br>        <span class="hljs-keyword">super</span>(initialCapacity, loadFactor);  <br>        init();  <br>        <span class="hljs-keyword">this</span>.accessOrder = accessOrder;  <br>    &#125; <br></code></pre></td></tr></table></figure>
+<p>显然，在LruCache中选择的是accessOrder &#x3D; true；此时，当accessOrder 设置为 true时，每当我们更新（即调用put方法）或访问（即调用get方法）map中的结点时，LinkedHashMap内部都会将这个结点移动到链表的尾部，因此，在链表的尾部是最近刚刚使用的结点，在链表的头部是是最近最少使用的结点，当我们的缓存空间不足时，就应该持续把链表头部结点移除掉，直到有剩余空间放置新结点。<br>可以看到，LinkedHashMap完成了LruCache中的核心功能，那LruCache中剩下要做的就是定义缓存空间总容量，当前保存数据已使用的容量，对外提供put、get方法。</p>
+<h2 id="field"><a href="#field" class="headerlink" title="field"></a>field</h2><p>android.util.LruCache 的代码很简洁，其重要的属性有下面三个。整个类的设计都是围绕着这三个变量来进行的。</p>
+<ul>
+<li>LinkedHashMap map &#x2F;&#x2F;核心数据结构 </li>
+<li>int maxSize  &#x2F;&#x2F;缓存空间总容量 </li>
+<li>int size  &#x2F;&#x2F; 当前缓存数据所占的大小<br>要注意的是size字段，因为map中可以存放各种类型的数据，这些数据的大小测量方式也是不一样的，比如Bitmap类型的数据和String类型的数据计算他们的大小方式肯定不同，因此，LruCache中在计算放入数据大小的方法sizeOf中，只是简单的返回了1，需要我们重写这个方法，自己去定义数据的测量方式。因此，我们在使用LruCache的时候，经常会看到这种方式<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs processing"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> CACHE_SIZE = <span class="hljs-number">4</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>;<span class="hljs-comment">//4Mib  </span><br>    LruCache&lt;<span class="hljs-built_in">String</span>,Bitmap&gt; bitmapCache = <span class="hljs-keyword">new </span><span class="hljs-class title_">LruCache</span>&lt;<span class="hljs-built_in">String</span>,Bitmap&gt;(CACHE_SIZE)&#123;  <br>        @Override  <br>        <span class="hljs-keyword">protected</span> <span class="hljs-type">int</span> <span class="hljs-title function_">sizeOf</span>(<span class="hljs-built_in">String</span> <span class="hljs-built_in">key</span>, Bitmap value) &#123;  <br>            <span class="hljs-keyword">return</span> value.<span class="hljs-property">getByteCount</span>();<span class="hljs-comment">//自定义Bitmap数据大小的计算方式  </span><br>        &#125;  <br>    &#125;; <br></code></pre></td></tr></table></figure>
+LinkedHashMap 是这个类的核心，LinkedHashMap 是 HashMap 的子类，从名字上就可以看出，它首先是一个 HashMap，然后是一个 Linked 的 HashMap，Linked 的设计，也让它更加适合 LruCache 的实现。被 get() 的实例会被放到链表的开头。</li>
+</ul>
+<h2 id="methods"><a href="#methods" class="headerlink" title="methods"></a>methods</h2><h3 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h3><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">LruCache</span><span class="hljs-params">(<span class="hljs-type">int</span> maxSize)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (maxSize &lt;= <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">IllegalArgumentException</span>(<span class="hljs-string">&quot;maxSize &lt;= 0&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">this</span>.maxSize = maxSize;<br>    <span class="hljs-keyword">this</span>.map = <span class="hljs-keyword">new</span> <span class="hljs-built_in">LinkedHashMap</span>&lt;K, V&gt;(<span class="hljs-number">0</span>, <span class="hljs-number">0.75f</span>, <span class="hljs-literal">true</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>LruCache只有一个唯一的构造方法，在构造方法中，给定了缓存空间的总大小，初始化了LinkedHashMap核心数据结构，在LinkedHashMap中的第三个参数指定为true，也就设置了accessOrder&#x3D;true，表示这个LinkedHashMap将是基于数据的访问顺序进行排序。</p>
+<h3 id="sizeOf-和safeSizeOf"><a href="#sizeOf-和safeSizeOf" class="headerlink" title="sizeOf()和safeSizeOf()"></a>sizeOf()和safeSizeOf()</h3><p> 根据上面的解释，由于各种数据类型大小测量的标准不统一，具体测量的方法应该由使用者来实现，如上面给出的一个在实现LruCache时重写sizeOf的一种常用实现方式。通过多态的性质，再具体调用sizeOf时会调用我们重写的方法进行测量，LruCache对sizeOf()的调用进行一层封装，如下：<br> <figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"> <span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> safe<span class="hljs-constructor">SizeOf(K <span class="hljs-params">key</span>, V <span class="hljs-params">value</span>)</span> &#123;<br>    <span class="hljs-built_in">int</span> result = size<span class="hljs-constructor">Of(<span class="hljs-params">key</span>, <span class="hljs-params">value</span>)</span>;<br>    <span class="hljs-keyword">if</span> (result &lt; <span class="hljs-number">0</span>) &#123;<br>        throw <span class="hljs-keyword">new</span> <span class="hljs-constructor">IllegalStateException(<span class="hljs-string">&quot;Negative size: &quot;</span> + <span class="hljs-params">key</span> + <span class="hljs-string">&quot;=&quot;</span> + <span class="hljs-params">value</span>)</span>;<br>    &#125;<br>    return result;<br>&#125;<br></code></pre></td></tr></table></figure><br>里面其实就是调用sizeOf()方法，返回sizeOf计算的大小。</p>
+<h3 id="get-和put-方法"><a href="#get-和put-方法" class="headerlink" title="get()和put()方法"></a>get()和put()方法</h3><p>get() 和 put() 方法是咱们使用 LruCache 最经常用的方法，remove() 咱们直接使用的就比较少了。trimToSize() 是 LruCache 管理缓存内容的核心了，配合 size 和 maxSize 这两个变量，维护这这个缓存的大小。<br>get()</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><code class="hljs processing"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Returns the value for &#123;@code key&#125; if it exists in the cache or can be</span><br><span class="hljs-comment"> * created by &#123;@code #create&#125;. If a value was returned, it is moved to the</span><br><span class="hljs-comment"> * head of the queue. This returns null if a value is not cached and cannot</span><br><span class="hljs-comment"> * be created.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> V <span class="hljs-built_in">get</span>(K <span class="hljs-built_in">key</span>) &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">key</span> == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new </span><span class="hljs-class title_">NullPointerException</span>(<span class="hljs-string">&quot;key == null&quot;</span>);<br>    &#125;<br><br>    V mapValue;<br>    <span class="hljs-title function_">synchronized</span> (<span class="hljs-variable">this</span>) &#123;<br>        mapValue = <span class="hljs-built_in">map</span>.<span class="hljs-property">get</span>(<span class="hljs-built_in">key</span>);<br>        <span class="hljs-keyword">if</span> (mapValue != <span class="hljs-literal">null</span>) &#123;<br>            hitCount++;<br>            <span class="hljs-keyword">return</span> mapValue;<br>        &#125;<br>        missCount++;<br>    &#125;<br><br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">     * Attempt to create a value. This may take a long time, and the map</span><br><span class="hljs-comment">     * may be different when create() returns. If a conflicting value was</span><br><span class="hljs-comment">     * added to the map while create() was working, we leave that value in</span><br><span class="hljs-comment">     * the map and release the created value.</span><br><span class="hljs-comment">     */</span><br><br>    <span class="hljs-comment">// 创建一个默认的对象，create() 默认返回 null ，可自定义实现，返回一个默认的对象</span><br>    V createdValue = <span class="hljs-title function_">create</span>(<span class="hljs-built_in">key</span>);<br>    <span class="hljs-keyword">if</span> (createdValue == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br><br>    <span class="hljs-comment">// 如果有默认对象，那么这个对象也是占用空间的</span><br>    <span class="hljs-title function_">synchronized</span> (<span class="hljs-variable">this</span>) &#123;<br>        createCount++;<br>        <span class="hljs-comment">// 把创建的对象放入 map 中，返回 map 中的原对象</span><br>        mapValue = <span class="hljs-built_in">map</span>.<span class="hljs-property">put</span>(<span class="hljs-built_in">key</span>, createdValue);<br>        <span class="hljs-comment">// 由于 create() 方法没有同步保护，所以这里需要再次检查，一般情况下 mapValue 会是空的，但是在多线程下，有可能不为空。 </span><br>        <span class="hljs-keyword">if</span> (mapValue != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-comment">// There was a conflict so undo that last put</span><br>            <span class="hljs-comment">// 如果不为空，保留原对象</span><br>            <span class="hljs-built_in">map</span>.<span class="hljs-property">put</span>(<span class="hljs-built_in">key</span>, mapValue);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-comment">// 计算创建的默认对象占用的空间</span><br>            <span class="hljs-built_in">size</span> += <span class="hljs-title function_">safeSizeOf</span>(<span class="hljs-built_in">key</span>, createdValue);<br>        &#125;<br>    &#125;<br><br>    <br>    <span class="hljs-keyword">if</span> (mapValue != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">// 刚创建的默认对象需要做一些回收的操作，如果需要的话。</span><br>        <span class="hljs-title function_">entryRemoved</span>(<span class="hljs-literal">false</span>, <span class="hljs-built_in">key</span>, createdValue, mapValue);<br>        <span class="hljs-keyword">return</span> mapValue;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// 如果默认的对象被放入到 map 中，需要重新检查和裁剪 map 大小。</span><br>        <span class="hljs-title function_">trimToSize</span>(maxSize);<br>        <span class="hljs-keyword">return</span> createdValue;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>get()方法的思路就是：</p>
+<ol>
+<li>先尝试从map缓存中获取value，即mapVaule &#x3D; map.get(key);如果mapVaule !&#x3D; null，说明缓存中存在该对象，直接返回即可；</li>
+<li>如果mapVaule &#x3D;&#x3D; null，说明缓存中不存在该对象，大多数情况下会直接返回null；但是如果我们重写了create()方法，在缓存没有该数据的时候自己去创建一个，则会继续往下走，中间可能会出现冲突，看注释；</li>
+<li>注意：在我们通过LinkedHashMap进行get(key)或put(key,value)时都会对链表进行调整，即将刚刚访问get或加入put的结点放入到链表尾部。<br>put()<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Caches &#123;@code value&#125; for &#123;@code key&#125;. The value is moved to the head of</span><br><span class="hljs-comment"> * the queue.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * @return the previous value mapped by &#123;@code key&#125;.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> V put(K key, V value) &#123;<br>    <span class="hljs-keyword">if</span> (key == <span class="hljs-keyword">null</span> || value == <span class="hljs-keyword">null</span>) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> NullPointerException(<span class="hljs-string">&quot;key == null || value == null&quot;</span>);<br>    &#125;<br><br>    V <span class="hljs-keyword">previous</span>;<br>    <span class="hljs-keyword">synchronized</span> (<span class="hljs-keyword">this</span>) &#123;<br>        putCount++;<br>        <span class="hljs-comment">// 计算将要放入的对象的大小</span><br>        <span class="hljs-keyword">size</span> += safeSizeOf(key, value);<br>        <span class="hljs-comment">// 把对象放入到 map 中，获取改 key 原对象</span><br>        <span class="hljs-keyword">previous</span> = map.put(key, value);<br>        <span class="hljs-comment">// 如果该 key 有原对象，减掉它占用的空间</span><br>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">previous</span> != <span class="hljs-keyword">null</span>) &#123;<br>            <span class="hljs-keyword">size</span> -= safeSizeOf(key, <span class="hljs-keyword">previous</span>);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">previous</span> != <span class="hljs-keyword">null</span>) &#123;<br>        entryRemoved(<span class="hljs-keyword">false</span>, key, <span class="hljs-keyword">previous</span>, value);<br>    &#125;<br>    <span class="hljs-comment">// 重新检查和裁剪 map 大小</span><br>    trimToSize(maxSize);<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">previous</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+可以看到，put()方法主要有以下几步：</li>
+<li>key和value判空，说明LruCache中不允许key和value为null；</li>
+<li>通过safeSizeOf()获取要加入对象数据的大小，并更新当前缓存数据的大小；</li>
+<li>将新的对象数据放入到缓存中，即调用LinkedHashMap的put方法，如果原来存在该key时，直接替换掉原来的value值，并返回之前的value值，得到之前value的大小，更新当前缓存数据的size大小；如果原来不存在该key，则直接加入缓存即可；</li>
+<li>清理缓存空间，如下；<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs processing"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">trimToSize</span>(<span class="hljs-type">int</span> maxSize) &#123;<br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">     * 循环进行LRU，直到当前所占容量大小没有超过指定的总容量大小</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>        K <span class="hljs-built_in">key</span>;<br>        V value;<br>        <span class="hljs-title function_">synchronized</span> (<span class="hljs-variable">this</span>) &#123;<br>            <span class="hljs-comment">// 一些异常情况的处理</span><br>            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">size</span> &lt; <span class="hljs-number">0</span> || (<span class="hljs-built_in">map</span>.<span class="hljs-property">isEmpty</span>() &amp;&amp; <span class="hljs-built_in">size</span> != <span class="hljs-number">0</span>)) &#123;<br>                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new </span><span class="hljs-class title_">IllegalStateException</span>(<br>                        <span class="hljs-title function_">getClass</span>().<span class="hljs-property">getName</span>() + <span class="hljs-string">&quot;.sizeOf() is reporting inconsistent results!&quot;</span>);<br>            &#125;<br>            <span class="hljs-comment">// 首先判断当前缓存数据大小是否超过了指定的缓存空间总大小。如果没有超过，即缓存中还可以存入数据，直接跳出循环，清理完毕</span><br>            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">size</span> &lt;= maxSize || <span class="hljs-built_in">map</span>.<span class="hljs-property">isEmpty</span>()) &#123;<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>            <span class="hljs-comment">/**</span><br><span class="hljs-comment">             * 执行到这，表示当前缓存数据已超过了总容量，需要执行LRU，即将最近最少使用的数据清除掉，直到数据所占缓存空间没有超标;</span><br><span class="hljs-comment">             * 根据前面的原理分析，知道，在链表中，链表的头结点是最近最少使用的数据，因此，最先清除掉链表前面的结点</span><br><span class="hljs-comment">             */</span><br>            Map.<span class="hljs-property">Entry</span>&lt;K, V&gt; toEvict = <span class="hljs-built_in">map</span>.<span class="hljs-property">entrySet</span>().<span class="hljs-property">iterator</span>().<span class="hljs-property">next</span>();<br>            <span class="hljs-built_in">key</span> = toEvict.<span class="hljs-property">getKey</span>();<br>            value = toEvict.<span class="hljs-property">getValue</span>();<br>            <span class="hljs-built_in">map</span>.<span class="hljs-property">remove</span>(<span class="hljs-built_in">key</span>);<br>            <span class="hljs-comment">// 移除掉后，更新当前数据缓存的大小</span><br>            <span class="hljs-built_in">size</span> -= <span class="hljs-title function_">safeSizeOf</span>(<span class="hljs-built_in">key</span>, value);<br>            <span class="hljs-comment">// 更新移除的结点数量</span><br>            evictionCount++;<br>        &#125;<br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">         * 通知某个结点被移除，类似于回调</span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-title function_">entryRemoved</span>(<span class="hljs-literal">true</span>, <span class="hljs-built_in">key</span>, value, <span class="hljs-literal">null</span>);<br>    &#125;<br></code></pre></td></tr></table></figure>
+trimToSize()方法的作用就是为了保证当前数据的缓存大小不能超过我们指定的缓存总大小，如果超过了，就会开始移除最近最少使用的数据，直到size符合要求。trimToSize()方法在put()的时候一定会调用，在get()的时候有可能会调用。</li>
+</ol>
+<h3 id="create"><a href="#create" class="headerlink" title="create()"></a>create()</h3><p>在 get() 调用中，可能需要调用 create() 创建默认对象。但是这个方法不是在一个同步语句块中调用的，所以要注意线程安全的问题，具体建议详细看看 get() 的方法是怎么处理的</p>
+<figure class="highlight wren"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs wren"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Called after a cache miss to compute a value for the corresponding key.</span><br><span class="hljs-comment"> * Returns the computed value or null if no value can be computed. The</span><br><span class="hljs-comment"> * default implementation returns null.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * &lt;p&gt;The method is called without synchronization: other threads may</span><br><span class="hljs-comment"> * access the cache while this method is executing.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * &lt;p&gt;If a value for &#123;<span class="hljs-doctag">@code</span> key&#125; exists in the cache when this method</span><br><span class="hljs-comment"> * returns, the created value will be released with &#123;<span class="hljs-doctag">@link</span> #entryRemoved&#125;</span><br><span class="hljs-comment"> * and discarded. This can occur when multiple threads request the same key</span><br><span class="hljs-comment"> * at the same time (causing multiple values to be created), or when one</span><br><span class="hljs-comment"> * thread calls &#123;<span class="hljs-doctag">@link</span> #put&#125; while another is creating a value for the same</span><br><span class="hljs-comment"> * key.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-variable">protected</span> <span class="hljs-variable">V</span> <span class="hljs-title function_">create</span>(<span class="hljs-params">K</span> <span class="hljs-params">key</span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="entryRemoved"><a href="#entryRemoved" class="headerlink" title="entryRemoved()"></a>entryRemoved()</h3><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs applescript">/**<br> * <span class="hljs-number">1.</span>当被回收或者删掉时调用。该方法当value被回收释放存储空间时被remove调用<br>* 或者替换条目值时<span class="hljs-keyword">put</span>调用，默认实现什么都没做。<br>* <span class="hljs-number">2.</span>该方法没用同步调用，如果其他线程访问缓存时，该方法也会执行。<br>* <span class="hljs-number">3.</span>evicted=<span class="hljs-literal">true</span>：如果该条目被删除空间 （表示 进行了trimToSize <span class="hljs-keyword">or</span> remove）  evicted=<span class="hljs-literal">false</span>：<span class="hljs-keyword">put</span>冲突后 或 <span class="hljs-keyword">get</span>里成功create后<br>* 导致<br>* <span class="hljs-number">4.</span>newValue!=null，那么则被<span class="hljs-keyword">put</span>()或<span class="hljs-keyword">get</span>()调用。<br>*/<br>protected void entryRemoved(<span class="hljs-built_in">boolean</span> evicted, K key, V oldValue, V newValue) &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>可以发现entryRemoved方法是一个空方法，说明这个也是让开发者自己根据需求去重写的。entryRemoved()主要作用就是在结点数据value需要被删除或回收的时候，给开发者的回调。开发者就可以在这个方法里面实现一些自己的逻辑：</p>
+<ol>
+<li>可以进行资源的回收；</li>
+<li>可以实现二级内存缓存，可以进一步提高性能，思路如下：重写LruCache的entryRemoved()函数，把删除掉的item，再次存入另外一个LinkedHashMap&lt;String, SoftWeakReference<Bitmap>&gt;中，这个数据结构当做二级缓存，每次获得图片的时候，先判断LruCache中是否缓存，没有的话，再判断这个二级缓存中是否有，如果都没有再从sdcard上获取。sdcard上也没有的话，就从网络服务器上拉取。</li>
+</ol>
+<h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><p>LruCache是线程安全的，因为在put、get、trimToSize、remove的方法中都加入synchronized进行同步控制</p>
+<h3 id="LRU的使用"><a href="#LRU的使用" class="headerlink" title="LRU的使用"></a>LRU的使用</h3><p>注意：</p>
+<ol>
+<li>在构造LruCache时提供一个总的缓存大小；</li>
+<li>重写sizeOf方法，对存入map的数据大小进行自定义测量；</li>
+<li>根据需要，决定是否要重写entryRemoved()方法；</li>
+<li>使用LruCache提供的put和get方法进行数据的缓存<blockquote>
+<p>LruCache 自身并没有释放内存，只是 LinkedHashMap中将数据移除了，如果数据还在别的地方被引用了，还是有泄漏问题，还需要手动释放内存；<br>覆写 entryRemoved 方法能知道 LruCache 数据移除是是否发生了冲突（冲突是指在map.put()的时候，对应的key中是否存在原来的值），也可以去手动释放资源；</p>
+</blockquote>
+</li>
+</ol>
+<h1 id="DiskLruCache"><a href="#DiskLruCache" class="headerlink" title="DiskLruCache"></a>DiskLruCache</h1><p>我们现在来假设一种情况，当前我们的手机应用需要对数据进行大量的读取，比如一个网易新闻，那么这个时候我们需要存储的不仅包括了文字，还有图片，甚至还有可能是视频。那么当这些文件如果也通过LruCache的方式进行存储的时候，我们就需要对他的内容进行大量的修改，那么这样的操作肯定是不合理的<br><img src="/assets/cache/cache01.png" srcset="/img/loading.gif" lazyload alt="网易新闻"><br>那么这个时候我们的DiskLruCache就起到了作用，他我们可以认为就是把当前的数据保存到了本地存储空间中(现在的手机大部分都不在使用外部存储卡，这样也大大提高了我们对于外部存储数据的读写速度)。</p>
+<p>当我们在有网络连接的情况下查看了某些新闻信息，当我们在没有网络情况下依然可以可以去访问我们之前看过的内容，那么这些东西就是使用DiskLruCache。既然保存在了本地，那么我们遇到的第一个问题就是存储的位置(说来惭愧，之前我一直对存储位置一知半解).<br>其实DiskLruCache并没有限制数据的缓存位置，可以自由地进行设定，但是通常情况下多数应用程序都会将缓存的位置选择为 </p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-regexp">/sdcard/</span>Android<span class="hljs-regexp">/data/</span>&lt;application <span class="hljs-keyword">package</span>&gt;/cache <br></code></pre></td></tr></table></figure>
+<p>这个路径。选择在这个位置有两点好处：第一，这是存储在SD卡上的，因此即使缓存再多的数据也不会对手机的内置存储空间有任何影响，只要SD卡空间足够就行。第二，这个路径被Android系统认定为应用程序的缓存路径，当程序被卸载的时候，这里的数据也会一起被清除掉，这样就不会出现删除程序之后手机上还有很多残留数据的问题。</p>
+<p>那么这里还是以网易新闻为例，它的客户端的包名是com.netease.newsreader.activity，因此数据缓存地址就应该是 &#x2F;sdcard&#x2F;Android&#x2F;data&#x2F;com.netease.newsreader.activity&#x2F;cache ，我们进入到这个目录中看一下，结果如下图所示：<br><img src="/assets/cache/cache02.png" srcset="/img/loading.gif" lazyload alt="网易新闻"><br>可以看到有很多个文件夹，因为网易新闻对多种类型的数据都进行了缓存，这里简单起见我们只分析图片缓存就好，所以进入到bitmap文件夹当中。然后你将会看到一堆文件名很长的文件，这些文件命名没有任何规则，完全看不懂是什么意思，但如果你一直向下滚动，将会看到一个名为journal的文件，如下图所示<br><img src="/assets/cache/cache03.png" srcset="/img/loading.gif" lazyload alt="网易新闻"><br>那么这些文件到底都是什么呢？看到这里相信有些朋友已经是一头雾水了，这里我简单解释一下。上面那些文件名很长的文件就是一张张缓存的图片，每个文件都对应着一张图片，而journal文件是DiskLruCache的一个日志文件，程序对每张图片的操作记录都存放在这个文件中，基本上看到journal这个文件就标志着该程序使用DiskLruCache技术了</p>
+<p>下面就是我们需要执行的步骤</p>
+<h2 id="申请权限"><a href="#申请权限" class="headerlink" title="申请权限"></a>申请权限</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot;</span> /&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.permission.INTERNET&quot;</span> /&gt;</span><br></code></pre></td></tr></table></figure>
+<h2 id="判断外部存储设备是否存在"><a href="#判断外部存储设备是否存在" class="headerlink" title="判断外部存储设备是否存在"></a>判断外部存储设备是否存在</h2><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">/**</span><br><span class="hljs-comment">   * Get a usable cache directory (external if available, internal otherwise).</span><br><span class="hljs-comment">   * external：如：/storage/emulated/0/Android/data/package_name/cache</span><br><span class="hljs-comment">   * internal 如：/data/data/package_name/cache</span><br><span class="hljs-comment">   *</span><br><span class="hljs-comment">   * @param context    The context to use</span><br><span class="hljs-comment">   * @param uniqueName A unique directory name to append to the cache dir</span><br><span class="hljs-comment">   * @return The cache dir</span><br><span class="hljs-comment">   */</span><br>  public static File get<span class="hljs-constructor">DiskCacheDir(Context <span class="hljs-params">context</span>, String <span class="hljs-params">uniqueName</span>)</span> &#123;<br>      final String cachePath = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Environment</span>.</span><span class="hljs-module"><span class="hljs-identifier">MEDIA_MOUNTED</span>.</span></span>equals(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Environment</span>.</span></span>get<span class="hljs-constructor">ExternalStorageState()</span>) <span class="hljs-pattern-match"><span class="hljs-operator">||</span>!is<span class="hljs-constructor">ExternalStorageRemovable()</span> </span><br><span class="hljs-pattern-match">              ? context.get<span class="hljs-constructor">ExternalCacheDir()</span>.get<span class="hljs-constructor">Path()</span></span><br><span class="hljs-pattern-match">              : context.get<span class="hljs-constructor">CacheDir()</span>.get<span class="hljs-constructor">Path()</span>;</span><br><span class="hljs-pattern-match">      return <span class="hljs-keyword">new</span> <span class="hljs-constructor">File(<span class="hljs-params">cachePath</span> + File.<span class="hljs-params">separator</span> + <span class="hljs-params">uniqueName</span>)</span>;</span><br><span class="hljs-pattern-match">  &#125;</span><br></code></pre></td></tr></table></figure>
+<ol>
+<li>首先判断外部缓存是否被移除或已存满，如果已存满或者外存储被移除，则缓存目录&#x3D;context.getCacheDir().getPath()，即存到 &#x2F;data&#x2F;data&#x2F;package_name&#x2F;cache 这个文件系统目录下；</li>
+<li>反之缓存目录&#x3D;context.getExternalCacheDir().getPath()，即存到 &#x2F;storage&#x2F;emulated&#x2F;0&#x2F;Android&#x2F;data&#x2F;package_name&#x2F;cache 这个外部存储目录中，PS：外部存储可以分为两种：一种如上面这种路径 (&#x2F;storage&#x2F;emulated&#x2F;0&#x2F;Android&#x2F;data&#x2F;package_name&#x2F;cache)， 当应用卸载后，存储数据也会被删除，另外一种是永久存储，即使应用被卸载，存储的数据依然存在，存储路径如：&#x2F;storage&#x2F;emulated&#x2F;0&#x2F;mDiskCache，可以通过Environment.getExternalStorageDirectory().getAbsolutePath() + “&#x2F;mDiskCache” 来获得路径。</li>
+</ol>
+<h2 id="下载一个现在的图片，并且把它写到输出流"><a href="#下载一个现在的图片，并且把它写到输出流" class="headerlink" title="下载一个现在的图片，并且把它写到输出流"></a>下载一个现在的图片，并且把它写到输出流</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Download a bitmap from a URL and write the content to an output stream.</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> urlString The URL to fetch</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> true if successful, false otherwise</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">downloadUrlToStream</span><span class="hljs-params">(String urlString, OutputStream outputStream)</span> &#123;<br>        <span class="hljs-type">HttpURLConnection</span> <span class="hljs-variable">urlConnection</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>        <span class="hljs-type">BufferedOutputStream</span> <span class="hljs-variable">out</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>        <span class="hljs-type">BufferedInputStream</span> <span class="hljs-variable">in</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br><br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">final</span> <span class="hljs-type">URL</span> <span class="hljs-variable">url</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">URL</span>(urlString);<br>            urlConnection = (HttpURLConnection) url.openConnection();<br>            in = <span class="hljs-keyword">new</span> <span class="hljs-title class_">BufferedInputStream</span>(urlConnection.getInputStream(), IO_BUFFER_SIZE);<br>            out = <span class="hljs-keyword">new</span> <span class="hljs-title class_">BufferedOutputStream</span>(outputStream, IO_BUFFER_SIZE);<br>            <span class="hljs-type">int</span> b;<br>            <span class="hljs-keyword">while</span> ((b = in.read()) != -<span class="hljs-number">1</span>) &#123;<br>                out.write(b);<br>            &#125;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            Log.e(TAG, <span class="hljs-string">&quot;Error in downloadBitmap - &quot;</span> + e);<br>        &#125; <span class="hljs-keyword">finally</span> &#123;<br>            <span class="hljs-keyword">if</span> (urlConnection != <span class="hljs-literal">null</span>) &#123;<br>                urlConnection.disconnect();<br>            &#125;<br>            <span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-keyword">if</span> (out != <span class="hljs-literal">null</span>) &#123;<br>                    out.close();<br>                &#125;<br>                <span class="hljs-keyword">if</span> (in != <span class="hljs-literal">null</span>) &#123;<br>                    in.close();<br>                &#125;<br>            &#125; <span class="hljs-keyword">catch</span> (<span class="hljs-keyword">final</span> IOException e) &#123;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br></code></pre></td></tr></table></figure>
+<h2 id="初始化DiskLruCache，并且使用DiskLruCache-Editor方法准备缓存"><a href="#初始化DiskLruCache，并且使用DiskLruCache-Editor方法准备缓存" class="headerlink" title="初始化DiskLruCache，并且使用DiskLruCache.Editor方法准备缓存"></a>初始化DiskLruCache，并且使用DiskLruCache.Editor方法准备缓存</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">MAX_SIZE</span> <span class="hljs-operator">=</span> <span class="hljs-number">10</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>;<span class="hljs-comment">//10MB</span><br>    <span class="hljs-keyword">private</span> DiskLruCache diskLruCache;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">initDiskLruCache</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">if</span> (diskLruCache == <span class="hljs-literal">null</span> || diskLruCache.isClosed()) &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-type">File</span> <span class="hljs-variable">cacheDir</span> <span class="hljs-operator">=</span> CacheUtil.getDiskCacheDir(<span class="hljs-built_in">this</span>, <span class="hljs-string">&quot;CacheDir&quot;</span>);<br>                <span class="hljs-keyword">if</span> (!cacheDir.exists()) &#123;<br>                    cacheDir.mkdirs();<br>                &#125;<br>                <span class="hljs-comment">//初始化DiskLruCache</span><br>                diskLruCache = DiskLruCache.open(cacheDir, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, MAX_SIZE);<br>            &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>                e.printStackTrace();<br>            &#125;<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+<p>下载图片时需要放在异步线程中，AsyncTask中的DoInBackground中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">protected</span> Boolean <span class="hljs-title function_">doInBackground</span><span class="hljs-params">(Object... params)</span> &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> Util.hashKeyForDisk(Util.IMG_URL);<br>        <span class="hljs-type">DiskLruCache</span> <span class="hljs-variable">diskLruCache</span> <span class="hljs-operator">=</span> (DiskLruCache) params[<span class="hljs-number">0</span>];<br>         <span class="hljs-comment">//得到DiskLruCache.Editor</span><br>        DiskLruCache.<span class="hljs-type">Editor</span> <span class="hljs-variable">editor</span> <span class="hljs-operator">=</span> diskLruCache.edit(key);<br>        <span class="hljs-keyword">if</span> (editor != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-type">OutputStream</span> <span class="hljs-variable">outputStream</span> <span class="hljs-operator">=</span> editor.newOutputStream(<span class="hljs-number">0</span>);<br>            <span class="hljs-keyword">if</span> (downloadUrlToStream(Util.IMG_URL, outputStream)) &#123;<br>                publishProgress(<span class="hljs-string">&quot;&quot;</span>);<br>                <span class="hljs-comment">//写入缓存</span><br>                editor.commit();<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                 <span class="hljs-comment">//写入失败</span><br>                editor.abort();<br>            &#125;<br>        &#125;<br>        diskLruCache.flush();<br>    &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>        e.printStackTrace();<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>上面代码中有个hashKeyForDisk()方法，其作用是把图片URL经过MD5加密生成唯一的key值，避免了URL中可能含有非法字符问题，hashKeyForDisk()代码如下</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">/**</span><br><span class="hljs-comment">  * A hashing method that changes a string (like a URL) into a hash suitable for using as a</span><br><span class="hljs-comment">  * disk filename.</span><br><span class="hljs-comment">  */</span><br> public static String hash<span class="hljs-constructor">KeyForDisk(String <span class="hljs-params">key</span>)</span> &#123;<br>     String cacheKey;<br>     <span class="hljs-keyword">try</span> &#123;<br>         final MessageDigest mDigest = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">MessageDigest</span>.</span></span>get<span class="hljs-constructor">Instance(<span class="hljs-string">&quot;MD5&quot;</span>)</span>;<br>         mDigest.update(key.get<span class="hljs-constructor">Bytes()</span>);<br>         cacheKey = <span class="hljs-built_in">bytes</span><span class="hljs-constructor">ToHexString(<span class="hljs-params">mDigest</span>.<span class="hljs-params">digest</span>()</span>);<br>     &#125; catch (NoSuchAlgorithmException e) &#123;<br>         cacheKey = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">String</span>.</span></span>value<span class="hljs-constructor">Of(<span class="hljs-params">key</span>.<span class="hljs-params">hashCode</span>()</span>);<br>     &#125;<br>     return cacheKey;<br> &#125;<br><br> <span class="hljs-keyword">private</span> static String <span class="hljs-built_in">bytes</span><span class="hljs-constructor">ToHexString(<span class="hljs-params">byte</span>[] <span class="hljs-params">bytes</span>)</span> &#123;<br>     <span class="hljs-comment">// http://stackoverflow.com/questions/332079</span><br>     StringBuilder sb = <span class="hljs-keyword">new</span> <span class="hljs-constructor">StringBuilder()</span>;<br>     <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">bytes</span>.length; i++) &#123;<br>         String hex = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Integer</span>.</span></span><span class="hljs-keyword">to</span><span class="hljs-constructor">HexString(0xFF &amp; <span class="hljs-params">bytes</span>[<span class="hljs-params">i</span>])</span>;<br>         <span class="hljs-keyword">if</span> (hex.length<span class="hljs-literal">()</span><span class="hljs-operator"> == </span><span class="hljs-number">1</span>) &#123;<br>             sb.append(<span class="hljs-character">&#x27;0&#x27;</span>);<br>         &#125;<br>         sb.append(hex);<br>     &#125;<br>     return sb.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>;<br> &#125;<br></code></pre></td></tr></table></figure>
+<p>经过上面的代码，我们已经可以看到图片已经缓存到 &#x2F;storage&#x2F;emulated&#x2F;0&#x2F;Android&#x2F;data&#x2F;package_name&#x2F;cache&#x2F;CacheDir 这个目录下了：<br><img src="/assets/cache/cache04.png" srcset="/img/loading.gif" lazyload alt="图片"><br>第一个标识为110.78kb大小的就是我们缓存下来的图片，它的名字正是由图片的URL经过MD5加密得到的，它下面的journal文件是用来记录的，来看里面的内容<br><img src="/assets/cache/cache05.png" srcset="/img/loading.gif" lazyload alt="图片"><br>第一行：libcore.io.DiskLruCache固定写死<br>第二行：DiskLruCache版本号<br>第三行：APP版本号，由open()方法的参数appVersion传入<br>第四行：同一个key可以对应多少文件，由open()方法的参数valueCount传入，一般为1<br>第五行：空格<br>第六行：以DIRTY开头，后面跟着的是图片的key值，表示准备缓存这张图片，当调用DiskLruCache的edit()时就会生成这行记录<br>第七行： 以CLEAN开头,后面跟着的是图片的Key值和大小，当调用editor.commit()时会生成这条记录，表示缓存成功；如果调用editor.abort()表示缓存失败，则会生成REMOVE开头的表示删除这条数据。</p>
+<h2 id="获取存储图片"><a href="#获取存储图片" class="headerlink" title="获取存储图片"></a>获取存储图片</h2><p>通过diskLruCache.get(key)得到DiskLruCache.Snapshot，key是经过MD5加密后那个唯一的key，接着使用Snapshot.getInputStream()可以得到输入流InputStream ，进而得到缓存图片</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> Bitmap <span class="hljs-title function_">getCache</span><span class="hljs-params">()</span> &#123;<br>     <span class="hljs-keyword">try</span> &#123;<br>         <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> Util.hashKeyForDisk(Util.IMG_URL);<br>         DiskLruCache.<span class="hljs-type">Snapshot</span> <span class="hljs-variable">snapshot</span> <span class="hljs-operator">=</span> diskLruCache.get(key);<br>         <span class="hljs-keyword">if</span> (snapshot != <span class="hljs-literal">null</span>) &#123;<br>             <span class="hljs-type">InputStream</span> <span class="hljs-variable">in</span> <span class="hljs-operator">=</span> snapshot.getInputStream(<span class="hljs-number">0</span>);<br>             <span class="hljs-keyword">return</span> BitmapFactory.decodeStream(in);<br>         &#125;<br>     &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>         e.printStackTrace();<br>     &#125;<br>     <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br> &#125;<br></code></pre></td></tr></table></figure>
+<p>使用：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm"><span class="hljs-keyword">Bitmap </span><span class="hljs-keyword">bitmap </span>= getCache();<br>     if (<span class="hljs-keyword">bitmap </span>!= null) &#123;<br>         iv_img.setImageBitmap(<span class="hljs-keyword">bitmap);</span><br><span class="hljs-keyword"></span>     &#125;<br></code></pre></td></tr></table></figure>
+<h2 id="移除缓存"><a href="#移除缓存" class="headerlink" title="移除缓存"></a>移除缓存</h2><p>在网易新闻的手机应用中我们会发现有清除缓存的操作，那么这个地方就是移除缓存<br>移除缓存主要是借助DiskLruCache的remove()方法实现的，接口如下所示：</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs processing"><span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">remove</span>(<span class="hljs-built_in">String</span> <span class="hljs-built_in">key</span>) <span class="hljs-keyword">throws</span> IOException  <br></code></pre></td></tr></table></figure>
+<p>在remove()方法中会要求传入一个key值，这样就会移除对应的缓存</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs abnf">try &#123;  <br>    String imageUrl <span class="hljs-operator">=</span> <span class="hljs-string">&quot;http://img.my.csdn.net/uploads/201309/01/1378037235_7476.jpg&quot;</span><span class="hljs-comment">;    </span><br>    String key <span class="hljs-operator">=</span> hashKeyForDisk(imageUrl)<span class="hljs-comment">;    </span><br>    mDiskLruCache.remove(key)<span class="hljs-comment">;  </span><br>&#125; catch (IOException e) &#123;  <br>    e.printStackTrace()<span class="hljs-comment">;  </span><br>&#125;  <br></code></pre></td></tr></table></figure>
+<p>当然这个地方我们其实使用这种方式是非常复杂的，就是因为这个key值得存在，那么其实我们是可以通过别的方法去删除的，这里把其他的一些API也说一下</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>size()</td>
+<td>这个方法会返回当前缓存路径下所有缓存数据的总字节数，以byte为单位，如果应用程序中需要在界面上显示当前缓存数据的总大小，就可以通过调用这个方法计算出来</td>
+</tr>
+<tr>
+<td>flush()</td>
+<td>这个方法用于将内存中的操作记录同步到日志文件（也就是journal文件）当中。这个方法非常重要，因为DiskLruCache能够正常工作的前提就是要依赖于journal文件中的内容。前面在讲解写入缓存操作的时候我有调用过一次这个方法，但其实并不是每次写入缓存都要调用一次flush()方法的，频繁地调用并不会带来任何好处，只会额外增加同步journal文件的时间。比较标准的做法就是在Activity的onPause()方法中去调用一次flush()方法就可以了</td>
+</tr>
+<tr>
+<td>close()</td>
+<td>这个方法用于将DiskLruCache关闭掉，是和open()方法对应的一个方法。关闭掉了之后就不能再调用DiskLruCache中任何操作缓存数据的方法，通常只应该在Activity的onDestroy()方法中去调用close()方法。</td>
+</tr>
+<tr>
+<td>delete()</td>
+<td>这个方法用于将所有的缓存数据全部删除，比如说网易新闻中的那个手动清理缓存功能，其实只需要调用一下DiskLruCache的delete()方法就可以实现了</td>
+</tr>
+</tbody></table>
+<h1 id="关于缓存的框架"><a href="#关于缓存的框架" class="headerlink" title="关于缓存的框架"></a>关于缓存的框架</h1><p>我们的换粗大部分情况下都是缓存图片，所以在一些图片请求框架中就已经包含了图片缓存，这个我以后在总结，留下个尾巴</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a target="_blank" rel="noopener" href="http://blog.csdn.net/shakespeare001/article/details/51695358">android缓存</a><br><a target="_blank" rel="noopener" href="http://www.binkery.com/archives/561.html">android Lru源码分析</a><br><a target="_blank" rel="noopener" href="http://blog.csdn.net/guolin_blog/article/details/28863651">android DiskLruCache</a><br><a target="_blank" rel="noopener" href="https://github.com/JakeWharton/DiskLruCache">jake大神的分析</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>重拾android路(六) 缓存</div>
+      <div>http://example.com/2016/04/15/android-6-cache/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2016年4月15日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2016/04/30/android-7-sqlite/" title="重拾Android之路(七) sqlite">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">重拾Android之路(七) sqlite</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2016/03/23/android-5-rxjava/" title="重拾Android路(五) RxJava和RxAndroid">
+                        <span class="hidden-mobile">重拾Android路(五) RxJava和RxAndroid</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,700 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="文件操作">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ios文件操作">
+<meta property="og:url" content="http://example.com/2018/05/16/ios-file-operation/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="文件操作">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/ios_file/if_01.png">
+<meta property="og:image" content="http://example.com/assets/ios_file/if_02.png">
+<meta property="og:image" content="http://example.com/assets/ios_file/if_03.png">
+<meta property="og:image" content="http://example.com/assets/ios_file/if_04.png">
+<meta property="og:image" content="http://example.com/assets/ios_file/if_05.png">
+<meta property="og:image" content="http://example.com/assets/iof_file/if_06.png">
+<meta property="og:image" content="http://example.com/assets/ios_file/if_07.png">
+<meta property="og:image" content="http://example.com/assets/ios_file/if_08.png">
+<meta property="og:image" content="http://example.com/assets/ios_file/if_09.png">
+<meta property="og:image" content="http://example.com/assets/ios_file/if_10.png">
+<meta property="og:image" content="http://example.com/assets/ios_file/if_11.png">
+<meta property="og:image" content="http://example.com/assets/ios_file/if_12/png">
+<meta property="og:image" content="http://example.com/assets/ios_file/if_13.png">
+<meta property="og:image" content="http://example.com/assets/ios_file/if_14.png">
+<meta property="og:image" content="http://example.com/assets/ios_file/if_15.png">
+<meta property="og:image" content="http://example.com/assets/ios_file/if_16.png">
+<meta property="og:image" content="http://example.com/assets/ios_file/if_17.png">
+<meta property="article:published_time" content="2018-05-16T01:15:30.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.118Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="ios">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/ios_file/if_01.png">
+  
+  
+  
+  <title>ios文件操作 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="ios文件操作"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2018-05-16 09:15" pubdate>
+          2018年5月16日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          67 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ios文件操作</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>文件操作</p>
+<span id="more"></span>
+<h1 id="遍历某个文件夹的文件"><a href="#遍历某个文件夹的文件" class="headerlink" title="遍历某个文件夹的文件"></a>遍历某个文件夹的文件</h1><h2 id="获取当前路径"><a href="#获取当前路径" class="headerlink" title="获取当前路径"></a>获取当前路径</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs stylus">let manager = FileManager<span class="hljs-selector-class">.default</span><br>let urlForDocument = manager<span class="hljs-selector-class">.urls</span>(<span class="hljs-keyword">for</span>: <span class="hljs-selector-class">.documentDirectory</span>, <span class="hljs-keyword">in</span>:.userDomainMask)<br>let url = urlForDocument<span class="hljs-selector-attr">[0]</span> as URL<br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(url)</span></span><br></code></pre></td></tr></table></figure>
+
+<p>结果：<br><img src="/assets/ios_file/if_01.png" srcset="/img/loading.gif" lazyload alt="获取当前路径"></p>
+<h2 id="对指定路径进行浅搜索，返回指定路径下的文件，子目录和符号链接的列表"><a href="#对指定路径进行浅搜索，返回指定路径下的文件，子目录和符号链接的列表" class="headerlink" title="对指定路径进行浅搜索，返回指定路径下的文件，子目录和符号链接的列表"></a>对指定路径进行浅搜索，返回指定路径下的文件，子目录和符号链接的列表</h2><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">let</span> contentsOfPath = <span class="hljs-keyword">try</span>? manager.contents<span class="hljs-constructor">OfDirectory(<span class="hljs-params">atPath</span>: <span class="hljs-params">url</span>.<span class="hljs-params">path</span>)</span><br>print(<span class="hljs-string">&quot;contentsOfPath: \(contentsOfPath)&quot;</span>)<br></code></pre></td></tr></table></figure>
+<p>有另外一种写法</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php">let contentsOfURL = <span class="hljs-keyword">try</span>? manager.<span class="hljs-title function_ invoke__">contentsOfDirectory</span>(<span class="hljs-attr">at</span>: url,<br>                        <span class="hljs-attr">includingPropertiesForKeys</span>: nil, <span class="hljs-attr">options</span>: .skipsHiddenFiles)<br><span class="hljs-keyword">print</span>(<span class="hljs-string">&quot;contentsOfURL: \(contentsOfURL)&quot;</span>)<br></code></pre></td></tr></table></figure>
+<p><img src="/assets/ios_file/if_02.png" srcset="/img/loading.gif" lazyload alt="浅遍历"></p>
+<h2 id="深度遍历，会递归遍历子文件夹和子文件-但不会递归符号链接"><a href="#深度遍历，会递归遍历子文件夹和子文件-但不会递归符号链接" class="headerlink" title="深度遍历，会递归遍历子文件夹和子文件(但不会递归符号链接)"></a>深度遍历，会递归遍历子文件夹和子文件(但不会递归符号链接)</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stylus">let enumeratorAtPath = manager<span class="hljs-selector-class">.enumerator</span>(atPath: url.path)<br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">&quot;enumeratorAtPath: \(enumeratorAtPath?.allObjects)&quot;</span>)</span></span><br></code></pre></td></tr></table></figure>
+<p><img src="/assets/ios_file/if_03.png" srcset="/img/loading.gif" lazyload alt="深遍历"><br>深度遍历，会递归遍历子文件夹（但不会递归符号链接）</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php">let enumeratorAtURL = manager.<span class="hljs-title function_ invoke__">enumerator</span>(<span class="hljs-attr">at</span>: url, <span class="hljs-attr">includingPropertiesForKeys</span>: nil,<br>                                         <span class="hljs-attr">options</span>: .skipsHiddenFiles, <span class="hljs-attr">errorHandler</span>:nil)<br><span class="hljs-keyword">print</span>(<span class="hljs-string">&quot;enumeratorAtURL: \(enumeratorAtURL?.allObjects)&quot;</span>)<br></code></pre></td></tr></table></figure>
+<p><img src="/assets/ios_file/if_04.png" srcset="/img/loading.gif" lazyload alt="深遍历获取全路径"></p>
+<h2 id="深度遍历，会递归遍历子文件夹（包括符号链接，所以要求性能的话用enumeratorAtPath）"><a href="#深度遍历，会递归遍历子文件夹（包括符号链接，所以要求性能的话用enumeratorAtPath）" class="headerlink" title="深度遍历，会递归遍历子文件夹（包括符号链接，所以要求性能的话用enumeratorAtPath）"></a>深度遍历，会递归遍历子文件夹（包括符号链接，所以要求性能的话用enumeratorAtPath）</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stylus">let subPaths = manager<span class="hljs-selector-class">.subpaths</span>(atPath: url.path)<br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">&quot;subPaths: \(subPaths)&quot;</span>)</span></span><br></code></pre></td></tr></table></figure>
+<p><img src="/assets/ios_file/if_05.png" srcset="/img/loading.gif" lazyload alt="深度遍历"></p>
+<h1 id="判断文件或者文件夹是否存在"><a href="#判断文件或者文件夹是否存在" class="headerlink" title="判断文件或者文件夹是否存在"></a>判断文件或者文件夹是否存在</h1><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">let</span> fileManager = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileManager</span>.</span></span>default<br><span class="hljs-keyword">let</span> filePath:String = <span class="hljs-constructor">NSHomeDirectory()</span> + <span class="hljs-string">&quot;/Documents/hangge.txt&quot;</span><br><span class="hljs-keyword">let</span> exist = fileManager.file<span class="hljs-constructor">Exists(<span class="hljs-params">atPath</span>: <span class="hljs-params">filePath</span>)</span><br></code></pre></td></tr></table></figure>
+<p><img src="/assets/iof_file/if_06.png" srcset="/img/loading.gif" lazyload alt="判断文件或者文件夹是否存在"></p>
+<h1 id="创建文件夹"><a href="#创建文件夹" class="headerlink" title="创建文件夹"></a>创建文件夹</h1><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs php">let myDirectory:String = <span class="hljs-title function_ invoke__">NSHomeDirectory</span>() + <span class="hljs-string">&quot;/Documents/myFolder/Files&quot;</span><br>let fileManager = FileManager.<span class="hljs-keyword">default</span><br> <br><span class="hljs-comment">//withIntermediateDirectories为ture表示路径中间如果有不存在的文件夹都会创建</span><br><span class="hljs-keyword">try</span>! fileManager.<span class="hljs-title function_ invoke__">createDirectory</span>(<span class="hljs-attr">atPath</span>: myDirectory,<br>                        <span class="hljs-attr">withIntermediateDirectories</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">attributes</span>: nil)<br></code></pre></td></tr></table></figure>
+<p><img src="/assets/ios_file/if_07.png" srcset="/img/loading.gif" lazyload alt="创建文件夹"><br>可以看到创建之后的数组中已经有了新的文件夹<br>第二种方法</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs swift"><span class="hljs-keyword">func</span> <span class="hljs-title function_">createFolder</span>(<span class="hljs-params">name</span>:<span class="hljs-type">String</span>,<span class="hljs-params">baseUrl</span>:<span class="hljs-type">NSURL</span>)&#123;<br>    <span class="hljs-keyword">let</span> manager <span class="hljs-operator">=</span> <span class="hljs-type">FileManager</span>.default<br>    <span class="hljs-keyword">let</span> folder <span class="hljs-operator">=</span> baseUrl.appendingPathComponent(name, isDirectory: <span class="hljs-literal">true</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;文件夹: <span class="hljs-subst">\(folder)</span>&quot;</span>)<br>    <span class="hljs-keyword">let</span> exist <span class="hljs-operator">=</span> manager.fileExists(atPath: folder<span class="hljs-operator">!</span>.path)<br>    <span class="hljs-keyword">if</span> <span class="hljs-operator">!</span>exist &#123;<br>        <span class="hljs-keyword">try!</span> manager.createDirectory(at: folder<span class="hljs-operator">!</span>, withIntermediateDirectories: <span class="hljs-literal">true</span>,<br>                                     attributes: <span class="hljs-literal">nil</span>)<br>    &#125;<br>&#125;<br>     <br><span class="hljs-comment">//在文档目录下新建folder目录</span><br><span class="hljs-keyword">let</span> manager <span class="hljs-operator">=</span> <span class="hljs-type">FileManager</span>.default<br><span class="hljs-keyword">let</span> urlForDocument <span class="hljs-operator">=</span> manager.urls(for: .documentDirectory, in: .userDomainMask)<br><span class="hljs-keyword">let</span> url <span class="hljs-operator">=</span> urlForDocument[<span class="hljs-number">0</span>] <span class="hljs-keyword">as</span> <span class="hljs-type">NSURL</span><br>createFolder(name: <span class="hljs-string">&quot;folder&quot;</span>, baseUrl: url)<br></code></pre></td></tr></table></figure>
+
+<h1 id="将对象写入文件"><a href="#将对象写入文件" class="headerlink" title="将对象写入文件"></a>将对象写入文件</h1><p>可以通过write(to:)方法，可以创建文件并将对象写入，对象包括String，NSString，UIImage，NSArray，NSDictionary等</p>
+<h2 id="把String保存到文件"><a href="#把String保存到文件" class="headerlink" title="把String保存到文件"></a>把String保存到文件</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> <span class="hljs-attr">filePath</span>:<span class="hljs-title class_">String</span> = <span class="hljs-title class_">NSHomeDirectory</span>()+<span class="hljs-string">&quot;/Documents/password.txt&quot;</span><br>       <span class="hljs-keyword">let</span> msg = <span class="hljs-string">&quot;我是测试内容，就问你怕不怕&quot;</span><br>       <span class="hljs-keyword">try</span>! msg.<span class="hljs-title function_">write</span>(<span class="hljs-attr">toFile</span>: filePath, <span class="hljs-attr">atomically</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">encoding</span>: <span class="hljs-title class_">String</span>.<span class="hljs-property">Encoding</span>.<span class="hljs-property">utf8</span>)<br></code></pre></td></tr></table></figure>
+<p><img src="/assets/ios_file/if_08.png" srcset="/img/loading.gif" lazyload alt="把String保存到文件覆盖的形式"></p>
+<h2 id="把图片保存到路径下"><a href="#把图片保存到路径下" class="headerlink" title="把图片保存到路径下"></a>把图片保存到路径下</h2><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">let</span> filePath = <span class="hljs-constructor">NSHomeDirectory()</span> + <span class="hljs-string">&quot;/Documents/hangge.png&quot;</span><br><span class="hljs-keyword">let</span> image = <span class="hljs-constructor">UIImage(<span class="hljs-params">named</span>: <span class="hljs-string">&quot;apple.png&quot;</span>)</span><br><span class="hljs-keyword">let</span> data:Data = <span class="hljs-constructor">UIImagePNGRepresentation(<span class="hljs-params">image</span>!)</span>!<br><span class="hljs-keyword">try</span>? data.write(<span class="hljs-keyword">to</span>: <span class="hljs-constructor">URL(<span class="hljs-params">fileURLWithPath</span>: <span class="hljs-params">filePath</span>)</span>)<br></code></pre></td></tr></table></figure>
+<p>这个实验之后是可以的，但是这个图片比较难搞定，所以暂时先不贴出来了</p>
+<h3 id="把NSArray写在文件路径下"><a href="#把NSArray写在文件路径下" class="headerlink" title="把NSArray写在文件路径下"></a>把NSArray写在文件路径下</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">let</span> <span class="hljs-built_in">array</span> = <span class="hljs-constructor">NSArray(<span class="hljs-params">objects</span>: <span class="hljs-string">&quot;aaa&quot;</span>,<span class="hljs-string">&quot;bbb&quot;</span>,<span class="hljs-string">&quot;ccc&quot;</span>)</span><br><span class="hljs-keyword">let</span> filePath:String = <span class="hljs-constructor">NSHomeDirectory()</span> + <span class="hljs-string">&quot;/Documents/array.plist&quot;</span><br><span class="hljs-built_in">array</span>.write(toFile: filePath, atomically: <span class="hljs-literal">true</span>)<br></code></pre></td></tr></table></figure>
+<p><img src="/assets/ios_file/if_09.png" srcset="/img/loading.gif" lazyload alt="把NSArray写在文件中"></p>
+<h3 id="把NSDirectionary保存到文件中"><a href="#把NSDirectionary保存到文件中" class="headerlink" title="把NSDirectionary保存到文件中"></a>把NSDirectionary保存到文件中</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs swift"><span class="hljs-keyword">let</span> dictionary:<span class="hljs-type">NSDictionary</span> <span class="hljs-operator">=</span> [<span class="hljs-string">&quot;Gold&quot;</span>: <span class="hljs-string">&quot;1st Place&quot;</span>, <span class="hljs-string">&quot;Silver&quot;</span>: <span class="hljs-string">&quot;2nd Place&quot;</span>]<br><span class="hljs-keyword">let</span> filePath:<span class="hljs-type">String</span> <span class="hljs-operator">=</span> <span class="hljs-type">NSHomeDirectory</span>() <span class="hljs-operator">+</span> <span class="hljs-string">&quot;/Documents/dictionary.plist&quot;</span><br>dictionary.write(toFile: filePath, atomically: <span class="hljs-literal">true</span>)<br></code></pre></td></tr></table></figure>
+<p><img src="/assets/ios_file/if_10.png" srcset="/img/loading.gif" lazyload alt="把NSDirectionary保存到文件中"></p>
+<h1 id="创建文件"><a href="#创建文件" class="headerlink" title="创建文件"></a>创建文件</h1><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"> <span class="hljs-comment">//在文档目录下新建test.txt文件</span><br>        <span class="hljs-keyword">let</span> manager = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileManager</span>.</span></span>default<br>        <span class="hljs-keyword">let</span> urlForDocument = manager.urls( <span class="hljs-keyword">for</span>: .documentDirectory,<br>                                           <span class="hljs-keyword">in</span>:.userDomainMask)<br>        <span class="hljs-keyword">let</span> url = urlForDocument<span class="hljs-literal">[<span class="hljs-number">0</span>]</span><br>        create<span class="hljs-constructor">File(<span class="hljs-params">name</span>:<span class="hljs-string">&quot;test.txt&quot;</span>, <span class="hljs-params">fileBaseUrl</span>: <span class="hljs-params">url</span>)</span><br><span class="hljs-comment">//创建文件的方法</span><br>func create<span class="hljs-constructor">File(<span class="hljs-params">name</span>:String, <span class="hljs-params">fileBaseUrl</span>:URL)</span>&#123;<br>        <span class="hljs-keyword">let</span> manager = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileManager</span>.</span></span>default<br>        <br>        <span class="hljs-keyword">let</span> file = fileBaseUrl.appending<span class="hljs-constructor">PathComponent(<span class="hljs-params">name</span>)</span><br>        print(<span class="hljs-string">&quot;文件: \(file)&quot;</span>)<br>        <span class="hljs-keyword">let</span> exist = manager.file<span class="hljs-constructor">Exists(<span class="hljs-params">atPath</span>: <span class="hljs-params">file</span>.<span class="hljs-params">path</span>)</span><br>        <span class="hljs-keyword">if</span> !exist &#123;<br>            <span class="hljs-keyword">let</span> data = <span class="hljs-constructor">Data(<span class="hljs-params">base64Encoded</span>:<span class="hljs-string">&quot;aGVsbG8gd29ybGQ=&quot;</span> ,<span class="hljs-params">options</span>:.<span class="hljs-params">ignoreUnknownCharacters</span>)</span><br>            <span class="hljs-keyword">let</span> createSuccess = manager.create<span class="hljs-constructor">File(<span class="hljs-params">atPath</span>: <span class="hljs-params">file</span>.<span class="hljs-params">path</span>,<span class="hljs-params">contents</span>:<span class="hljs-params">data</span>,<span class="hljs-params">attributes</span>:<span class="hljs-params">nil</span>)</span><br>            print(<span class="hljs-string">&quot;文件创建结果: \(createSuccess)&quot;</span>)<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+<p><img src="/assets/ios_file/if_11.png" srcset="/img/loading.gif" lazyload alt="创建文件"></p>
+<h1 id="复制文件"><a href="#复制文件" class="headerlink" title="复制文件"></a>复制文件</h1><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">let</span> fileManager = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileManager</span>.</span></span>default<br><span class="hljs-keyword">let</span> homeDirectory = <span class="hljs-constructor">NSHomeDirectory()</span><br><span class="hljs-keyword">let</span> srcUrl = homeDirectory + <span class="hljs-string">&quot;/Documents/hangge.txt&quot;</span><br><span class="hljs-keyword">let</span> toUrl = homeDirectory + <span class="hljs-string">&quot;/Documents/copyed.txt&quot;</span><br><span class="hljs-keyword">try</span>! fileManager.copy<span class="hljs-constructor">Item(<span class="hljs-params">atPath</span>: <span class="hljs-params">srcUrl</span>, <span class="hljs-params">toPath</span>: <span class="hljs-params">toUrl</span>)</span><br></code></pre></td></tr></table></figure>
+<p><img src="/assets/ios_file/if_12/png" srcset="/img/loading.gif" lazyload alt="复制文件"><br>另一种方法</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">// 定位到用户文档目录</span><br><span class="hljs-keyword">let</span> manager = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileManager</span>.</span></span>default<br><span class="hljs-keyword">let</span> urlForDocument = manager.urls( <span class="hljs-keyword">for</span>:.documentDirectory, <span class="hljs-keyword">in</span>:.userDomainMask)<br><span class="hljs-keyword">let</span> url = urlForDocument<span class="hljs-literal">[<span class="hljs-number">0</span>]</span><br> <br><span class="hljs-comment">// 将test.txt文件拷贝到文档目录根目录下的copyed.txt文件</span><br><span class="hljs-keyword">let</span> srcUrl = url.appending<span class="hljs-constructor">PathComponent(<span class="hljs-string">&quot;test.txt&quot;</span>)</span><br><span class="hljs-keyword">let</span> toUrl = url.appending<span class="hljs-constructor">PathComponent(<span class="hljs-string">&quot;copyed.txt&quot;</span>)</span><br> <br><span class="hljs-keyword">try</span>! manager.copy<span class="hljs-constructor">Item(<span class="hljs-params">at</span>: <span class="hljs-params">srcUrl</span>, <span class="hljs-params">to</span>: <span class="hljs-params">toUrl</span>)</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="移动文件"><a href="#移动文件" class="headerlink" title="移动文件"></a>移动文件</h1><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">let</span> fileManager = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileManager</span>.</span></span>default<br><span class="hljs-keyword">let</span> homeDirectory = <span class="hljs-constructor">NSHomeDirectory()</span><br><span class="hljs-keyword">let</span> srcUrl = homeDirectory + <span class="hljs-string">&quot;/Documents/hangge.txt&quot;</span><br><span class="hljs-keyword">let</span> toUrl = homeDirectory + <span class="hljs-string">&quot;/Documents/moved/hangge.txt&quot;</span><br><span class="hljs-keyword">try</span>! fileManager.move<span class="hljs-constructor">Item(<span class="hljs-params">atPath</span>: <span class="hljs-params">srcUrl</span>, <span class="hljs-params">toPath</span>: <span class="hljs-params">toUrl</span>)</span><br></code></pre></td></tr></table></figure>
+<p>另外一种方法</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">// 定位到用户文档目录</span><br><span class="hljs-keyword">let</span> manager = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileManager</span>.</span></span>default<br><span class="hljs-keyword">let</span> urlForDocument = manager.urls( <span class="hljs-keyword">for</span>: .documentDirectory, <span class="hljs-keyword">in</span>:.userDomainMask)<br><span class="hljs-keyword">let</span> url = urlForDocument<span class="hljs-literal">[<span class="hljs-number">0</span>]</span><br> <br><span class="hljs-keyword">let</span> srcUrl = url.appending<span class="hljs-constructor">PathComponent(<span class="hljs-string">&quot;test.txt&quot;</span>)</span><br><span class="hljs-keyword">let</span> toUrl = url.appending<span class="hljs-constructor">PathComponent(<span class="hljs-string">&quot;copyed.txt&quot;</span>)</span><br><span class="hljs-comment">// 移动srcUrl中的文件（test.txt）到toUrl中（copyed.txt）</span><br><span class="hljs-keyword">try</span>! manager.move<span class="hljs-constructor">Item(<span class="hljs-params">at</span>: <span class="hljs-params">srcUrl</span>, <span class="hljs-params">to</span>: <span class="hljs-params">toUrl</span>)</span><br></code></pre></td></tr></table></figure>
+<h1 id="删除文件"><a href="#删除文件" class="headerlink" title="删除文件"></a>删除文件</h1><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">let</span> fileManager = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileManager</span>.</span></span>default<br><span class="hljs-keyword">let</span> homeDirectory = <span class="hljs-constructor">NSHomeDirectory()</span><br><span class="hljs-keyword">let</span> srcUrl = homeDirectory + <span class="hljs-string">&quot;/Documents/hangge.txt&quot;</span><br><span class="hljs-keyword">try</span>! fileManager.remove<span class="hljs-constructor">Item(<span class="hljs-params">atPath</span>: <span class="hljs-params">srcUrl</span>)</span><br></code></pre></td></tr></table></figure>
+<p>另一种方法</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">// 定位到用户文档目录</span><br><span class="hljs-keyword">let</span> manager = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileManager</span>.</span></span>default<br><span class="hljs-keyword">let</span> urlForDocument = manager.urls(<span class="hljs-keyword">for</span>: .documentDirectory, <span class="hljs-keyword">in</span>:.userDomainMask)<br><span class="hljs-keyword">let</span> url = urlForDocument<span class="hljs-literal">[<span class="hljs-number">0</span>]</span><br> <br><span class="hljs-keyword">let</span> toUrl = url.appending<span class="hljs-constructor">PathComponent(<span class="hljs-string">&quot;copyed.txt&quot;</span>)</span><br><span class="hljs-comment">// 删除文档根目录下的toUrl路径的文件（copyed.txt文件）</span><br><span class="hljs-keyword">try</span>! manager.remove<span class="hljs-constructor">Item(<span class="hljs-params">at</span>: <span class="hljs-params">toUrl</span>)</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="删除目录下所有的文件"><a href="#删除目录下所有的文件" class="headerlink" title="删除目录下所有的文件"></a>删除目录下所有的文件</h1><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">let</span> fileManager = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileManager</span>.</span></span>default<br><span class="hljs-keyword">let</span> myDirectory = <span class="hljs-constructor">NSHomeDirectory()</span> + <span class="hljs-string">&quot;/Documents/Files&quot;</span><br><span class="hljs-keyword">let</span> fileArray = fileManager.subpaths(atPath: myDirectory)<br><span class="hljs-keyword">for</span> fn <span class="hljs-keyword">in</span> fileArray!&#123;<br>    <span class="hljs-keyword">try</span>! fileManager.remove<span class="hljs-constructor">Item(<span class="hljs-params">atPath</span>: <span class="hljs-params">myDirectory</span> + <span class="hljs-string">&quot;/\(fn)&quot;</span>)</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>删除目录后，再创建该目录</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php">let fileManager = FileManager.<span class="hljs-keyword">default</span><br>let myDirectory = <span class="hljs-title function_ invoke__">NSHomeDirectory</span>() + <span class="hljs-string">&quot;/Documents/Files&quot;</span><br><span class="hljs-keyword">try</span>! fileManager.<span class="hljs-title function_ invoke__">removeItem</span>(<span class="hljs-attr">atPath</span>: myDirectory)<br><span class="hljs-keyword">try</span>! fileManager.<span class="hljs-title function_ invoke__">createDirectory</span>(<span class="hljs-attr">atPath</span>: myDirectory, <span class="hljs-attr">withIntermediateDirectories</span>: <span class="hljs-literal">true</span>,<br>                                 <span class="hljs-attr">attributes</span>: nil)<br></code></pre></td></tr></table></figure>
+
+<h1 id="读取文件"><a href="#读取文件" class="headerlink" title="读取文件"></a>读取文件</h1><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">let</span> manager = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileManager</span>.</span></span>default<br><span class="hljs-keyword">let</span> urlsForDocDirectory = manager.urls(<span class="hljs-keyword">for</span>: .documentDirectory, <span class="hljs-keyword">in</span>:.userDomainMask)<br><span class="hljs-keyword">let</span> docPath = urlsForDocDirectory<span class="hljs-literal">[<span class="hljs-number">0</span>]</span><br><span class="hljs-keyword">let</span> file = docPath.appending<span class="hljs-constructor">PathComponent(<span class="hljs-string">&quot;test.txt&quot;</span>)</span><br> <br><span class="hljs-comment">//方法1</span><br><span class="hljs-keyword">let</span> readHandler = <span class="hljs-keyword">try</span>! <span class="hljs-constructor">FileHandle(<span class="hljs-params">forReadingFrom</span>:<span class="hljs-params">file</span>)</span><br><span class="hljs-keyword">let</span> data = readHandler.read<span class="hljs-constructor">DataToEndOfFile()</span><br><span class="hljs-keyword">let</span> readString = <span class="hljs-constructor">String(<span class="hljs-params">data</span>: <span class="hljs-params">data</span>, <span class="hljs-params">encoding</span>: String.Encoding.<span class="hljs-params">utf8</span>)</span><br>print(<span class="hljs-string">&quot;文件内容: \(readString)&quot;</span>)<br> <br><span class="hljs-comment">//方法2</span><br><span class="hljs-keyword">let</span> data2 = manager.contents(atPath: file.path)<br><span class="hljs-keyword">let</span> readString2 = <span class="hljs-constructor">String(<span class="hljs-params">data</span>: <span class="hljs-params">data2</span>!, <span class="hljs-params">encoding</span>: String.Encoding.<span class="hljs-params">utf8</span>)</span><br>print(<span class="hljs-string">&quot;文件内容: \(readString2)&quot;</span>)<br></code></pre></td></tr></table></figure>
+<p><img src="/assets/ios_file/if_13.png" srcset="/img/loading.gif" lazyload alt="读取文件"></p>
+<h1 id="在任意位置写入数据"><a href="#在任意位置写入数据" class="headerlink" title="在任意位置写入数据"></a>在任意位置写入数据</h1><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">let</span> manager = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileManager</span>.</span></span>default<br><span class="hljs-keyword">let</span> urlsForDocDirectory = manager.urls(<span class="hljs-keyword">for</span>:.documentDirectory, <span class="hljs-keyword">in</span>:.userDomainMask)<br><span class="hljs-keyword">let</span> docPath = urlsForDocDirectory<span class="hljs-literal">[<span class="hljs-number">0</span>]</span><br><span class="hljs-keyword">let</span> file = docPath.appending<span class="hljs-constructor">PathComponent(<span class="hljs-string">&quot;test.txt&quot;</span>)</span><br> <br><span class="hljs-keyword">let</span> <span class="hljs-built_in">string</span> = <span class="hljs-string">&quot;添加一些文字到文件末尾&quot;</span><br><span class="hljs-keyword">let</span> appendedData = <span class="hljs-built_in">string</span>.data(using: <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">String</span>.</span><span class="hljs-module"><span class="hljs-identifier">Encoding</span>.</span></span>utf8, allowLossyConversion: <span class="hljs-literal">true</span>)<br><span class="hljs-keyword">let</span> writeHandler = <span class="hljs-keyword">try</span>? <span class="hljs-constructor">FileHandle(<span class="hljs-params">forWritingTo</span>:<span class="hljs-params">file</span>)</span><br>writeHandler!.seek<span class="hljs-constructor">ToEndOfFile()</span><br>writeHandler!.write(appendedData!)<br></code></pre></td></tr></table></figure>
+<p><img src="/assets/ios_file/if_14.png" srcset="/img/loading.gif" lazyload alt="在任意位置写入数据"></p>
+<h1 id="文件权限判断"><a href="#文件权限判断" class="headerlink" title="文件权限判断"></a>文件权限判断</h1><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">let</span> manager = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileManager</span>.</span></span>default<br><span class="hljs-keyword">let</span> urlForDocument = manager.urls(<span class="hljs-keyword">for</span>: .documentDirectory, <span class="hljs-keyword">in</span>:.userDomainMask)<br><span class="hljs-keyword">let</span> docPath = urlForDocument<span class="hljs-literal">[<span class="hljs-number">0</span>]</span><br><span class="hljs-keyword">let</span> file = docPath.appending<span class="hljs-constructor">PathComponent(<span class="hljs-string">&quot;test.txt&quot;</span>)</span><br> <br><span class="hljs-keyword">let</span> readable = manager.is<span class="hljs-constructor">ReadableFile(<span class="hljs-params">atPath</span>: <span class="hljs-params">file</span>.<span class="hljs-params">path</span>)</span><br>print(<span class="hljs-string">&quot;可读: \(readable)&quot;</span>)<br><span class="hljs-keyword">let</span> writeable = manager.is<span class="hljs-constructor">WritableFile(<span class="hljs-params">atPath</span>: <span class="hljs-params">file</span>.<span class="hljs-params">path</span>)</span><br>print(<span class="hljs-string">&quot;可写: \(writeable)&quot;</span>)<br><span class="hljs-keyword">let</span> executable = manager.is<span class="hljs-constructor">ExecutableFile(<span class="hljs-params">atPath</span>: <span class="hljs-params">file</span>.<span class="hljs-params">path</span>)</span><br>print(<span class="hljs-string">&quot;可执行: \(executable)&quot;</span>)<br><span class="hljs-keyword">let</span> deleteable = manager.is<span class="hljs-constructor">DeletableFile(<span class="hljs-params">atPath</span>: <span class="hljs-params">file</span>.<span class="hljs-params">path</span>)</span><br>print(<span class="hljs-string">&quot;可删除: \(deleteable)&quot;</span>)<br></code></pre></td></tr></table></figure>
+<p><img src="/assets/ios_file/if_15.png" srcset="/img/loading.gif" lazyload alt="文件权限判断"></p>
+<h1 id="获取文件属性（创建时间，修改时间，文件大小，文件类型等信息"><a href="#获取文件属性（创建时间，修改时间，文件大小，文件类型等信息" class="headerlink" title="获取文件属性（创建时间，修改时间，文件大小，文件类型等信息"></a>获取文件属性（创建时间，修改时间，文件大小，文件类型等信息</h1><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">let</span> manager = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileManager</span>.</span></span>default<br><span class="hljs-keyword">let</span> urlForDocument = manager.urls(<span class="hljs-keyword">for</span>: .documentDirectory, <span class="hljs-keyword">in</span>:.userDomainMask)<br><span class="hljs-keyword">let</span> docPath = urlForDocument<span class="hljs-literal">[<span class="hljs-number">0</span>]</span><br><span class="hljs-keyword">let</span> file = docPath.appending<span class="hljs-constructor">PathComponent(<span class="hljs-string">&quot;test.txt&quot;</span>)</span><br> <br><span class="hljs-keyword">let</span> attributes = <span class="hljs-keyword">try</span>? manager.attributes<span class="hljs-constructor">OfItem(<span class="hljs-params">atPath</span>: <span class="hljs-params">file</span>.<span class="hljs-params">path</span>)</span> <span class="hljs-comment">//结果为Dictionary类型</span><br>print(<span class="hljs-string">&quot;attributes: \(attributes!)&quot;</span>)<br></code></pre></td></tr></table></figure>
+<p><img src="/assets/ios_file/if_16.png" srcset="/img/loading.gif" lazyload alt="获取文件属性"><br>感觉内容太多，不清晰，我们可以拆分一下</p>
+<figure class="highlight isbl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs isbl"><span class="hljs-function"><span class="hljs-title">print</span>(<span class="hljs-string">&quot;创建时间：\(attributes![FileAttributeKey.creationDate]!)&quot;</span>)</span><br>        <span class="hljs-function"><span class="hljs-title">print</span>(<span class="hljs-string">&quot;修改时间：\(attributes![FileAttributeKey.modificationDate]!)&quot;</span>)</span><br>        <span class="hljs-function"><span class="hljs-title">print</span>(<span class="hljs-string">&quot;文件大小：\(attributes![FileAttributeKey.size]!)&quot;</span>)</span><br></code></pre></td></tr></table></figure>
+<p><img src="/assets/ios_file/if_17.png" srcset="/img/loading.gif" lazyload alt="文件属性"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ios/">#ios</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ios文件操作</div>
+      <div>http://example.com/2018/05/16/ios-file-operation/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2018年5月16日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/05/18/ios-microsoft/" title="ios-打开microsoft文档App">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ios-打开microsoft文档App</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/05/14/ios-framework4swift/" title="ios项目开发框架总结(Swift)">
+                        <span class="hidden-mobile">ios项目开发框架总结(Swift)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,657 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="实现音频的采集和播放">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android 音视频开发(三)">
+<meta property="og:url" content="http://example.com/2019/08/04/android-media-03/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="实现音频的采集和播放">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-08-04T13:51:10.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.099Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta property="article:tag" content="音视频">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>android 音视频开发(三) - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="android 音视频开发(三)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-08-04 21:51" pubdate>
+          2019年8月4日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          12k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          101 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">android 音视频开发(三)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>实现音频的采集和播放</p>
+<span id="more"></span>
+<p>实现语音的采集和播放有三种方式，这里我会把三种方式都分别实现一下。这三种方式分别是AudioRecord，MediaRecord，AudioTrack。<br>其中MediaRecord是基于文件录音，系统集成，提供了大量的方法，集成了录音，编码，压缩等，支持少量的音频格式文件，操作起来比较简单。而AudioRecord基于字节流录音，Audiotrack更加贴近底层，使用起来更加灵活，也能够实现更多的功能。<br>先来看一下他们的优缺点吧</p>
+<h4 id="AudioRecord"><a href="#AudioRecord" class="headerlink" title="AudioRecord"></a>AudioRecord</h4><p>优点：可以实现语音的实时处理，进行边录边播，对音频的实时处理AudioTrack更加贴近底层<br>缺点：输出的是PCM语音数据，如果保存成音频文件是不能被播放器播放的。需要使用AudioTrack进行播放。API不完善，常见的如暂停功能没有实现</p>
+<h4 id="MediaRecord"><a href="#MediaRecord" class="headerlink" title="MediaRecord"></a>MediaRecord</h4><p>优点：系统封装完整，直接调用即可，操作简单，录制的音频文件可以使用系统自带的播放器播放<br>缺点：无法实现实时处理音频，输出音频格式少，录制的音频文件是经过压缩的，需要设置编码器</p>
+<p>在实现进一步操作之前，有几个专有名词需要了解一下</p>
+<h4 id="采样率"><a href="#采样率" class="headerlink" title="采样率"></a>采样率</h4><p>采样率：采样率即采样频率，指每秒钟取得声音样本的次数，采样频率越高，能表现的频率范围就越大，音质就会越好，声音的还原度也更真实，但此同时带来的弊端是占有的内存资源也会越大。因为人耳的分辨率有限，并不是频率越高越好，44KHz已相当于CD音质了，目前的常用采样频率都不超过48KHz。</p>
+<h4 id="声道"><a href="#声道" class="headerlink" title="声道"></a>声道</h4><p>声道：这个好理解，生活中也经常听到单声道、双声道等，在Android系统中，可以通过设置音频的录制的声道 CHANNEL_IN_STEREO 为双声道，CHANNEL_CONFIGURATION_MONO 为单声道，双声道音质更加，但同样伴随着内存资源消耗更大的弊端。</p>
+<h4 id="采样位深"><a href="#采样位深" class="headerlink" title="采样位深"></a>采样位深</h4><p>采样位深：位深度也叫采样位深，音频的位深度决定动态范围，它是用来衡量声音波动变化的一个参数，也可以说是声卡的分辨率。它的数值越大，分辨率也就越高，所发出声音的能力越强。在计算机中采样位数一般有8位和16位之分，即分成2的8次方和2的16次方之分，PCM 16位每个样本，保证设备支持。PCM 8位每个样本，不一定能得到设备支持。</p>
+<h1 id="AudioRecord-1"><a href="#AudioRecord-1" class="headerlink" title="AudioRecord"></a>AudioRecord</h1><h2 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h2><p>我们先来看构造函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-title function_">AudioRecord</span><span class="hljs-params">(<span class="hljs-type">int</span> audioSource, <span class="hljs-type">int</span> sampleRateInHz, <span class="hljs-type">int</span> channelConfig, <span class="hljs-type">int</span> audioFormat,</span><br><span class="hljs-params">            <span class="hljs-type">int</span> bufferSizeInBytes)</span><br></code></pre></td></tr></table></figure>
+<ol>
+<li>audioSource：录音源，指定声音是从哪里录制的，官网文档参考戳此</li>
+<li>sampleRateInHz：采样率</li>
+<li>channelConfig：声道数</li>
+<li>audioFormat：采样位深</li>
+<li>bufferSizeInBytes：最小缓冲大小，可以通过 getMinBufferSize 获取。</li>
+</ol>
+<blockquote>
+<p>存储量&#x3D; 采样率 * 采样时间 * 采样位深 &#x2F; 8 * 声道数（Bytes）。以采样率为44.1kHZ、采样位深为16位、双声道计算，一分钟消耗的内存为10.335M。</p>
+</blockquote>
+<p>完整代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 用于实现录音、暂停、继续、停止、播放</span><br><span class="hljs-comment"> * 最近看了下pcm和wav，内容真多，要是有一些参数不理解的，可以查阅资料</span><br><span class="hljs-comment"> * PCM BufferSize = 采样率 * 采样时间 * 采样位深 / 8 * 通道数（Bytes）</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AudioRecorder</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> AudioRecorder audioRecorder;<br>    <span class="hljs-comment">//音频输入-麦克风</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-variable">AUDIO_INPUT</span> <span class="hljs-operator">=</span> MediaRecorder.AudioSource.MIC;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 采样率即采样频率，采样频率越高，能表现的频率范围就越大</span><br><span class="hljs-comment">     * 设置音频采样率，44100是目前的标准，但是某些设备仍然支持22050，16000，11025</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-variable">AUDIO_SAMPLE_RATE</span> <span class="hljs-operator">=</span> <span class="hljs-number">16000</span>;<br>    <span class="hljs-comment">// 设置音频的录制的声道CHANNEL_IN_STEREO为双声道，CHANNEL_CONFIGURATION_MONO为单声道</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-variable">AUDIO_CHANNEL</span> <span class="hljs-operator">=</span> AudioFormat.CHANNEL_IN_MONO;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 位深度也叫采样位深，音频的位深度决定动态范围</span><br><span class="hljs-comment">     * 音频数据格式:PCM 16位每个样本。保证设备支持。PCM 8位每个样本。不一定能得到设备支持。</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-variable">AUDIO_ENCODING</span> <span class="hljs-operator">=</span> AudioFormat.ENCODING_PCM_16BIT;<br>    <span class="hljs-comment">// 缓冲区字节大小</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> <span class="hljs-variable">bufferSizeInBytes</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><br>    <span class="hljs-comment">//录音对象</span><br>    <span class="hljs-keyword">private</span> AudioRecord audioRecord;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 播放声音</span><br><span class="hljs-comment">     * 一些必要的参数，需要和AudioRecord一一对应，否则声音会出错</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> AudioTrack audioTrack;<br><br>    <span class="hljs-comment">//录音状态,默认未开始</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">AudioStatus</span> <span class="hljs-variable">status</span> <span class="hljs-operator">=</span> AudioStatus.STATUS_NO_READY;<br><br>    <span class="hljs-comment">//文件名</span><br>    <span class="hljs-keyword">private</span> String fileName;<br><br>    <span class="hljs-comment">//录音文件集合</span><br>    <span class="hljs-keyword">private</span> List&lt;String&gt; filesName = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br><br>    <span class="hljs-comment">//用来回调，转码后的文件绝对路径</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> IAudioCallback iAudioCallback;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 创建带有缓存的线程池</span><br><span class="hljs-comment">     * 当执行第二个任务时第一个任务已经完成，会复用执行第一个任务的线程，而不用每次新建线程。</span><br><span class="hljs-comment">     * 如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程。</span><br><span class="hljs-comment">     * 一开始选择错误，选用newSingleThreadExecutor，导致停止后在录制，出现一堆问题</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">ExecutorService</span> <span class="hljs-variable">cachedThreadPool</span> <span class="hljs-operator">=</span> Executors.newCachedThreadPool();<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 重置，删除所有的pcm文件</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-variable">isReset</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-title function_">AudioRecorder</span><span class="hljs-params">()</span> &#123;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setReset</span><span class="hljs-params">()</span> &#123;<br>        isReset = <span class="hljs-literal">true</span>;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 单例，双重检验</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> iAudio 用于合成后回调</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> AudioRecorder <span class="hljs-title function_">getInstance</span><span class="hljs-params">(IAudioCallback iAudio)</span> &#123;<br>        <span class="hljs-keyword">if</span> (audioRecorder == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">synchronized</span> (AudioRecord.class) &#123;<br>                <span class="hljs-keyword">if</span> (audioRecorder == <span class="hljs-literal">null</span>) &#123;<br>                    audioRecorder = <span class="hljs-keyword">new</span> <span class="hljs-title class_">AudioRecorder</span>();<br>                    iAudioCallback = iAudio;<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> audioRecorder;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 创建默认的录音对象</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> fileName 文件名</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">createDefaultAudio</span><span class="hljs-params">(String fileName)</span> &#123;<br>        <span class="hljs-comment">// 获得缓冲区字节大小</span><br>        bufferSizeInBytes = AudioRecord.getMinBufferSize(AUDIO_SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING);<br>        audioRecord = <span class="hljs-keyword">new</span> <span class="hljs-title class_">AudioRecord</span>(AUDIO_INPUT, AUDIO_SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING, bufferSizeInBytes);<br>        <span class="hljs-built_in">this</span>.fileName = fileName;<br>        status = AudioStatus.STATUS_READY;<br><br>        <span class="hljs-type">AudioAttributes</span> <span class="hljs-variable">audioAttributes</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AudioAttributes</span>.Builder().setUsage(AudioAttributes.USAGE_MEDIA)<br>                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build();<br><br>        <span class="hljs-type">AudioFormat</span> <span class="hljs-variable">audioFormat</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AudioFormat</span>.Builder().setSampleRate(AUDIO_SAMPLE_RATE)<br>                .setEncoding(AUDIO_ENCODING).setChannelMask(AudioFormat.CHANNEL_OUT_MONO).build();<br><br>        audioTrack = <span class="hljs-keyword">new</span> <span class="hljs-title class_">AudioTrack</span>(audioAttributes, audioFormat, bufferSizeInBytes,<br>                AudioTrack.MODE_STREAM, AudioManager.AUDIO_SESSION_ID_GENERATE);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 开始录音</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">startRecord</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">if</span> (status == AudioStatus.STATUS_NO_READY || TextUtils.isEmpty(fileName)) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalStateException</span>(<span class="hljs-string">&quot;请检查录音权限&quot;</span>);<br>        &#125;<br>        <span class="hljs-keyword">if</span> (status == AudioStatus.STATUS_START) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalStateException</span>(<span class="hljs-string">&quot;正在录音&quot;</span>);<br>        &#125;<br>        audioRecord.startRecording();<br>        cachedThreadPool.execute(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Runnable</span>() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>                writeDataTOFile();<br>            &#125;<br>        &#125;);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 暂停录音</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">pauseRecord</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">if</span> (status != AudioStatus.STATUS_START) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalStateException</span>(<span class="hljs-string">&quot;没有在录音&quot;</span>);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            audioRecord.stop();<br>            status = AudioStatus.STATUS_PAUSE;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 停止录音</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">stopRecord</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">if</span> (status == AudioStatus.STATUS_NO_READY || status == AudioStatus.STATUS_READY) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalStateException</span>(<span class="hljs-string">&quot;录音尚未开始&quot;</span>);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            audioRecord.stop();<br>            status = AudioStatus.STATUS_STOP;<br>            release();<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 释放资源</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">release</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">//假如有暂停录音</span><br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">if</span> (filesName.size() &gt; <span class="hljs-number">0</span>) &#123;<br>                List&lt;String&gt; filePaths = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>                <span class="hljs-keyword">for</span> (String fileName : filesName) &#123;<br>                    filePaths.add(FileUtils.getPcmFileAbsolutePath(fileName));<br>                &#125;<br>                <span class="hljs-comment">//清除</span><br>                filesName.clear();<br>                <span class="hljs-keyword">if</span> (isReset) &#123;<br>                    isReset = <span class="hljs-literal">false</span>;<br>                    FileUtils.clearFiles(filePaths);<br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    <span class="hljs-comment">//将多个pcm文件转化为wav文件</span><br>                    pcmFilesToWavFile(filePaths);<br>                &#125;<br>            &#125;<br>        &#125; <span class="hljs-keyword">catch</span> (IllegalStateException e) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalStateException</span>(e.getMessage());<br>        &#125;<br><br>        <span class="hljs-keyword">if</span> (audioRecord != <span class="hljs-literal">null</span>) &#123;<br>            audioRecord.release();<br>            audioRecord = <span class="hljs-literal">null</span>;<br>        &#125;<br>        status = AudioStatus.STATUS_NO_READY;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 播放合成后的wav文件</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> filePath 文件的绝对路径</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">play</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String filePath)</span> &#123;<br>        audioTrack.play();<br><br>        cachedThreadPool.execute(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Runnable</span>() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>                <span class="hljs-type">File</span> <span class="hljs-variable">file</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(filePath);<br>                <span class="hljs-type">FileInputStream</span> <span class="hljs-variable">fis</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    fis = <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileInputStream</span>(file);<br>                &#125; <span class="hljs-keyword">catch</span> (FileNotFoundException e) &#123;<br>                    e.printStackTrace();<br>                &#125;<br>                <span class="hljs-type">byte</span>[] buffer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">byte</span>[bufferSizeInBytes];<br>                <span class="hljs-keyword">while</span> (fis != <span class="hljs-literal">null</span>) &#123;<br>                    <span class="hljs-keyword">try</span> &#123;<br>                        <span class="hljs-type">int</span> <span class="hljs-variable">readCount</span> <span class="hljs-operator">=</span> fis.read(buffer);<br>                        <span class="hljs-keyword">if</span> (readCount == AudioTrack.ERROR_INVALID_OPERATION || readCount == AudioTrack.ERROR_BAD_VALUE) &#123;<br>                            <span class="hljs-keyword">continue</span>;<br>                        &#125;<br>                        <span class="hljs-keyword">if</span> (readCount != <span class="hljs-number">0</span> &amp;&amp; readCount != -<span class="hljs-number">1</span>) &#123;<br>                            audioTrack.write(buffer, <span class="hljs-number">0</span>, readCount);<br>                        &#125;<br>                    &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>                        e.printStackTrace();<br>                    &#125;<br>                &#125;<br>            &#125;<br>        &#125;);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 释放audioTrack</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">releaseAudioTrack</span><span class="hljs-params">()</span>&#123;<br>        <span class="hljs-keyword">if</span> (audioTrack == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (audioTrack.getPlayState() != AudioTrack.PLAYSTATE_STOPPED) &#123;<br>            audioTrack.stop();<br>        &#125;<br>        audioTrack.release();<br>        audioTrack = <span class="hljs-literal">null</span>;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 将音频信息写入文件</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">writeDataTOFile</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// new一个byte数组用来存一些字节数据，大小为缓冲区大小</span><br>        <span class="hljs-type">byte</span>[] audioData = <span class="hljs-keyword">new</span> <span class="hljs-title class_">byte</span>[bufferSizeInBytes];<br>        <span class="hljs-type">FileOutputStream</span> <span class="hljs-variable">fos</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">readSize</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-type">String</span> <span class="hljs-variable">currentFileName</span> <span class="hljs-operator">=</span> fileName;<br>            <span class="hljs-keyword">if</span> (status == AudioStatus.STATUS_PAUSE) &#123;<br>                <span class="hljs-comment">//假如是暂停录音 将文件名后面加个数字,防止重名文件内容被覆盖</span><br>                currentFileName += filesName.size();<br>            &#125;<br>            filesName.add(currentFileName);<br>            <span class="hljs-type">File</span> <span class="hljs-variable">file</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(FileUtils.getPcmFileAbsolutePath(currentFileName));<br>            <span class="hljs-keyword">if</span> (file.exists()) &#123;<br>                file.delete();<br>            &#125;<br>            <span class="hljs-comment">// 建立一个可存取字节的文件</span><br>            fos = <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileOutputStream</span>(file);<br>        &#125; <span class="hljs-keyword">catch</span> (IllegalStateException e) &#123;<br>            e.printStackTrace();<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalStateException</span>(e.getMessage());<br>        &#125; <span class="hljs-keyword">catch</span> (FileNotFoundException e) &#123;<br>            e.printStackTrace();<br>        &#125;<br>        <span class="hljs-comment">//将录音状态设置成正在录音状态</span><br>        status = AudioStatus.STATUS_START;<br>        <span class="hljs-keyword">while</span> (status == AudioStatus.STATUS_START) &#123;<br>            readSize = audioRecord.read(audioData, <span class="hljs-number">0</span>, bufferSizeInBytes);<br>            <span class="hljs-keyword">if</span> (AudioRecord.ERROR_INVALID_OPERATION != readSize &amp;&amp; fos != <span class="hljs-literal">null</span>) &#123;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    fos.write(audioData);<br>                &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>                    e.printStackTrace();<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">if</span> (fos != <span class="hljs-literal">null</span>) &#123;<br>                fos.close();<span class="hljs-comment">// 关闭写入流</span><br>            &#125;<br>        &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>            e.printStackTrace();<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 将pcm合并成wav</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> filePaths pcm文件的绝对路径</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">pcmFilesToWavFile</span><span class="hljs-params">(<span class="hljs-keyword">final</span> List&lt;String&gt; filePaths)</span> &#123;<br>        cachedThreadPool.execute(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Runnable</span>() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>                <span class="hljs-type">String</span> <span class="hljs-variable">filePath</span> <span class="hljs-operator">=</span> FileUtils.getWavFileAbsolutePath(fileName);<br>                <span class="hljs-keyword">if</span> (PcmToWav.mergePCMFilesToWAVFile(filePaths, filePath)) &#123;<br>                    <span class="hljs-comment">//合成后回调</span><br>                    <span class="hljs-keyword">if</span> (iAudioCallback != <span class="hljs-literal">null</span>) &#123;<br>                        iAudioCallback.showPlay(filePath);<br>                    &#125;<br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalStateException</span>(<span class="hljs-string">&quot;合成失败&quot;</span>);<br>                &#125;<br>                fileName = <span class="hljs-literal">null</span>;<br>            &#125;<br>        &#125;);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 获取录音对象的状态</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> AudioStatus <span class="hljs-title function_">getStatus</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> status;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="MediaRecord-1"><a href="#MediaRecord-1" class="headerlink" title="MediaRecord"></a>MediaRecord</h1><p>完整代码</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Coder: niupuyue</span><br><span class="hljs-comment"> * Date: 2019/8/6</span><br><span class="hljs-comment"> * Time: 16:29</span><br><span class="hljs-comment"> * Desc: 用于实现录音，暂停，继续，停止，播放</span><br><span class="hljs-comment"> * 统一将语音录制成wav格式</span><br><span class="hljs-comment"> * Version:</span><br><span class="hljs-comment"> */</span><br>public <span class="hljs-keyword">class</span> IMediaRecorder &#123;<br><br>    <span class="hljs-comment">// 默认采样率</span><br>    <span class="hljs-keyword">private</span> static final <span class="hljs-built_in">int</span> RECORDER_SIMPLE_RATE = <span class="hljs-number">8000</span>;<br>    <span class="hljs-comment">// 最大采样率</span><br>    <span class="hljs-keyword">private</span> static final <span class="hljs-built_in">int</span> RECORDER_SIMPLE_BIG_RATE = <span class="hljs-number">67000</span>;<br><br>    <span class="hljs-keyword">private</span> static IMediaRecorder mIMediaRecorder;<br><br>    public static IMediaRecorder get<span class="hljs-constructor">Instance()</span> &#123;<br>        <span class="hljs-keyword">if</span> (mIMediaRecorder<span class="hljs-operator"> == </span>null) &#123;<br>            synchronized (<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">IMediaRecorder</span>.</span></span><span class="hljs-keyword">class</span>) &#123;<br>                <span class="hljs-keyword">if</span> (mIMediaRecorder<span class="hljs-operator"> == </span>null) &#123;<br>                    mIMediaRecorder = <span class="hljs-keyword">new</span> <span class="hljs-constructor">IMediaRecorder()</span>;<br>                &#125;<br>            &#125;<br>        &#125;<br>        return mIMediaRecorder;<br>    &#125;<br><br>    <span class="hljs-comment">// 默认输出文件</span><br>    <span class="hljs-keyword">private</span> File audioFile;<br>    <span class="hljs-comment">// 语音录制系统封装好的对象</span><br>    <span class="hljs-keyword">private</span> MediaRecorder mediaRecorder;<br>    <span class="hljs-comment">// 语音播放系统封装好的对象</span><br>    <span class="hljs-keyword">private</span> MediaPlayer mediaPlayer;<br>    <span class="hljs-comment">// 语音播放管理对象</span><br>    <span class="hljs-keyword">private</span> AudioManager audioManager;<br>    <span class="hljs-comment">// 声明一个带有缓存的线程池</span><br>    <span class="hljs-keyword">private</span> ExecutorService thread = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Executors</span>.</span></span><span class="hljs-keyword">new</span><span class="hljs-constructor">CachedThreadPool()</span>;<br><br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 开始语音录制</span><br><span class="hljs-comment">     * 语音的录制放在子线程中</span><br><span class="hljs-comment">     */</span><br>    public void start<span class="hljs-constructor">Recorder()</span> &#123;<br>        thread.execute(<span class="hljs-keyword">new</span> <span class="hljs-constructor">Runnable()</span> &#123;<br>            @Override<br>            public void run<span class="hljs-literal">()</span> &#123;<br>                audioFile = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileUtils</span>.</span></span>create<span class="hljs-constructor">MediaRecordCacheFile(<span class="hljs-params">new</span> SimpleDateFormat(<span class="hljs-string">&quot;yyyyMMddhhmmss&quot;</span>, Locale.CHINA)</span>.format(<span class="hljs-keyword">new</span> <span class="hljs-constructor">Date()</span>));<br>                <span class="hljs-keyword">try</span> &#123;<br>                    <span class="hljs-keyword">if</span> (mediaRecorder<span class="hljs-operator"> == </span>null) &#123;<br>                        mediaRecorder = <span class="hljs-keyword">new</span> <span class="hljs-constructor">MediaRecorder()</span>;<br>                    &#125;<br>                    mediaRecorder.set<span class="hljs-constructor">AudioSource(MediaRecorder.AudioSource.MIC)</span>;<br>                    mediaRecorder.set<span class="hljs-constructor">OutputFormat(MediaRecorder.OutputFormat.RAW_AMR)</span>;<br>                    mediaRecorder.set<span class="hljs-constructor">AudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)</span>;<br>                    mediaRecorder.set<span class="hljs-constructor">AudioSamplingRate(RECORDER_SIMPLE_RATE)</span>;<br>                    mediaRecorder.set<span class="hljs-constructor">AudioEncodingBitRate(RECORDER_SIMPLE_BIG_RATE)</span>;<br>                    mediaRecorder.set<span class="hljs-constructor">OutputFile(<span class="hljs-params">audioFile</span>.<span class="hljs-params">getAbsolutePath</span>()</span>);<br>                    mediaRecorder.prepare<span class="hljs-literal">()</span>;<br><br>                    mediaRecorder.start<span class="hljs-literal">()</span>;<br>                &#125; catch (Exception ex) &#123;<br>                    <span class="hljs-keyword">if</span> (mediaRecorder != null) &#123;<br>                        mediaRecorder.reset<span class="hljs-literal">()</span>;<br>                        mediaRecorder.release<span class="hljs-literal">()</span>;<br>                        mediaRecorder = null;<br>                    &#125;<br>                    ex.print<span class="hljs-constructor">StackTrace()</span>;<br>                    return;<br>                &#125;<br>            &#125;<br>        &#125;);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 停止录制语音</span><br><span class="hljs-comment">     */</span><br>    public void stop<span class="hljs-constructor">Recorder()</span> &#123;<br>        <span class="hljs-keyword">if</span> (mediaRecorder != null) &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                mediaRecorder.stop<span class="hljs-literal">()</span>;<br>            &#125; catch (Exception ex) &#123;<br>                ex.print<span class="hljs-constructor">StackTrace()</span>;<br>            &#125;<br>            mediaRecorder.release<span class="hljs-literal">()</span>;<br>            mediaRecorder = null;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 播放语音</span><br><span class="hljs-comment">     */</span><br>    public void play<span class="hljs-constructor">Recorder()</span> &#123;<br>        <span class="hljs-keyword">if</span> (audioFile != null<span class="hljs-operator"> &amp;&amp; </span>audioFile.exists<span class="hljs-literal">()</span>) &#123;<br>            <span class="hljs-keyword">if</span> (mediaPlayer<span class="hljs-operator"> == </span>null) &#123;<br>                mediaPlayer = <span class="hljs-keyword">new</span> <span class="hljs-constructor">MediaPlayer()</span>;<br>            &#125;<br>            <span class="hljs-comment">// 语音播放完成回调</span><br>            mediaPlayer.set<span class="hljs-constructor">OnCompletionListener(<span class="hljs-params">new</span> MediaPlayer.OnCompletionListener()</span> &#123;<br>                @Override<br>                public void on<span class="hljs-constructor">Completion(MediaPlayer <span class="hljs-params">mediaPlayer</span>)</span> &#123;<br>                    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>e(<span class="hljs-string">&quot;npl&quot;</span>, <span class="hljs-string">&quot;语音播放完成&quot;</span>);<br>                &#125;<br>            &#125;);<br>            <span class="hljs-comment">// 设置语音播放失败监听回调</span><br>            mediaPlayer.set<span class="hljs-constructor">OnErrorListener(<span class="hljs-params">new</span> MediaPlayer.OnErrorListener()</span> &#123;<br>                @Override<br>                public boolean on<span class="hljs-constructor">Error(MediaPlayer <span class="hljs-params">mediaPlayer</span>, <span class="hljs-params">int</span> <span class="hljs-params">what</span>, <span class="hljs-params">int</span> <span class="hljs-params">extra</span>)</span> &#123;<br>                    <span class="hljs-keyword">if</span> (what<span class="hljs-operator"> == </span>MediaPlayer.MEDIA_ERROR_UNKNOWN) &#123;<br>                        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>e(<span class="hljs-string">&quot;NPL&quot;</span>, <span class="hljs-string">&quot;语音播放失败&quot;</span>);<br>                    &#125; <span class="hljs-keyword">else</span> &#123;<br>                        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>e(<span class="hljs-string">&quot;NPL&quot;</span>, <span class="hljs-string">&quot;取消语音播放&quot;</span>);<br>                    &#125;<br>                    return <span class="hljs-literal">false</span>;<br>                &#125;<br>            &#125;);<br>            <span class="hljs-keyword">if</span> (!mediaPlayer.is<span class="hljs-constructor">Playing()</span>) &#123;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    mediaPlayer.reset<span class="hljs-literal">()</span>;<br>                    mediaPlayer.set<span class="hljs-constructor">DataSource(<span class="hljs-params">audioFile</span>.<span class="hljs-params">getAbsolutePath</span>()</span>);<br>                    <span class="hljs-comment">// 异步操作播放语音</span><br>                    mediaPlayer.prepare<span class="hljs-constructor">Async()</span>;<br>                    <span class="hljs-comment">// 语音播放准备完毕监听回调</span><br>                    mediaPlayer.set<span class="hljs-constructor">OnPreparedListener(<span class="hljs-params">new</span> MediaPlayer.OnPreparedListener()</span> &#123;<br>                        @Override<br>                        public void on<span class="hljs-constructor">Prepared(MediaPlayer <span class="hljs-params">mediaPlayer</span>)</span> &#123;<br>                            <span class="hljs-comment">// 开始播放</span><br>                            mediaPlayer.start<span class="hljs-literal">()</span>;<br>                        &#125;<br>                    &#125;);<br>                &#125; catch (Exception ex) &#123;<br>                    ex.print<span class="hljs-constructor">StackTrace()</span>;<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://github.com/xiaoniudadi/android-media-demo/tree/master/02-android-media-audio-collection">demo代码</a></p>
+<h1 id="参考博客"><a href="#参考博客" class="headerlink" title="参考博客"></a>参考博客</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/pangpang123654/article/details/82657795">AudioRecord 录音详解</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+        <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/">#音视频</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>android 音视频开发(三)</div>
+      <div>http://example.com/2019/08/04/android-media-03/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年8月4日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/08/05/python-09/" title="拥抱Python（九） 字典">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">拥抱Python（九） 字典</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/08/04/python-08/" title="拥抱Python（八） 元组">
+                        <span class="hidden-mobile">拥抱Python（八） 元组</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

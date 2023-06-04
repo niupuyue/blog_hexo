@@ -1,0 +1,647 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="数据解析在网络请求中是非常重要的，不管是发送数据到服务器，还是接受服务器传回来的数据，都是要用到json解析的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重拾Android路(四) json解析">
+<meta property="og:url" content="http://example.com/2016/02/29/android-4-json/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="数据解析在网络请求中是非常重要的，不管是发送数据到服务器，还是接受服务器传回来的数据，都是要用到json解析的。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-02-29T15:19:42.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.091Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>重拾Android路(四) json解析 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="重拾Android路(四) json解析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2016-02-29 23:19" pubdate>
+          2016年2月29日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          47 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">重拾Android路(四) json解析</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>数据解析在网络请求中是非常重要的，不管是发送数据到服务器，还是接受服务器传回来的数据，都是要用到json解析的。</p>
+<span id="more"></span>
+<p>在这片博客中，主要介绍三种json数据解析</p>
+<ol>
+<li>原生json</li>
+<li>Gson</li>
+<li>fastjson</li>
+</ol>
+<h1 id="JSON"><a href="#JSON" class="headerlink" title="JSON"></a>JSON</h1><p>JSON是一种取代XML的数据结构,和xml相比,它更小巧但描述能力却不差,由于它的小巧所以网络传输数据将减少更多流量从而加快速度。<br>JSON就是一串字符串 只不过元素会使用特定的符号标注。</p>
+<ol>
+<li>{} 双括号表示对象</li>
+<li>[] 中括号表示数组</li>
+<li>“” 双引号内是属性或值</li>
+<li>: 冒号表示后者是前者的值(这个值可以是字符串、数字、也可以是另一个数组或对象)<br>所以 {“name”: “Michael”} 可以理解为是一个包含name为Michael的对象<br>而[{“name”: “Michael”},{“name”: “Jerry”}]就表示包含两个对象的数组<br>当然了,你也可以使用{“name”:[“Michael”,”Jerry”]}来简化上面一部,这是一个拥有一个name数组的对象</li>
+</ol>
+<h1 id="原生Json"><a href="#原生Json" class="headerlink" title="原生Json"></a>原生Json</h1><h2 id="生成原生Json字符串"><a href="#生成原生Json字符串" class="headerlink" title="生成原生Json字符串"></a>生成原生Json字符串</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-title class_">String</span> <span class="hljs-title function_">createJsonString</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> key, <span class="hljs-built_in">Object</span> value</span>) &#123;<br>    <span class="hljs-title class_">JSON</span><span class="hljs-built_in">Object</span> jsonObject = <span class="hljs-keyword">new</span> <span class="hljs-title class_">JSON</span><span class="hljs-built_in">Object</span>();<br>    jsonObject.<span class="hljs-title function_">put</span>(key, value);<br>    <span class="hljs-keyword">return</span> jsonObject.<span class="hljs-title function_">toString</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="解析Json字符串"><a href="#解析Json字符串" class="headerlink" title="解析Json字符串"></a>解析Json字符串</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.ArrayList;<br><span class="hljs-keyword">import</span> java.util.HashMap;<br><span class="hljs-keyword">import</span> java.util.Iterator;<br><span class="hljs-keyword">import</span> java.util.List;<br><span class="hljs-keyword">import</span> java.util.Map;<br><span class="hljs-keyword">import</span> org.json.JSONArray;<br><span class="hljs-keyword">import</span> org.json.JSONObject;<br><span class="hljs-keyword">import</span> com.android.myjson.domain.Person;<br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 完成对json数据的解析</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">JsonTools</span> &#123;<br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Person <span class="hljs-title function_">getPerson</span><span class="hljs-params">(String key, String jsonString)</span> &#123;<br>    <span class="hljs-type">Person</span> <span class="hljs-variable">person</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Person</span>();<br>    <span class="hljs-keyword">try</span> &#123;<br>      <span class="hljs-type">JSONObject</span> <span class="hljs-variable">jsonObject</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JSONObject</span>(jsonString);<br>      <span class="hljs-type">JSONObject</span> <span class="hljs-variable">personObject</span> <span class="hljs-operator">=</span> jsonObject.getJSONObject(<span class="hljs-string">&quot;person&quot;</span>);<br>      person.setId(personObject.getInt(<span class="hljs-string">&quot;id&quot;</span>));<br>      person.setName(personObject.getString(<span class="hljs-string">&quot;name&quot;</span>));<br>      person.setAddress(personObject.getString(<span class="hljs-string">&quot;address&quot;</span>));<br>    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>      <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> handle exception</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> person;<br>  &#125;<br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> List <span class="hljs-title function_">getPersons</span><span class="hljs-params">(String key, String jsonString)</span> &#123;<br>    <span class="hljs-type">List</span> <span class="hljs-variable">list</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>();<br>    <span class="hljs-keyword">try</span> &#123;<br>      <span class="hljs-type">JSONObject</span> <span class="hljs-variable">jsonObject</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JSONObject</span>(jsonString);<br>      <span class="hljs-comment">// 返回json的数组</span><br>      <span class="hljs-type">JSONArray</span> <span class="hljs-variable">jsonArray</span> <span class="hljs-operator">=</span> jsonObject.getJSONArray(key);<br>      <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; jsonArray.length(); i++) &#123;<br>        <span class="hljs-type">JSONObject</span> <span class="hljs-variable">jsonObject2</span> <span class="hljs-operator">=</span> jsonArray.getJSONObject(i);<br>        <span class="hljs-type">Person</span> <span class="hljs-variable">person</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Person</span>();<br>        person.setId(jsonObject2.getInt(<span class="hljs-string">&quot;id&quot;</span>));<br>        person.setName(jsonObject2.getString(<span class="hljs-string">&quot;name&quot;</span>));<br>        person.setAddress(jsonObject2.getString(<span class="hljs-string">&quot;address&quot;</span>));<br>        list.add(person);<br>      &#125;<br>    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>      <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> handle exception</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> list;<br>  &#125;<br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> List <span class="hljs-title function_">getList</span><span class="hljs-params">(String key, String jsonString)</span> &#123;<br>    <span class="hljs-type">List</span> <span class="hljs-variable">list</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>();<br>    <span class="hljs-keyword">try</span> &#123;<br>      <span class="hljs-type">JSONObject</span> <span class="hljs-variable">jsonObject</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JSONObject</span>(jsonString);<br>      <span class="hljs-type">JSONArray</span> <span class="hljs-variable">jsonArray</span> <span class="hljs-operator">=</span> jsonObject.getJSONArray(key);<br>      <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; jsonArray.length(); i++) &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">msg</span> <span class="hljs-operator">=</span> jsonArray.getString(i);<br>        list.add(msg);<br>      &#125;<br>    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>      <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> handle exception</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> list;<br>  &#125;<br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> List&gt; listKeyMaps(String key,<br>      String jsonString) &#123;<br>    List&gt; list = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&gt;();<br>    <span class="hljs-keyword">try</span> &#123;<br>      <span class="hljs-type">JSONObject</span> <span class="hljs-variable">jsonObject</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JSONObject</span>(jsonString);<br>      <span class="hljs-type">JSONArray</span> <span class="hljs-variable">jsonArray</span> <span class="hljs-operator">=</span> jsonObject.getJSONArray(key);<br>      <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; jsonArray.length(); i++) &#123;<br>        <span class="hljs-type">JSONObject</span> <span class="hljs-variable">jsonObject2</span> <span class="hljs-operator">=</span> jsonArray.getJSONObject(i);<br>        <span class="hljs-type">Map</span> <span class="hljs-variable">map</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>();<br>        <span class="hljs-type">Iterator</span> <span class="hljs-variable">iterator</span> <span class="hljs-operator">=</span> jsonObject2.keys();<br>        <span class="hljs-keyword">while</span> (iterator.hasNext()) &#123;<br>          <span class="hljs-type">String</span> <span class="hljs-variable">json_key</span> <span class="hljs-operator">=</span> iterator.next();<br>          <span class="hljs-type">Object</span> <span class="hljs-variable">json_value</span> <span class="hljs-operator">=</span> jsonObject2.get(json_key);<br>          <span class="hljs-keyword">if</span> (json_value == <span class="hljs-literal">null</span>) &#123;<br>            json_value = <span class="hljs-string">&quot;&quot;</span>;<br>          &#125;<br>          map.put(json_key, json_value);<br>        &#125;<br>        list.add(map);<br>      &#125;<br>    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>      <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> handle exception</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> list;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h1 id="Gson"><a href="#Gson" class="headerlink" title="Gson"></a>Gson</h1><h2 id="生成Json字符串"><a href="#生成Json字符串" class="headerlink" title="生成Json字符串"></a>生成Json字符串</h2><figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs processing"><span class="hljs-keyword">import</span> com.<span class="hljs-property">google</span>.<span class="hljs-property">gson</span>.<span class="hljs-property">Gson</span>;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">JsonUtils</span> &#123;<br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-built_in">String</span> <span class="hljs-title function_">createJsonObject</span>(<span class="hljs-built_in">Object</span> obj) &#123;<br>    Gson gson = <span class="hljs-keyword">new </span><span class="hljs-class title_">Gson</span>();<br>    <span class="hljs-built_in">String</span> <span class="hljs-built_in">str</span> = gson.<span class="hljs-property">toJson</span>(obj);<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">str</span>;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="解析Json"><a href="#解析Json" class="headerlink" title="解析Json"></a>解析Json</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.ArrayList;<br><span class="hljs-keyword">import</span> java.util.List;<br><span class="hljs-keyword">import</span> java.util.Map;<br><span class="hljs-keyword">import</span> com.google.gson.Gson;<br><span class="hljs-keyword">import</span> com.google.gson.reflect.TypeToken;<br>;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">GsonTools</span> &#123;<br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">GsonTools</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">// TODO Auto-generated constructor stub</span><br>  &#125;<br>  <span class="hljs-comment">/**</span><br><span class="hljs-comment">   * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">   * <span class="hljs-doctag">@param</span> jsonString</span><br><span class="hljs-comment">   * <span class="hljs-doctag">@param</span> cls</span><br><span class="hljs-comment">   * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">   */</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> T <span class="hljs-title function_">getPerson</span><span class="hljs-params">(String jsonString, Class cls)</span> &#123;<br>    <span class="hljs-type">T</span> <span class="hljs-variable">t</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>    <span class="hljs-keyword">try</span> &#123;<br>      <span class="hljs-type">Gson</span> <span class="hljs-variable">gson</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Gson</span>();<br>      t = gson.fromJson(jsonString, cls);<br>    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>      <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> handle exception</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> t;<br>  &#125;<br>  <span class="hljs-comment">/**</span><br><span class="hljs-comment">   * 使用Gson进行解析 List</span><br><span class="hljs-comment">   *</span><br><span class="hljs-comment">   * <span class="hljs-doctag">@param</span></span><br><span class="hljs-comment">   * <span class="hljs-doctag">@param</span> jsonString</span><br><span class="hljs-comment">   * <span class="hljs-doctag">@param</span> cls</span><br><span class="hljs-comment">   * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">   */</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> List <span class="hljs-title function_">getPersons</span><span class="hljs-params">(String jsonString, Class cls)</span> &#123;<br>    <span class="hljs-type">List</span> <span class="hljs-variable">list</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>();<br>    <span class="hljs-keyword">try</span> &#123;<br>      <span class="hljs-type">Gson</span> <span class="hljs-variable">gson</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Gson</span>();<br>      list = gson.fromJson(jsonString, <span class="hljs-keyword">new</span> <span class="hljs-title class_">TypeToken</span>&gt;() &#123;<br>      &#125;.getType());<br>    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>    &#125;<br>    <span class="hljs-keyword">return</span> list;<br>  &#125;<br>  <span class="hljs-comment">/**</span><br><span class="hljs-comment">   * <span class="hljs-doctag">@param</span> jsonString</span><br><span class="hljs-comment">   * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">   */</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> List <span class="hljs-title function_">getList</span><span class="hljs-params">(String jsonString)</span> &#123;<br>    <span class="hljs-type">List</span> <span class="hljs-variable">list</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>();<br>    <span class="hljs-keyword">try</span> &#123;<br>      <span class="hljs-type">Gson</span> <span class="hljs-variable">gson</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Gson</span>();<br>      list = gson.fromJson(jsonString, <span class="hljs-keyword">new</span> <span class="hljs-title class_">TypeToken</span>&gt;() &#123;<br>      &#125;.getType());<br>    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>      <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> handle exception</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> list;<br>  &#125;<br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> List&gt; listKeyMaps(String jsonString) &#123;<br>    List&gt; list = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&gt;();<br>    <span class="hljs-keyword">try</span> &#123;<br>      <span class="hljs-type">Gson</span> <span class="hljs-variable">gson</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Gson</span>();<br>      list = gson.fromJson(jsonString,<br>          <span class="hljs-keyword">new</span> <span class="hljs-title class_">TypeToken</span>&gt;&gt;() &#123;<br>          &#125;.getType());<br>    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>      <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> handle exception</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> list;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h1 id="Fastjson"><a href="#Fastjson" class="headerlink" title="Fastjson"></a>Fastjson</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">import</span> java.<span class="hljs-property">util</span>.<span class="hljs-property">ArrayList</span>;<br><span class="hljs-keyword">import</span> java.<span class="hljs-property">util</span>.<span class="hljs-property">List</span>;<br><span class="hljs-keyword">import</span> java.<span class="hljs-property">util</span>.<span class="hljs-property">Map</span>;<br><span class="hljs-keyword">import</span> com.<span class="hljs-property">alibaba</span>.<span class="hljs-property">fastjson</span>.<span class="hljs-property">JSON</span>;<br><span class="hljs-keyword">import</span> com.<span class="hljs-property">alibaba</span>.<span class="hljs-property">fastjson</span>.<span class="hljs-property">TypeReference</span>;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">JsonTool</span> &#123;<br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> T <span class="hljs-title function_">getPerson</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> jsonstring, Class cls</span>) &#123;<br>    T t = <span class="hljs-literal">null</span>;<br>    <span class="hljs-keyword">try</span> &#123;<br>      t = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parseObject</span>(jsonstring, cls);<br>    &#125; <span class="hljs-keyword">catch</span> (<span class="hljs-title class_">Exception</span> e) &#123;<br>      <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> handle exception</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> t;<br>  &#125;<br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-title class_">List</span> <span class="hljs-title function_">getPersonList</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> jsonstring, Class cls</span>) &#123;<br>    <span class="hljs-title class_">List</span> list = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>();<br>    <span class="hljs-keyword">try</span> &#123;<br>      list = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parseArray</span>(jsonstring, cls);<br>    &#125; <span class="hljs-keyword">catch</span> (<span class="hljs-title class_">Exception</span> e) &#123;<br>      <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> handle exception</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> list;<br>  &#125;<br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-title class_">List</span>&gt; <span class="hljs-title function_">getPersonListMap1</span>(<span class="hljs-params"></span><br><span class="hljs-params">      <span class="hljs-built_in">String</span> jsonstring</span>) &#123;<br>    <span class="hljs-title class_">List</span>&gt; list = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&gt;();<br>    <span class="hljs-keyword">try</span> &#123;<br>      list = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parseObject</span>(jsonstring,<br>          <span class="hljs-keyword">new</span> <span class="hljs-title class_">TypeReference</span>&gt;&gt;() &#123;<br>          &#125;.<span class="hljs-title function_">getType</span>());<br>    &#125; <span class="hljs-keyword">catch</span> (<span class="hljs-title class_">Exception</span> e) &#123;<br>      <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> handle exception</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> list;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a target="_blank" rel="noopener" href="http://www.jb51.net/article/101610.htm">基于java的json解析</a><br><a target="_blank" rel="noopener" href="https://github.com/google/gson">Gson</a><br><a target="_blank" rel="noopener" href="https://github.com/alibaba/fastjson">fastjson</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>重拾Android路(四) json解析</div>
+      <div>http://example.com/2016/02/29/android-4-json/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2016年2月29日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2016/03/23/android-5-rxjava/" title="重拾Android路(五) RxJava和RxAndroid">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">重拾Android路(五) RxJava和RxAndroid</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2016/02/19/Android-3-network/" title="重拾android路(三) 网络请求">
+                        <span class="hidden-mobile">重拾android路(三) 网络请求</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

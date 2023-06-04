@@ -1,0 +1,679 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="关于MQTT">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重拾android路(三十五) MQTT">
+<meta property="og:url" content="http://example.com/2019/12/24/android-35-mqtt/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="关于MQTT">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/android/mqtt01.png">
+<meta property="article:published_time" content="2019-12-24T13:35:51.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.090Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta property="article:tag" content="mqtt">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/android/mqtt01.png">
+  
+  
+  
+  <title>重拾android路(三十五) MQTT - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="重拾android路(三十五) MQTT"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-12-24 21:35" pubdate>
+          2019年12月24日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          18 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">重拾android路(三十五) MQTT</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="关于MQTT"><a href="#关于MQTT" class="headerlink" title="关于MQTT"></a>关于MQTT</h1><span id="more"></span>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>MQTT，消息队列遥测传输，是IBM开发的一个即时通信协议。它是一种发布&#x2F;订阅，极其简单和轻量级的消息传递协议，专门为受限设备和低带宽，高延迟或不可靠的网络而设计。它的设计思想是轻巧，开放，简单，规范，易于实现。这些特点使得他对很多场景来说都是很好的选择。特别是一些受限环境如机器与机器的通信(M2M)以及物联网环境，相对于XMPP，MQTT更加轻量级，并且占用的宽带低。</p>
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><ol>
+<li>使用发布&#x2F;订阅消息模式。提供一对多的消息发布，解除应用程序耦合</li>
+<li>对敷在内容屏蔽的消息传输模式</li>
+<li>使用TCP&#x2F;IP提供网络连接</li>
+<li>有三种消息发布服务质量<ul>
+<li>qos为0:”至多1次”，消息发布完全依赖底层TCP&#x2F;IP网络。会发生消息丢失或重复，这一级别可用于如下情况：环境传感器数据，丢失一次几路无所谓，因为不久之后还有第二次发送</li>
+<li>qos为1:”至少1次”，确保消息到达，但消息重复可能会发生，这一级别可用于如下情况：你需要获取每条消息，并且消息重复发送对我们来说无影响</li>
+<li>qos为2::”只有1次”，确保消息到达一次，这一级别可用于如下情况，在计费系统中，消息重复或丢失导致不正确的结果</li>
+</ul>
+</li>
+<li>小型传输，开销很小(固定长度的头部是2字节)。协议交换最小化，以降低网络流量。使用Last Will和Testament特性通知有关各方客户端异常中断的机制</li>
+</ol>
+<h2 id="MQTT体系结构"><a href="#MQTT体系结构" class="headerlink" title="MQTT体系结构"></a>MQTT体系结构</h2><p>如下图所示<br><img src="/assets/android/mqtt01.png" srcset="/img/loading.gif" lazyload alt="MQTT体系结构"></p>
+<p>我们可以这样理解，我们去一个景区玩，进入景区配置一台闸机设备作为发布者(publisher),当闸机设备监控到有游客进入的时候，会发布一个带有主体(topic)的消息(例如主题为：welcome)给服务器(MQTT-Broker),当服务器收到发不过来的消息后，进行基于主题的过滤，将消息转发给鼎娱乐该主题的订阅者。而景区的大屏幕作为定于这(Subscriber),订阅的主题也是welcome,这样就能接收到服务器转发过来的消息，收到消息后在大屏幕上显示我们需要的内容</p>
+<p>在该结构图中，闸机设备和大屏幕都是客户端，都可以进行发布和订阅。</p>
+<h1 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h1><h2 id="发布-x2F-订阅模式"><a href="#发布-x2F-订阅模式" class="headerlink" title="发布&#x2F;订阅模式"></a>发布&#x2F;订阅模式</h2><p>发布&#x2F;订阅模式解耦了发布消息的客户端(发布者)和订阅消息的客户端(订阅者)之间的关系，这意味着发布者和订阅者之间不需要直接建立联系。就比如，打电话给朋友，我们需要等到朋友接通电话才能交流，这就是一种典型的同步请求&#x2F;回答的场景；而给一个好友发送邮件就不一样了，发送的邮件之后，我们可以去做别的事，朋友有时间去看邮件就好了。这就是一个典型的异步发布&#x2F;订阅的场景。</p>
+<blockquote>
+<p>发布者与订阅者不需要彼此了解，只需要认识同一个消息代理即可；发布者和订阅者不需要交互，发布者无需等待订阅者确认而导致锁定；发布者和订阅者不需要同时在线，可以自由选择时间消费消息</p>
+</blockquote>
+<h2 id="主题"><a href="#主题" class="headerlink" title="主题"></a>主题</h2><p>MQTT是通过主题对消息进行分类的，本质上就是一个UTF-8的字符串，不过可以通过反斜杠表示多个层级关系，主题不需要创建，直接使用即可<br>主题还可以通过通配符进行过滤，其中+可以过滤一个层级，*只能出现在主题最后表示过滤任意级别的层级</p>
+<blockquote>
+<p>building-b&#x2F;floor-5:表示B楼5层的设置；+&#x2F;floor-5:表示任何一个楼里的5层的设置；building-b&#x2F;*:表示B楼中的所有设配</p>
+</blockquote>
+<h2 id="服务质量"><a href="#服务质量" class="headerlink" title="服务质量"></a>服务质量</h2><p>为了满足不同的场景，MQTT支持三种不同级别的服务质量QoS，为不同的场景提供消息的可靠性</p>
+<ol>
+<li>级别0：尽力而为，消息发送者会想尽办法将消息发送出去，但如遇意外，并不会重新发送</li>
+<li>级别1：至少一次，消息接受者如果没有知会或者知会本身丢失，消息发送者再次发送该消息，以确保消息能够被接收到，这种情况，可能会造成消息的重复</li>
+<li>级别2：恰好一次，保证这种语义肯定会减少并发或增加延迟，不过丢失或者重复消息是不可被接受的。</li>
+</ol>
+<p>服务质量是一个老话题，级别2所提供的的不重复不丢失很多情况下是最理想的，不过往返多次的确认，一定会对并发和延迟带来影响；级别1提供至少一次语义在日志处理这种场景下是没问题的，所以像Kafka这类的系统利用这个特点减少确认从而提高高并发；级别0适合几个数据场景，但是并不是特别多，姑且不表；</p>
+<h2 id="消息类型"><a href="#消息类型" class="headerlink" title="消息类型"></a>消息类型</h2><ol>
+<li>CONNECT：客户端连接到MQTT代理</li>
+<li>CONNACK：连接确认</li>
+<li>PUBLISH：新发布消息</li>
+<li>PUBACK：新发布消息确认，是QoS 1给PUBLISH消息的回复</li>
+<li>PUBREC：QoS 2消息流的第一部分，表示消息发布已记录</li>
+<li>PUBREL：QoS 2消息流的第二部分，表示消息发布已释放</li>
+<li>PUBCOMP：QoS 2消息流的第三部分，表示消息发布完成</li>
+<li>SUBSCRIBE：客户端订阅某个主题</li>
+<li>SUBACK：对于SUBSCRIBE消息的确认</li>
+<li>UNSUBSCRIBE：客户端终止订阅的消息</li>
+<li>UNSUBACK：对于UNSUBSCRIBE消息的确认</li>
+<li>PINGREQ：心跳</li>
+<li>PINGRESP：确认心跳</li>
+<li>DISCONNECT：客户端终止连接前优雅地通知MQTT代理</li>
+</ol>
+<h1 id="参考博客"><a href="#参考博客" class="headerlink" title="参考博客"></a>参考博客</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_17250009/article/details/52774472">android App必备高级功能，消息推送之MQTT</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/73436a5cf855">Android消息推送MQTT实战</a><br><a target="_blank" rel="noopener" href="https://www.hivemq.com/blog/how-to-get-started-with-mqtt/">Getting started with MQTT</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/github_33304260/article/details/73555475">MQTT入门知识</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+        <a href="/tags/mqtt/">#mqtt</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>重拾android路(三十五) MQTT</div>
+      <div>http://example.com/2019/12/24/android-35-mqtt/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年12月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/02/24/android-36-aidl/" title="重拾android路(三十六) AIDL">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">重拾android路(三十六) AIDL</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/12/20/android-34-room/" title="重拾android路(三十四) room">
+                        <span class="hidden-mobile">重拾android路(三十四) room</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,691 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Activity启动流程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android奇技淫巧 11 Activity启动">
+<meta property="og:url" content="http://example.com/2019/07/27/android-tools-11/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Activity启动流程">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/tools/tools-progress-01.png">
+<meta property="og:image" content="http://example.com/assets/tools/tools-progress-03.png">
+<meta property="article:published_time" content="2019-07-27T12:42:10.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.111Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/tools/tools-progress-01.png">
+  
+  
+  
+  <title>android奇技淫巧 11 Activity启动 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="android奇技淫巧 11 Activity启动"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-07-27 20:42" pubdate>
+          2019年7月27日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          21k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          174 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">android奇技淫巧 11 Activity启动</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Activity启动流程</p>
+<span id="more"></span>
+
+<h1 id="Zygote"><a href="#Zygote" class="headerlink" title="Zygote"></a>Zygote</h1><p>先来看一张图片<br><img src="/assets/tools/tools-progress-01.png" srcset="/img/loading.gif" lazyload alt="Android系统结构图"><br>在Android体系结构中，底层内核空间以Linux Kernel为核心，上层用户控件以C++&#x2F;Java组成FrameWork，通过系统调用来连接用户空间和内核空间。而用户空间又分为Native和Java，通过JNI技术机型连接。Native的init进程是所有用户进程的祖先，其pid为1，init进程通过解析init.rc文件创建出Zygote进程，Zygote进程如其名，中文直译为受精卵，他是Java世界中的第一个进程，也是Android系统中的第一个Java进程。</p>
+<p>Zygote创建的第一个进程就是System Server，System Server负责管理和启动整个Java FrameWork层。创建完System Server之后，Zygote会完全进入受精卵的角色，等待进行不行繁殖，创建应用进程。所有的应用进程都是由Zygote进程forl而来的</p>
+<p>Zygote的启动过程是从Native层开始的，我们先不对Native层做过多分析，直接进入Java代码的入口ZygoteInit.main();</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String argv[])</span> &#123;<br>    <span class="hljs-type">ZygoteServer</span> <span class="hljs-variable">zygoteServer</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ZygoteServer</span>();<br><br>    <span class="hljs-comment">// Mark zygote start. This ensures that thread creation will throw</span><br>    <span class="hljs-comment">// an error.</span><br>    ZygoteHooks.startZygoteNoThreadCreation();<br><br>    <span class="hljs-comment">// Zygote goes into its own process group.</span><br>    <span class="hljs-comment">// 设置进程组 ID</span><br>    <span class="hljs-comment">// pid 为 0 表示设置当前进程的进程组 ID</span><br>    <span class="hljs-comment">// gid 为 0 表示使用当前进程的 PID 作为进程组 ID</span><br>    <span class="hljs-keyword">try</span> &#123;<br>        Os.setpgid(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>);<br>    &#125; <span class="hljs-keyword">catch</span> (ErrnoException ex) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Failed to setpgid(0,0)&quot;</span>, ex);<br>    &#125;<br><br>    <span class="hljs-keyword">final</span> Runnable caller;<br>    <span class="hljs-keyword">try</span> &#123;<br>        ......<br>        RuntimeInit.enableDdms(); <span class="hljs-comment">// 启用 DDMS</span><br><br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">startSystemServer</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">socketName</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;zygote&quot;</span>;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">abiList</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">enableLazyPreload</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt; argv.length; i++) &#123; <span class="hljs-comment">// 参数解析</span><br>            <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;start-system-server&quot;</span>.equals(argv[i])) &#123;<br>                startSystemServer = <span class="hljs-literal">true</span>;<br>            &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;--enable-lazy-preload&quot;</span>.equals(argv[i])) &#123;<br>                enableLazyPreload = <span class="hljs-literal">true</span>;<br>            &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (argv[i].startsWith(ABI_LIST_ARG)) &#123;<br>                abiList = argv[i].substring(ABI_LIST_ARG.length());<br>            &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (argv[i].startsWith(SOCKET_NAME_ARG)) &#123;<br>                socketName = argv[i].substring(SOCKET_NAME_ARG.length());<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Unknown command line argument: &quot;</span> + argv[i]);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">if</span> (abiList == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;No ABI list supplied.&quot;</span>);<br>        &#125;<br><br>        <span class="hljs-comment">// 1. 注册服务端 socket，这里的 IPC 不是 Binder 通信</span><br>        zygoteServer.registerServerSocketFromEnv(socketName); <br>        <span class="hljs-comment">// In some configurations, we avoid preloading resources and classes eagerly.</span><br>        <span class="hljs-comment">// In such cases, we will preload things prior to our first fork.</span><br>        <span class="hljs-keyword">if</span> (!enableLazyPreload) &#123;<br>            bootTimingsTraceLog.traceBegin(<span class="hljs-string">&quot;ZygotePreload&quot;</span>);<br>            EventLog.writeEvent(LOG_BOOT_PROGRESS_PRELOAD_START,<br>                SystemClock.uptimeMillis());<br>            preload(bootTimingsTraceLog); <span class="hljs-comment">// 2. 预加载操作</span><br>            EventLog.writeEvent(LOG_BOOT_PROGRESS_PRELOAD_END,<br>                SystemClock.uptimeMillis());<br>            bootTimingsTraceLog.traceEnd(); <span class="hljs-comment">// ZygotePreload</span><br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            Zygote.resetNicePriority(); <span class="hljs-comment">// 设置线程优先级为 NORM_PRIORITY (5)</span><br>        &#125;<br><br>        <span class="hljs-comment">// Do an initial gc to clean up after startup</span><br>        gcAndFinalize(); <span class="hljs-comment">// 3. 强制进行一次垃圾收集</span><br><br>        Zygote.nativeSecurityInit();<br><br>        <span class="hljs-comment">// Zygote process unmounts root storage spaces.</span><br>        Zygote.nativeUnmountStorageOnInit();<br><br>        ZygoteHooks.stopZygoteNoThreadCreation();<br><br>        <span class="hljs-keyword">if</span> (startSystemServer) &#123;<br>            <span class="hljs-comment">// 4. 启动SystemServer 进程</span><br>            <span class="hljs-type">Runnable</span> <span class="hljs-variable">r</span> <span class="hljs-operator">=</span> forkSystemServer(abiList, socketName, zygoteServer); <br><br>            <span class="hljs-comment">// &#123;@code r == null&#125; in the parent (zygote) process, and &#123;@code r != null&#125; in the</span><br>            <span class="hljs-comment">// child (system_server) process.</span><br>            <span class="hljs-keyword">if</span> (r != <span class="hljs-literal">null</span>) &#123;<br>                r.run(); <span class="hljs-comment">// 由 RuntimeInit.java 中的 MethodAndArgsCaller 反射调用SystemServer 的 main() 方法</span><br>                <span class="hljs-keyword">return</span>;<br>            &#125;<br>        &#125;<br><br>        Log.i(TAG, <span class="hljs-string">&quot;Accepting command socket connections&quot;</span>);<br><br>        <span class="hljs-comment">// The select loop returns early in the child process after a fork and</span><br>        <span class="hljs-comment">// loops forever in the zygote.</span><br>        <span class="hljs-comment">// 5. 循环等待处理客户端请求</span><br>        caller = zygoteServer.runSelectLoop(abiList);<br>    &#125; <span class="hljs-keyword">catch</span> (Throwable ex) &#123;<br>        Log.e(TAG, <span class="hljs-string">&quot;System zygote died with exception&quot;</span>, ex);<br>        <span class="hljs-keyword">throw</span> ex;<br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>        zygoteServer.closeServerSocket(); <span class="hljs-comment">// 关闭并释放 socket 连接</span><br>    &#125;<br><br>    <span class="hljs-comment">// We&#x27;re in the child process and have exited the select loop. Proceed to execute the</span><br>    <span class="hljs-comment">// command.</span><br>    <span class="hljs-keyword">if</span> (caller != <span class="hljs-literal">null</span>) &#123;<br>        caller.run();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>已经省略掉一些不是特别重要的代码，ZtgoteInit.main()方法大致分为五个步骤</p>
+<ol>
+<li>registerServerSocketFromEnv，注册服务端socket，用于跨进程通信，这里并没有使用Binder通信</li>
+<li>preload(),进行预加载操作</li>
+<li>gcAndFinalize(),在forkSystemServer之前主动进行一次垃圾回收</li>
+<li>forkSystemServer(),创建SystemServer进程</li>
+<li>runSelectLoop(),循环贷等处理客户端发送来的socket请求</li>
+</ol>
+<p>上面基本上就是Zygote的全部内容</p>
+<h2 id="registerServerSocketFromEnv"><a href="#registerServerSocketFromEnv" class="headerlink" title="registerServerSocketFromEnv"></a>registerServerSocketFromEnv</h2><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs haxe">&gt; ZygoteServer.java<br><br>void registerServerSocketFromEnv(<span class="hljs-keyword">String</span> socketName) &#123;<br>    <span class="hljs-keyword">if</span> (mServerSocket == <span class="hljs-literal">null</span>) &#123;<br>        int fileDesc;<br>        final <span class="hljs-keyword">String</span> fullSocketName = ANDROID_SOCKET_PREFIX + socketName;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-comment">// 从环境变量中获取 socket 的 fd</span><br>            <span class="hljs-keyword">String</span> env = System.getenv(fullSocketName);<br>            fileDesc = Integer.parseInt(env);<br>        &#125; <span class="hljs-keyword">catch</span> (RuntimeException ex) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-type">RuntimeException</span>(fullSocketName + <span class="hljs-string">&quot; unset or invalid&quot;</span>, ex);<br>        &#125;<br><br>        <span class="hljs-keyword">try</span> &#123;<br>            FileDescriptor fd = <span class="hljs-keyword">new</span> <span class="hljs-type">FileDescriptor</span>();<br>            fd.setInt$(fileDesc); <span class="hljs-comment">// 设置文件描述符</span><br>            mServerSocket = <span class="hljs-keyword">new</span> <span class="hljs-type">LocalServerSocket</span>(fd); <span class="hljs-comment">// 创建服务端 socket</span><br>            mCloseSocketFd = <span class="hljs-literal">true</span>;<br>        &#125; <span class="hljs-keyword">catch</span> (IOException ex) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-type">RuntimeException</span>(<br>                    <span class="hljs-string">&quot;Error binding to local socket &#x27;&quot;</span> + fileDesc + <span class="hljs-string">&quot;&#x27;&quot;</span>, ex);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>首先从环境变量中获取socket的文件描述符fd，然后根据fd创建服务器LocalServerSocket，用于IPC通信，这里的环境变量是init进程创建Zygote进程时设置的</p>
+<h3 id="preload"><a href="#preload" class="headerlink" title="preload()"></a>preload()</h3><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs lasso">&gt; ZygoteInit.java<br><br>static <span class="hljs-literal">void</span> preload(TimingsTraceLog bootTimingsTraceLog) &#123;<br>        <span class="hljs-params">...</span><span class="hljs-params">...</span><br>        preloadClasses(); <span class="hljs-comment">// 预加载并初始化 /system/etc/preloaded-classes 中的类</span><br>        <span class="hljs-params">...</span><span class="hljs-params">...</span><br>        preloadResources(); <span class="hljs-comment">// 预加载系统资源</span><br>        <span class="hljs-params">...</span><span class="hljs-params">...</span><br>        nativePreloadAppProcessHALs(); <span class="hljs-comment">// HAL?</span><br>        <span class="hljs-params">...</span><span class="hljs-params">...</span><br>        preloadOpenGL(); <span class="hljs-comment">// 预加载 OpenGL</span><br>        <span class="hljs-params">...</span><span class="hljs-params">...</span><br>        preloadSharedLibraries(); <span class="hljs-comment">// 预加载 共享库，包括 android、compiler_rt、jnigraphics 这三个库</span><br>        preloadTextResources(); <span class="hljs-comment">// 预加载文字资源</span><br>        <span class="hljs-comment">// Ask the WebViewFactory to do any initialization that must run in the zygote process,</span><br>        <span class="hljs-comment">// for memory sharing purposes.</span><br>        <span class="hljs-comment">// WebViewFactory 中一些必须在 zygote 进程中进行的初始化工作，用于共享内存</span><br>        WebViewFactory.prepareWebViewInZygote();<br>        warmUpJcaProviders();<br><br>        sPreloadComplete = <span class="hljs-literal">true</span>;<br>    &#125;<br></code></pre></td></tr></table></figure>
+<p>preload()方法主要进行一些类，资源，共享库的预加载工作，艺体生运行时效率，分别加载的了以下内容</p>
+<h4 id="preloadClasses"><a href="#preloadClasses" class="headerlink" title="preloadClasses()"></a>preloadClasses()</h4><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs csharp">&gt; ZygoteInit.<span class="hljs-function">java</span><br><span class="hljs-function"></span><br><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">preloadClasses</span>()</span> &#123;<br>    ......<br>    InputStream <span class="hljs-keyword">is</span>;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-comment">// /system/etc/preloaded-classes</span><br>        <span class="hljs-keyword">is</span> = <span class="hljs-keyword">new</span> FileInputStream(PRELOADED_CLASSES);<br>    &#125; <span class="hljs-keyword">catch</span> (FileNotFoundException e) &#123;<br>        Log.e(TAG, <span class="hljs-string">&quot;Couldn&#x27;t find &quot;</span> + PRELOADED_CLASSES + <span class="hljs-string">&quot;.&quot;</span>);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">try</span> &#123;<br>        BufferedReader br<br>            = <span class="hljs-keyword">new</span> BufferedReader(<span class="hljs-keyword">new</span> InputStreamReader(<span class="hljs-keyword">is</span>), <span class="hljs-number">256</span>);<br><br>        <span class="hljs-built_in">int</span> count = <span class="hljs-number">0</span>;<br>        String line;<br>        <span class="hljs-keyword">while</span> ((line = br.readLine()) != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-comment">// Skip comments and blank lines.</span><br>            line = line.trim();<br>            <span class="hljs-keyword">if</span> (line.startsWith(<span class="hljs-string">&quot;#&quot;</span>) || line.<span class="hljs-keyword">equals</span>(<span class="hljs-string">&quot;&quot;</span>)) &#123;<br>                <span class="hljs-keyword">continue</span>;<br>            &#125;<br><br>            <span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-comment">// Load and explicitly initialize the given class. Use</span><br>                <span class="hljs-comment">// Class.forName(String, boolean, ClassLoader) to avoid repeated stack lookups</span><br>                <span class="hljs-comment">// (to derive the caller&#x27;s class-loader). Use true to force initialization, and</span><br>                <span class="hljs-comment">// null for the boot classpath class-loader (could as well cache the</span><br>                <span class="hljs-comment">// class-loader of this class in a variable).</span><br>                Class.forName(line, <span class="hljs-literal">true</span>, <span class="hljs-literal">null</span>);<br>                count++;<br>            &#125; <span class="hljs-keyword">catch</span> (ClassNotFoundException e) &#123;<br>                Log.w(TAG, <span class="hljs-string">&quot;Class not found for preloading: &quot;</span> + line);<br>            &#125; <span class="hljs-keyword">catch</span> (UnsatisfiedLinkError e) &#123;<br>                Log.w(TAG, <span class="hljs-string">&quot;Problem preloading &quot;</span> + line + <span class="hljs-string">&quot;: &quot;</span> + e);<br>            &#125; <span class="hljs-keyword">catch</span> (Throwable t) &#123;<br>                ......<br>            &#125;<br>        &#125;<br>    &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>        Log.e(TAG, <span class="hljs-string">&quot;Error reading &quot;</span> + PRELOADED_CLASSES + <span class="hljs-string">&quot;.&quot;</span>, e);<br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>        IoUtils.closeQuietly(<span class="hljs-keyword">is</span>);<br>        ......<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>只保留了核心逻辑代码，读取&#x2F;system&#x2F;etc&#x2F;preloaded-classes文件，并通过Class.forName()方法逐行加载文件中声明的类。提前预加载系统常用的类无疑可以提升运行时效率，但是这个预加载常用类的工作通常会很繁重。搜索整个代码库，在&#x2F;frameworks&#x2F;base&#x2F;config目录下发现一份preoloaded-classes文件，打开这个文件，一共6558行，这就意味着要提前加载数千个类，这无疑会消耗很长时间，以增加Android系统启动时间的代价提升运行时效率</p>
+<h4 id="preloadResoureces"><a href="#preloadResoureces" class="headerlink" title="preloadResoureces()"></a>preloadResoureces()</h4><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">&gt; ZygoteInit.java<br><br><span class="hljs-keyword">private</span> static <span class="hljs-built_in">void</span> preloadResources() &#123;<br>    <span class="hljs-keyword">final</span> VMRuntime runtime = VMRuntime.getRuntime();<br><br>    <span class="hljs-keyword">try</span> &#123;<br>        mResources = Resources.getSystem();<br>        mResources.startPreloading();<br>        <span class="hljs-keyword">if</span> (PRELOAD_RESOURCES) &#123;<br>            TypedArray ar = mResources.obtainTypedArray(<br>                    com.android.<span class="hljs-built_in">int</span>ernal.R.<span class="hljs-built_in">array</span>.preloaded_drawables);<br>            <span class="hljs-built_in">int</span> N = preloadDrawables(ar);<br>            ar.recycle();<br>            ......<br>            ar = mResources.obtainTypedArray(<br>                    com.android.<span class="hljs-built_in">int</span>ernal.R.<span class="hljs-built_in">array</span>.preloaded_color_state_lists);<br>            N = preloadColorStateLists(ar);<br>            ar.recycle();<br><br>            <span class="hljs-keyword">if</span> (mResources.getBoolean(<br>                    com.android.<span class="hljs-built_in">int</span>ernal.R.<span class="hljs-built_in">bool</span>.config_freeformWindowManagement)) &#123;<br>                ar = mResources.obtainTypedArray(<br>                    com.android.<span class="hljs-built_in">int</span>ernal.R.<span class="hljs-built_in">array</span>.preloaded_freeform_multi_window_drawables);<br>                N = preloadDrawables(ar);<br>                ar.recycle();<br>            &#125;<br>        &#125;<br>        mResources.finishPreloading();<br>    &#125; <span class="hljs-keyword">catch</span> (RuntimeException e) &#123;<br>        Log.w(TAG, <span class="hljs-string">&quot;Failure preloading resources&quot;</span>, e);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>从源码中可以看出主要加载的有以下几个资源</p>
+<ul>
+<li>com.android.internal.R.array.preloaded_drawables</li>
+<li>com.android.internal.R.array.preloaded_color_state_lists</li>
+<li>com.android.internal.R.array.preloaded_freeform_multi_window_drawables</li>
+</ul>
+<h4 id="preloadSharedLibraries"><a href="#preloadSharedLibraries" class="headerlink" title="preloadSharedLibraries"></a>preloadSharedLibraries</h4><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">&gt; <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ZygoteInit</span>.</span></span>java<br><br><span class="hljs-keyword">private</span> static void preload<span class="hljs-constructor">SharedLibraries()</span> &#123;<br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>i(TAG, <span class="hljs-string">&quot;Preloading shared libraries...&quot;</span>);<br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>load<span class="hljs-constructor">Library(<span class="hljs-string">&quot;android&quot;</span>)</span>;<br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>load<span class="hljs-constructor">Library(<span class="hljs-string">&quot;compiler_rt&quot;</span>)</span>;<br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>load<span class="hljs-constructor">Library(<span class="hljs-string">&quot;jnigraphics&quot;</span>)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>预加载了三个共享库，libandroid.so,libcompiler_rt.so和libjnigraphics.so</p>
+<h3 id="gcAndroid"><a href="#gcAndroid" class="headerlink" title="gcAndroid"></a>gcAndroid</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">&gt; <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ZygoteInit</span>.</span></span>java<br><br>static void gc<span class="hljs-constructor">AndFinalize()</span> &#123;<br>    final VMRuntime runtime = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">VMRuntime</span>.</span></span>get<span class="hljs-constructor">Runtime()</span>;<br><br>    <span class="hljs-comment">/* runFinalizationSync() lets finalizers be called in Zygote,</span><br><span class="hljs-comment">     * which doesn&#x27;t have a HeapWorker thread.</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>gc<span class="hljs-literal">()</span>;<br>    runtime.run<span class="hljs-constructor">FinalizationSync()</span>;<br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>gc<span class="hljs-literal">()</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在forkSystemServer()之前会主动进行一次GC操作</p>
+<h3 id="forSystemServer"><a href="#forSystemServer" class="headerlink" title="forSystemServer()"></a>forSystemServer()</h3><p>主动调用GC之后，Zygote就要去做他的大事—fork SystemServer进程了</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><code class="hljs haxe">&gt; ZygoteInit.java<br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Runnable forkSystemServer(<span class="hljs-keyword">String</span> abiList, <span class="hljs-keyword">String</span> socketName,<br>    <br>    ......<br>    <br>    <span class="hljs-comment">/* Hardcoded command line to start the system server */</span><br>    <span class="hljs-comment">// 启动参数</span><br>    <span class="hljs-keyword">String</span> args[] = &#123;<br>        <span class="hljs-string">&quot;--setuid=1000&quot;</span>,<br>        <span class="hljs-string">&quot;--setgid=1000&quot;</span>,<br>        <span class="hljs-string">&quot;--setgroups=1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1018,1021,1023,1024,1032,1065,3001,3002,3003,3006,3007,3009,3010&quot;</span>,<br>        <span class="hljs-string">&quot;--capabilities=&quot;</span> + capabilities + <span class="hljs-string">&quot;,&quot;</span> + capabilities,<br>        <span class="hljs-string">&quot;--nice-name=system_server&quot;</span>, <span class="hljs-comment">// 进程名</span><br>        <span class="hljs-string">&quot;--runtime-args&quot;</span>,<br>        <span class="hljs-string">&quot;--target-sdk-version=&quot;</span> + VMRuntime.SDK_VERSION_CUR_DEVELOPMENT,<br>        <span class="hljs-string">&quot;com.android.server.SystemServer&quot;</span>, <span class="hljs-comment">// 加载类名</span><br>    &#125;;<br>    ZygoteConnection.Arguments parsedArgs = <span class="hljs-literal">null</span>;<br><br>    int pid;<br><br>    <span class="hljs-keyword">try</span> &#123;<br>        parsedArgs = <span class="hljs-keyword">new</span> <span class="hljs-type">ZygoteConnection</span>.Arguments(args);<br>        ZygoteConnection.applyDebuggerSystemProperty(parsedArgs);<br>        ZygoteConnection.applyInvokeWithSystemProperty(parsedArgs);<br><br>        boolean profileSystemServer = SystemProperties.getBoolean(<br>                <span class="hljs-string">&quot;dalvik.vm.profilesystemserver&quot;</span>, <span class="hljs-literal">false</span>);<br>        <span class="hljs-keyword">if</span> (profileSystemServer) &#123;<br>            parsedArgs.runtimeFlags |= Zygote.PROFILE_SYSTEM_SERVER;<br>        &#125;<br><br>        <span class="hljs-comment">/* Request to fork the system server process</span><br><span class="hljs-comment">         * fork system_server 进程</span><br><span class="hljs-comment">         */</span><br>        pid = Zygote.forkSystemServer(<br>                parsedArgs.uid, parsedArgs.gid,<br>                parsedArgs.gids,<br>                parsedArgs.runtimeFlags,<br>                <span class="hljs-literal">null</span>,<br>                parsedArgs.permittedCapabilities,<br>                parsedArgs.effectiveCapabilities);<br>    &#125; <span class="hljs-keyword">catch</span> (IllegalArgumentException ex) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-type">RuntimeException</span>(ex);<br>    &#125;<br><br>    <span class="hljs-comment">/* For child process */</span><br>    <span class="hljs-comment">// pid == 0 表示子进程，从这里开始进入 system_server 进程</span><br>    <span class="hljs-keyword">if</span> (pid == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">if</span> (hasSecondZygote(abiList)) &#123; <span class="hljs-comment">// 如果有第二个 Zygote</span><br>            waitForSecondaryZygote(socketName);<br>        &#125;<br><br>        zygoteServer.closeServerSocket(); <span class="hljs-comment">// 关闭并释放从 Zygote copy 过来的 socket</span><br>        <span class="hljs-keyword">return</span> handleSystemServerProcess(parsedArgs); <span class="hljs-comment">// 完成新创建的 system_server 进程的剩余工作</span><br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 注意 fork() 函数式一次执行，两次返回（两个进程对同一程序的两次执行）。</span><br><span class="hljs-comment">     * pid &gt; 0  说明还是父进程。pid = 0 说明进入了子进程</span><br><span class="hljs-comment">     * 所以这里的 return null 依旧会执行 </span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>从上面的启动参数可以看到，SystemServer进程的uid和gid都是1000，进程名是system_server，其最后要加载的类名是com.android.server.SystemSever。准备好一系列参数后通过ZygoteConnection.Arguments()拼接，接着调用Zygote.forkSystemServer()方法真正的fork出子进程system_server</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt; Zygote.java<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">forkSystemServer</span><span class="hljs-params">(<span class="hljs-type">int</span> uid, <span class="hljs-type">int</span> gid, <span class="hljs-type">int</span>[] gids, <span class="hljs-type">int</span> runtimeFlags,</span><br><span class="hljs-params">        <span class="hljs-type">int</span>[][] rlimits, <span class="hljs-type">long</span> permittedCapabilities, <span class="hljs-type">long</span> effectiveCapabilities)</span> &#123;<br>    VM_HOOKS.preFork();<br>    <span class="hljs-comment">// Resets nice priority for zygote process.</span><br>    resetNicePriority();<br>    <span class="hljs-type">int</span> <span class="hljs-variable">pid</span> <span class="hljs-operator">=</span> nativeForkSystemServer(<br>            uid, gid, gids, runtimeFlags, rlimits, permittedCapabilities, effectiveCapabilities);<br>    <span class="hljs-comment">// Enable tracing as soon as we enter the system_server.</span><br>    <span class="hljs-keyword">if</span> (pid == <span class="hljs-number">0</span>) &#123;<br>        Trace.setTracingEnabled(<span class="hljs-literal">true</span>, runtimeFlags);<br>    &#125;<br>    VM_HOOKS.postForkCommon();<br>    <span class="hljs-keyword">return</span> pid;<br>&#125;<br><br><span class="hljs-keyword">native</span> <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">nativeForkSystemServer</span><span class="hljs-params">(<span class="hljs-type">int</span> uid, <span class="hljs-type">int</span> gid, <span class="hljs-type">int</span>[] gids, <span class="hljs-type">int</span> runtimeFlags,</span><br><span class="hljs-params">        <span class="hljs-type">int</span>[][] rlimits, <span class="hljs-type">long</span> permittedCapabilities, <span class="hljs-type">long</span> effectiveCapabilities)</span>;<br></code></pre></td></tr></table></figure>
+<p>最后的fork()操作是在native层完成的，再回到ZygoteInit.forSystemServer()中执行fork()之后的逻辑处理</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">if</span>(pid == <span class="hljs-number">0</span>)&#123;<br>    ......<br>    <span class="hljs-keyword">return</span> handleSystemServerProcess(parsedArgs);<br>&#125;<br><br><span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br></code></pre></td></tr></table></figure>
+<p>按照正常的逻辑思维，这两处return只会执行一次，其实不然。fork()函数是一次执行，两次返回。更准确的说是两个进程对用一个程序的两次执行。当pis&#x3D;&#x3D;0时，说明现在处于子进程，当pid&gt;0时，说明处于父进程。在刚fork出子进程的时候，父子进程的数据结构基本是一样的，但是之后就分道扬镳了，各自执行各自的殴。所以上面的代码会出现两次返回值，子进程中会反悔执行hadleSystemServerProcess(parsedArgs)的结果，父进程Zygote会返回null，对于两个不同的返回值又会分别做什么处理呢？我们回到ZygoteInit.main()中，</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">if</span> (startSystemServer) &#123;<br>        Runnable r = fork<span class="hljs-constructor">SystemServer(<span class="hljs-params">abiList</span>, <span class="hljs-params">socketName</span>, <span class="hljs-params">zygoteServer</span>)</span>;<br><br>        <span class="hljs-comment">// &#123;@code r == null&#125; in the parent (zygote) process, and &#123;@code r != null&#125; in the</span><br>        <span class="hljs-comment">// child (system_server) process.</span><br>        <span class="hljs-comment">// r == null 说明是在 zygote 进程</span><br>        <span class="hljs-comment">// r != null 说明是在 system_server 进程</span><br>        <span class="hljs-keyword">if</span> (r != null) &#123;<br>            r.run<span class="hljs-literal">()</span>; <br>            return;<br>        &#125;<br>    &#125;<br>    <br>    <span class="hljs-comment">// 循环等待处理客户端请求</span><br>    caller = zygoteServer.run<span class="hljs-constructor">SelectLoop(<span class="hljs-params">abiList</span>)</span>;<br></code></pre></td></tr></table></figure>
+<p>子进程system_server返回的是一个Runnable，执行r.run(),然后直接return了。而父进程Zygote返回的是null，所以不满足if的判断条件，继续往下执行runSelectLoop。父子进程就各做各的事情了</p>
+<p>下面分析runSelectLoop()和handlSystemServerProcess()这两个方法</p>
+<h4 id="handleSystemServerProcess"><a href="#handleSystemServerProcess" class="headerlink" title="handleSystemServerProcess"></a>handleSystemServerProcess</h4><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><code class="hljs typescript">&gt; <span class="hljs-title class_">ZygoteInit</span>.<span class="hljs-property">java</span><br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-title class_">Runnable</span> <span class="hljs-title function_">handleSystemServerProcess</span>(<span class="hljs-params">ZygoteConnection.Arguments parsedArgs</span>) &#123;<br>    <span class="hljs-comment">// set umask to 0077 so new files and directories will default to owner-only permissions.</span><br>    <span class="hljs-comment">// umask一般是用在你初始创建一个目录或者文件的时候赋予他们的权限</span><br>    <span class="hljs-title class_">Os</span>.<span class="hljs-title function_">umask</span>(<span class="hljs-variable constant_">S_IRWXG</span> | <span class="hljs-variable constant_">S_IRWXO</span>);<br><br>    <span class="hljs-comment">// 设置当前进程名为 &quot;system_server&quot;</span><br>    <span class="hljs-keyword">if</span> (parsedArgs.<span class="hljs-property">niceName</span> != <span class="hljs-literal">null</span>) &#123; <br>        <span class="hljs-title class_">Process</span>.<span class="hljs-title function_">setArgV0</span>(parsedArgs.<span class="hljs-property">niceName</span>);<br>    &#125;<br><br>    final <span class="hljs-title class_">String</span> systemServerClasspath = <span class="hljs-title class_">Os</span>.<span class="hljs-title function_">getenv</span>(<span class="hljs-string">&quot;SYSTEMSERVERCLASSPATH&quot;</span>);<br>    <span class="hljs-keyword">if</span> (systemServerClasspath != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">// dex 优化操作</span><br>        <span class="hljs-title function_">performSystemServerDexOpt</span>(systemServerClasspath);<br>        <span class="hljs-comment">// Capturing profiles is only supported for debug or eng builds since selinux normally</span><br>        <span class="hljs-comment">// prevents it.</span><br>        <span class="hljs-built_in">boolean</span> profileSystemServer = <span class="hljs-title class_">SystemProperties</span>.<span class="hljs-title function_">getBoolean</span>(<br>                <span class="hljs-string">&quot;dalvik.vm.profilesystemserver&quot;</span>, <span class="hljs-literal">false</span>);<br>        <span class="hljs-keyword">if</span> (profileSystemServer &amp;&amp; (<span class="hljs-title class_">Build</span>.<span class="hljs-property">IS_USERDEBUG</span> || <span class="hljs-title class_">Build</span>.<span class="hljs-property">IS_ENG</span>)) &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-title function_">prepareSystemServerProfile</span>(systemServerClasspath);<br>            &#125; <span class="hljs-keyword">catch</span> (<span class="hljs-title class_">Exception</span> e) &#123;<br>                <span class="hljs-title class_">Log</span>.<span class="hljs-title function_">wtf</span>(<span class="hljs-variable constant_">TAG</span>, <span class="hljs-string">&quot;Failed to set up system server profile&quot;</span>, e);<br>            &#125;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (parsedArgs.<span class="hljs-property">invokeWith</span> != <span class="hljs-literal">null</span>) &#123; <span class="hljs-comment">// invokeWith 一般为空</span><br>        <span class="hljs-title class_">String</span>[] args = parsedArgs.<span class="hljs-property">remainingArgs</span>;<br>        <span class="hljs-comment">// If we have a non-null system server class path, we&#x27;ll have to duplicate the</span><br>        <span class="hljs-comment">// existing arguments and append the classpath to it. ART will handle the classpath</span><br>        <span class="hljs-comment">// correctly when we exec a new process.</span><br>        <span class="hljs-keyword">if</span> (systemServerClasspath != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-title class_">String</span>[] amendedArgs = <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[args.<span class="hljs-property">length</span> + <span class="hljs-number">2</span>];<br>            amendedArgs[<span class="hljs-number">0</span>] = <span class="hljs-string">&quot;-cp&quot;</span>;<br>            amendedArgs[<span class="hljs-number">1</span>] = systemServerClasspath;<br>            <span class="hljs-title class_">System</span>.<span class="hljs-title function_">arraycopy</span>(args, <span class="hljs-number">0</span>, amendedArgs, <span class="hljs-number">2</span>, args.<span class="hljs-property">length</span>);<br>            args = amendedArgs;<br>        &#125;<br><br>        <span class="hljs-title class_">WrapperInit</span>.<span class="hljs-title function_">execApplication</span>(parsedArgs.<span class="hljs-property">invokeWith</span>,<br>                parsedArgs.<span class="hljs-property">niceName</span>, parsedArgs.<span class="hljs-property">targetSdkVersion</span>,<br>                <span class="hljs-title class_">VMRuntime</span>.<span class="hljs-title function_">getCurrentInstructionSet</span>(), <span class="hljs-literal">null</span>, args);<br><br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalStateException</span>(<span class="hljs-string">&quot;Unexpected return from WrapperInit.execApplication&quot;</span>);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-title class_">ClassLoader</span> cl = <span class="hljs-literal">null</span>;<br>        <span class="hljs-keyword">if</span> (systemServerClasspath != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-comment">// 创建类加载器，并赋给当前线程</span><br>            cl = <span class="hljs-title function_">createPathClassLoader</span>(systemServerClasspath, parsedArgs.<span class="hljs-property">targetSdkVersion</span>);<br>                <br>            <span class="hljs-title class_">Thread</span>.<span class="hljs-title function_">currentThread</span>().<span class="hljs-title function_">setContextClassLoader</span>(cl);<br>        &#125;<br><br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">         * Pass the remaining arguments to SystemServer.</span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-title class_">ZygoteInit</span>.<span class="hljs-title function_">zygoteInit</span>(parsedArgs.<span class="hljs-property">targetSdkVersion</span>, parsedArgs.<span class="hljs-property">remainingArgs</span>, cl);<br>    &#125;<br><br>    <span class="hljs-comment">/* should never reach here */</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>设置进程名为system_server，执行dex优化，给当前线程设置类加载器，最后调用ZygoteInit.zygoteInit()继续处理剩余参数</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public static final Runnable zygote<span class="hljs-constructor">Init(<span class="hljs-params">int</span> <span class="hljs-params">targetSdkVersion</span>, String[] <span class="hljs-params">argv</span>, ClassLoader <span class="hljs-params">classLoader</span>)</span> &#123;<br>    ......<br>    <span class="hljs-comment">// Redirect System.out and System.err to the Android log.</span><br>    <span class="hljs-comment">// 重定向 System.out 和 System.err 到 Android log</span><br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">RuntimeInit</span>.</span></span>redirect<span class="hljs-constructor">LogStreams()</span>;<br><br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">RuntimeInit</span>.</span></span>common<span class="hljs-constructor">Init()</span>; <span class="hljs-comment">// 一些初始化工作</span><br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ZygoteInit</span>.</span></span>native<span class="hljs-constructor">ZygoteInit()</span>; <span class="hljs-comment">// native 层初始化</span><br>    return <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">RuntimeInit</span>.</span></span>application<span class="hljs-constructor">Init(<span class="hljs-params">targetSdkVersion</span>, <span class="hljs-params">argv</span>, <span class="hljs-params">classLoader</span>)</span>; <span class="hljs-comment">// 调用入口函数</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>重定向Log，进行一些初始化工作。这部分工作就先不说了，最后调用RuntimeInit.applicationInit(),继续往下看</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs arduino">&gt; RuntimeInit.<span class="hljs-function">java</span><br><span class="hljs-function"></span><br><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-type">static</span> Runnable <span class="hljs-title">applicationInit</span><span class="hljs-params">(<span class="hljs-type">int</span> targetSdkVersion, <span class="hljs-type">String</span>[] argv,</span></span><br><span class="hljs-params"><span class="hljs-function">        ClassLoader classLoader)</span> </span>&#123;<br>        <br>    ......<br>    <span class="hljs-keyword">final</span> Arguments args = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Arguments</span>(argv); <span class="hljs-comment">// 解析参数</span><br><br>    ......<br>    <span class="hljs-comment">// 寻找 startClass 的 main() 方法。这里的 startClass 是 com.android.server.SystemServer</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">findStaticMain</span>(args.startClass, args.startArgs, classLoader);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这里的 startClass 参数是 com.android.server.SystemServer。findStaticMain() 方法看名字就能知道它的作用是找到 main() 函数，这里是要找到 com.android.server.SystemServer 类的 main() 方法。</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs haxe">protected <span class="hljs-keyword">static</span> Runnable findStaticMain(<span class="hljs-keyword">String</span> className, <span class="hljs-keyword">String</span>[] argv,<br>        ClassLoader classLoader) &#123;<br>    Class&lt;?&gt; cl;<br><br>    <span class="hljs-keyword">try</span> &#123;<br>        cl = Class.forName(className, <span class="hljs-literal">true</span>, classLoader);<br>    &#125; <span class="hljs-keyword">catch</span> (ClassNotFoundException ex) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-type">RuntimeException</span>(<br>                <span class="hljs-string">&quot;Missing class when invoking static main &quot;</span> + className,<br>                ex);<br>    &#125;<br><br>    Method m;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-comment">// 寻找 main() 方法</span><br>        m = cl.getMethod(<span class="hljs-string">&quot;main&quot;</span>, <span class="hljs-keyword">new</span> <span class="hljs-type">Class</span>[] &#123; <span class="hljs-keyword">String</span>[].<span class="hljs-class"><span class="hljs-keyword">class</span> &#125;);</span><br><span class="hljs-class">    &#125; <span class="hljs-title">catch</span> (<span class="hljs-title">NoSuchMethodException</span> <span class="hljs-title">ex</span>) </span>&#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-type">RuntimeException</span>(<br>                <span class="hljs-string">&quot;Missing static main on &quot;</span> + className, ex);<br>    &#125; <span class="hljs-keyword">catch</span> (SecurityException ex) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-type">RuntimeException</span>(<br>                <span class="hljs-string">&quot;Problem getting static main on &quot;</span> + className, ex);<br>    &#125;<br><br>    int modifiers = m.getModifiers();<br>    <span class="hljs-keyword">if</span> (! (Modifier.isStatic(modifiers) &amp;&amp; Modifier.isPublic(modifiers))) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-type">RuntimeException</span>(<br>                <span class="hljs-string">&quot;Main method is not public and static on &quot;</span> + className);<br>    &#125;<br><br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">     * This throw gets caught in ZygoteInit.main(), which responds</span><br><span class="hljs-comment">     * by invoking the exception&#x27;s run() method. This arrangement</span><br><span class="hljs-comment">     * clears up all the stack frames that were required in setting</span><br><span class="hljs-comment">     * up the process.</span><br><span class="hljs-comment">     * 返回一个 Runnable，在 Zygote 的 main() 方法中执行器 run() 方法</span><br><span class="hljs-comment">     * 之前的版本是抛出一个异常，在 main() 方法中捕获</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-type">MethodAndArgsCaller</span>(m, argv);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>找到 main() 方法并构建一个 Runnable 对象 MethodAndArgsCaller 。这里返回的 Runnable 对象会在哪里执行呢？又要回到文章开头的 ZygoteInit.main() 函数了，在 forkSystemServer() 之后，子进程执行 handleSystemServerProcess() 并返回一个 Runnable 对象，在 ZygoteInit.main() 中会执行其 run() 方法。<br>再来看看 MethodAndArgsCaller 的 run() 方法吧！</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-built_in">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MethodAndArgsCaller</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Runnable</span> </span>&#123;<br>    <span class="hljs-comment">/** method to call */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Method mMethod;<br><br>    <span class="hljs-comment">/** argument array */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String[] mArgs;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_ invoke__">MethodAndArgsCaller</span>(Method method, String[] args) &#123;<br>        mMethod = method;<br>        mArgs = args;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_ invoke__">run</span>() &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            mMethod.<span class="hljs-title function_ invoke__">invoke</span>(<span class="hljs-literal">null</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>[] &#123; mArgs &#125;);<br>        &#125; <span class="hljs-keyword">catch</span> (IllegalAccessException ex) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">RuntimeException</span>(ex);<br>        &#125; <span class="hljs-keyword">catch</span> (InvocationTargetException ex) &#123;<br>            <span class="hljs-built_in">Throwable</span> cause = ex.<span class="hljs-title function_ invoke__">getCause</span>();<br>            <span class="hljs-keyword">if</span> (cause <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">RuntimeException</span>) &#123;<br>                <span class="hljs-keyword">throw</span> (<span class="hljs-built_in">RuntimeException</span>) cause;<br>            &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cause <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Error</span>) &#123;<br>                <span class="hljs-keyword">throw</span> (<span class="hljs-built_in">Error</span>) cause;<br>            &#125;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">RuntimeException</span>(ex);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>就一件事，执行参数中的 method。这里的 method 就是 com.android.server.SystemServer 的 main() 方法。到这里，SystemServer 就要正式工作了。<br>其实在老版本的 Android 源码中，并不是通过这种方法执行 SystemServer.main() 的。老版本的 MethodAndArgsCaller 是 Exception 的子类，在这里会直接抛出异常，然后在 ZygoteInit.main() 方法中进行捕获，捕获之后执行其 run() 方法。<br>SystemServer 的具体分析就放到下篇文章吧，本篇的主角还是 Zygote ！<br>看到这里，Zygote 已经完成了一件人生大事，孵化出了 SystemServer 进程。但是作为 “女娲” ，造人的任务还是停不下来，任何一个应用进程的创建还是离不开它的。ZygoteServer.runSlectLoop() 给它搭好了和客户端之前的桥梁。</p>
+<h4 id="runSelectLoop"><a href="#runSelectLoop" class="headerlink" title="runSelectLoop"></a>runSelectLoop</h4><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs haxe">&gt; ZygoteServer.java<br><br>Runnable runSelectLoop(<span class="hljs-keyword">String</span> abiList) &#123;<br>    ArrayList&lt;FileDescriptor&gt; fds = <span class="hljs-keyword">new</span> <span class="hljs-type">ArrayList</span>&lt;FileDescriptor&gt;();<br>    ArrayList&lt;ZygoteConnection&gt; peers = <span class="hljs-keyword">new</span> <span class="hljs-type">ArrayList</span>&lt;ZygoteConnection&gt;();<br><br>    <span class="hljs-comment">// mServerSocket 是之前在 Zygote 中创建的</span><br>    fds.add(mServerSocket.getFileDescriptor());<br>    peers.add(<span class="hljs-literal">null</span>);<br><br>    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>        StructPollfd[] pollFds = <span class="hljs-keyword">new</span> <span class="hljs-type">StructPollfd</span>[fds.size()];<br>        <span class="hljs-keyword">for</span> (int i = <span class="hljs-number">0</span>; i &lt; pollFds.length; ++i) &#123;<br>            pollFds[i] = <span class="hljs-keyword">new</span> <span class="hljs-type">StructPollfd</span>();<br>            pollFds[i].fd = fds.<span class="hljs-keyword">get</span>(i);<br>            pollFds[i].events = (short) POLLIN;<br>        &#125;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-comment">// 有事件来时往下执行，没有时就阻塞</span><br>            Os.poll(pollFds, <span class="hljs-number">-1</span>);<br>        &#125; <span class="hljs-keyword">catch</span> (ErrnoException ex) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-type">RuntimeException</span>(<span class="hljs-string">&quot;poll failed&quot;</span>, ex);<br>        &#125;<br>        <span class="hljs-keyword">for</span> (int i = pollFds.length - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; --i) &#123;<br>            <span class="hljs-keyword">if</span> ((pollFds[i].revents &amp; POLLIN) == <span class="hljs-number">0</span>) &#123;<br>                <span class="hljs-keyword">continue</span>;<br>            &#125;<br><br>            <span class="hljs-keyword">if</span> (i == <span class="hljs-number">0</span>) &#123; <span class="hljs-comment">// 有新客户端连接</span><br>                ZygoteConnection <span class="hljs-keyword">new</span><span class="hljs-type">Peer</span> = acceptCommandPeer(abiList);<br>                peers.add(<span class="hljs-keyword">new</span><span class="hljs-type">Peer</span>);<br>                fds.add(<span class="hljs-keyword">new</span><span class="hljs-type">Peer</span>.getFileDesciptor());<br>            &#125; <span class="hljs-keyword">else</span> &#123; <span class="hljs-comment">// 处理客户端请求</span><br>                <span class="hljs-keyword">try</span> &#123;<br>                    ZygoteConnection connection = peers.<span class="hljs-keyword">get</span>(i);<br>                    final Runnable command = connection.processOneCommand(<span class="hljs-built_in">this</span>);<br><br>                    ......<br>                &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>                   ......<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>mServerSocket 是 ZygoteInit.main() 中一开始就建立的服务端 socket，用于处理客户端请求。一看到 while(true) 就肯定会有阻塞操作。Os.poll() 在有事件来时往下执行，否则就阻塞。当有客户端请求过来时，调用 ZygoteConnection.processOneCommand() 方法来处理。<br>processOneCommand() 源码很长，这里就贴一下关键部分：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">......<br>pid = Zygote.forkAndSpecialize(parsedArgs.uid, parsedArgs.gid, parsedArgs.gids,<br>        parsedArgs.runtimeFlags, rlimits, parsedArgs.mountExternal, parsedArgs.seInfo,<br>        parsedArgs.niceName, fdsToClose, fdsToIgnore, parsedArgs.startChildZygote,<br>        parsedArgs.instructionSet, parsedArgs.appDataDir);<br><br><span class="hljs-keyword">try</span> &#123;<br>    <span class="hljs-keyword">if</span> (pid == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-comment">// in child 进入子进程</span><br>        zygoteServer.setForkChild();<br><br>        zygoteServer.closeServerSocket();<br>        IoUtils.closeQuietly(serverPipeFd);<br>        serverPipeFd = <span class="hljs-literal">null</span>;<br><br>        <span class="hljs-keyword">return</span> handleChildProc(parsedArgs, descriptors, childPipeFd,<br>                parsedArgs.startChildZygote);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// In the parent. A pid &lt; 0 indicates a failure and will be handled in</span><br>        <span class="hljs-comment">// handleParentProc.</span><br>        IoUtils.closeQuietly(childPipeFd);<br>        childPipeFd = <span class="hljs-literal">null</span>;<br>        handleParentProc(pid, descriptors, serverPipeFd);<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>&#125; <span class="hljs-keyword">finally</span> &#123;<br>            IoUtils.closeQuietly(childPipeFd);<br>            IoUtils.closeQuietly(serverPipeFd);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>乍一看是不是感觉有点眼熟？没错，这一块的逻辑和 forkSystemServer() 很相似，只是这里 fork 的是普通应用进程，调用的是 forkAndSpecialize() 方法。中间的代码调用就不在这详细分析了，最后还是会调用到 findStaticMain() 执行应用进程的对应 main() 方法，感兴趣的同学可以到我的源码项目 android_9.0.0_r45 阅读相关文件，注释还是比较多的。<br>还有一个问题，上面只分析了 Zygote 接收到客户端请求并响应，那么这个客户端可能是谁呢？具体又是如何与 Zygote 通信的呢？关于这个问题，后续文章中肯定会写到，关注我的 Github 仓库 android_9.0.0_r45，所有文章都会第一时间同步过去。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><img src="/assets/tools/tools-progress-03.png" srcset="/img/loading.gif" lazyload alt="时序图"></p>
+<h1 id="参考博客"><a href="#参考博客" class="headerlink" title="参考博客"></a>参考博客</h1><p><a target="_blank" rel="noopener" href="http://wuxiaolong.me/2017/03/13/appStart/">App启动</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/89fd44083c1c">Activity启动流程</a><br><a target="_blank" rel="noopener" href="https://juejin.im/post/5d6cad7d518825138e2b587a?utm_source=gold_browser_extension">Android App启动过程</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>android奇技淫巧 11 Activity启动</div>
+      <div>http://example.com/2019/07/27/android-tools-11/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年7月27日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/07/30/python-03/" title="拥抱Python（三） 其他操作符">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">拥抱Python（三） 其他操作符</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/07/25/python-02/" title="拥抱Python（二） 基本语法概述">
+                        <span class="hidden-mobile">拥抱Python（二） 基本语法概述</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

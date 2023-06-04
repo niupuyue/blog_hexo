@@ -1,0 +1,845 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="随着android智能手机的发展和普及，各种各样的大小和尺寸的android智能机不断的退出，通过各种各样的设备机型，我们能够让自己的APP接触到广大的用户。为了能在各种android平台上使用，我们的APP需要兼容不同的设备类型，比如语言，屏幕尺寸，android系统的版本等重要的变量因素。希望能够通过这次总结，复习符合使用基础的平台功能，利用替代资源和其他功能，使APP仅用一个程序包，就能想用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重拾android路(二) 手机适配">
+<meta property="og:url" content="http://example.com/2016/01/09/Android-2-adaptation/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="随着android智能手机的发展和普及，各种各样的大小和尺寸的android智能机不断的退出，通过各种各样的设备机型，我们能够让自己的APP接触到广大的用户。为了能在各种android平台上使用，我们的APP需要兼容不同的设备类型，比如语言，屏幕尺寸，android系统的版本等重要的变量因素。希望能够通过这次总结，复习符合使用基础的平台功能，利用替代资源和其他功能，使APP仅用一个程序包，就能想用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/android/lang-1.png">
+<meta property="article:published_time" content="2016-01-09T08:40:42.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.074Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/android/lang-1.png">
+  
+  
+  
+  <title>重拾android路(二) 手机适配 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="重拾android路(二) 手机适配"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2016-01-09 16:40" pubdate>
+          2016年1月9日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          13k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          109 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">重拾android路(二) 手机适配</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>随着android智能手机的发展和普及，各种各样的大小和尺寸的android智能机不断的退出，通过各种各样的设备机型，我们能够让自己的APP接触到广大的用户。为了能在各种android平台上使用，我们的APP需要兼容不同的设备类型，比如语言，屏幕尺寸，android系统的版本等重要的变量因素。希望能够通过这次总结，复习符合使用基础的平台功能，利用替代资源和其他功能，使APP仅用一个程序包，就能想用android兼容设备的用户提供更好的用户体验</p>
+<span id="more"></span>
+<h1 id="设配不同的语言"><a href="#设配不同的语言" class="headerlink" title="设配不同的语言"></a>设配不同的语言</h1><p>把UI中的字符串存储到外部文件，通过代码提取这种方式可以实现。当我们通过AS创建一个项目工程的时候，就会在工程的根目录中创建一个res的目录，目录中包含所有的资源类型的子目录。其中就包好工程的默认文件res&#x2F;values&#x2F;strings.xml，用于保存字符串值。</p>
+<h2 id="创建区域设置目录及字符串文件"><a href="#创建区域设置目录及字符串文件" class="headerlink" title="创建区域设置目录及字符串文件"></a>创建区域设置目录及字符串文件</h2><p>为了支持多国语言，在res中创建一个额外的values目录，以连字符和ISO国家代码结尾来命名，如果决定支持某种语言，则需要创建资源子目录和字符串资源文件</p>
+<p><img src="/assets/android/lang-1.png" srcset="/img/loading.gif" lazyload alt="支持了不同国家语言"></p>
+<p>添加不同区域语言的字符串值到相应的文件</p>
+<p>android系统运行时，会根据当前用户的区域设置，使用相应的字符串资源。</p>
+<p>如下几个不同语言对应的不同字符串资源</p>
+<p>英语(默认区域语言) values&#x2F;strings.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">resources</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">string</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;app_name&quot;</span>&gt;</span>Android_Demo_01<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">resources</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>西班牙语: values-es&#x2F;strings.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">resources</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">string</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;title&quot;</span>&gt;</span>Mi Aplicación<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">string</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;hello_world&quot;</span>&gt;</span>Hola Mundo!<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">resources</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>法语: values-fr&#x2F;strings.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">resources</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">string</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;title&quot;</span>&gt;</span>Mon Application<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">string</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;hello_world&quot;</span>&gt;</span>Bonjour le monde !<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">resources</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="使用字符资源"><a href="#使用字符资源" class="headerlink" title="使用字符资源"></a>使用字符资源</h2><p>我们可以通过源代码和其他XML文件总通过<pre><string></pre>元素的name属性来引入自己的字符串资源</p>
+<p>在源代码中可以通过R.string.<string_name>语法来引入一个字符串资源，很多方法都可以通过这种方式来接受字符串</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">String ss = get<span class="hljs-constructor">Resources()</span>.get<span class="hljs-constructor">String(R.<span class="hljs-params">string</span>.<span class="hljs-params">app_name</span>)</span>;<br></code></pre></td></tr></table></figure>
+
+<p>在其他的XML文件中，每当XML属性需要接受一个字符串值时，我们可以通过@string&#x2F;<string_name>的方式来引入</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;TextView<br>    android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span><br>    android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span><br>    android:<span class="hljs-attribute">text</span>=<span class="hljs-string">&quot;@string/hello_world&quot;</span> /&gt;<br></code></pre></td></tr></table></figure>
+
+<h1 id="屏幕适配"><a href="#屏幕适配" class="headerlink" title="屏幕适配"></a>屏幕适配</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>使得某一元素在android不同尺寸，不同分辨率的手机上具备相同的显示效果</p>
+<h3 id="屏幕尺寸"><a href="#屏幕尺寸" class="headerlink" title="屏幕尺寸"></a>屏幕尺寸</h3><ul>
+<li>含义: 手机对角线的物理尺寸</li>
+<li>单位: 英寸 1英寸 &#x3D; 2.54厘米</li>
+</ul>
+<blockquote>
+<p>目前来说android常见的尺寸有5寸，5.5寸，6寸</p>
+</blockquote>
+<h3 id="屏幕分辨率"><a href="#屏幕分辨率" class="headerlink" title="屏幕分辨率"></a>屏幕分辨率</h3><ul>
+<li>含义: 手机荷香，纵向上像素点数的综合</li>
+</ul>
+<blockquote>
+<p>一般描述成屏幕的”宽x高”&#x3D;AxB<br>含义: 屏幕在横向上有A个像素点，在纵向上有B个像素点<br>例如:1080x1920 即宽度上有1080个像素点，高度上有1920个像素点</p>
+</blockquote>
+<ul>
+<li><p>单位：px 1px &#x3D; 1像素</p>
+</li>
+<li><p>android常见的分辨率是320x480 480x800 720x1280 1080x1920</p>
+</li>
+</ul>
+<h3 id="屏幕像素密度"><a href="#屏幕像素密度" class="headerlink" title="屏幕像素密度"></a>屏幕像素密度</h3><ul>
+<li>含义: 每英寸上的像素点数</li>
+<li>单位: dpi</li>
+</ul>
+<blockquote>
+<p>假设设备每英寸有160个像素，该设备的屏幕像素度是160dpi</p>
+</blockquote>
+<ul>
+<li>android手机对于每类手机屏幕大小都有一个相应的屏幕像素密度</li>
+</ul>
+<p>| 密度类型        | 代表的分辨率（px） | 屏幕像素密度（dpi）|<br>| ————-    |:————-:|<br>| 低密度（ldpi）    | 240x320       | 120 |<br>| 中密度（mdpi）    | 320x480       | 160 |<br>| 高密度（hdpi）    | 480x800       | 240|<br>| 超高密度（xhdpi） | 720x1280      | 320|<br>| 超超高密度（xxhdpi） | 1080x1920   | 480 |</p>
+<h3 id="密度无关像素"><a href="#密度无关像素" class="headerlink" title="密度无关像素"></a>密度无关像素</h3><ul>
+<li>含义: 与终端上的实际物理像素点无关</li>
+<li>单位: dp 可以保证在不同屏幕像素密度的设备上显示相同的效果</li>
+</ul>
+<blockquote>
+<ol>
+<li>android开发室用dp而不是px单位设置图片大小，是android特有的单位</li>
+<li>场景：假如同样都是画一条长度是屏幕一半的线，如果使用px作为计量单位，那么在480x800分辨率手机上设置应为240px；在320x480的手机上应设置为160px，二者设置就不同了；如果使用dp为单位，在这两种分辨率下，160dp都显示为屏幕一半的长度</li>
+</ol>
+</blockquote>
+<ul>
+<li>dp和px的转换<br>因为ui设计师给你的设计图是以px为单位的，Android开发则是使用dp作为单位的，那么我们需要进行转换</li>
+</ul>
+<p>| 密度类型 | 代表的分辨率（px） | 屏幕密度（dpi）|换算（px&#x2F;dp） |比例|<br>| ————- |:————-:| ————-:| ————-:|<br>| 低密度（ldpi） | 240x320 | 120 |1dp&#x3D;0.75px|3|<br>| 中密度（mdpi） | 320x480 | 160 |1dp&#x3D;1px|4|<br>| 高密度（hdpi） | 480x800 | 240|1dp&#x3D;1.5px|6|<br>| 超高密度（xhdpi） | 720x1280 | 320|1dp&#x3D;2px|8|<br>| 超超高密度（xxhdpi） | 1080x1920 | 480 |1dp&#x3D;3px|12|</p>
+<p>在android中，规定以160dpi(即分辨率为320x480为基准),1dp &#x3D; 1px</p>
+<h3 id="独立比例像素"><a href="#独立比例像素" class="headerlink" title="独立比例像素"></a>独立比例像素</h3><ul>
+<li>含义: sp</li>
+<li>单位：sp</li>
+</ul>
+<blockquote>
+<ol>
+<li>Android开发时用此单位设置文字大小，可根据字体大小首选项进行缩放</li>
+<li>荐使用12sp、14sp、18sp、22sp作为字体设置的大小，不推荐使用奇数和小数，容易造成精度的丢失问题；小于12sp的字体会太小导致用户看不清</li>
+</ol>
+</blockquote>
+<p><font color=gray size=72>以上是基本概念，需要牢记</font></p>
+<h2 id="屏幕适配的本质"><a href="#屏幕适配的本质" class="headerlink" title="屏幕适配的本质"></a>屏幕适配的本质</h2><ul>
+<li>使得布局，不及组件，图片资源，用户界面流程匹配不同的屏幕尺寸</li>
+</ul>
+<blockquote>
+<p>使得布局，布局组件自适应屏幕尺寸<br>根据屏幕的配置来加载相应的UI布局和用户界面流程</p>
+</blockquote>
+<ul>
+<li>使得图片资源匹配不同的屏幕密度</li>
+</ul>
+<h3 id="布局匹配"><a href="#布局匹配" class="headerlink" title="布局匹配"></a>布局匹配</h3><h4 id="使得布局元素自适应屏幕尺寸"><a href="#使得布局元素自适应屏幕尺寸" class="headerlink" title="使得布局元素自适应屏幕尺寸"></a>使得布局元素自适应屏幕尺寸</h4><ul>
+<li>做法:使用相对布局(relativeLayout)，禁止使用绝对布局(AbsoluteLayout)</li>
+</ul>
+<blockquote>
+<p>android中的布局样式分为4种</p>
+<ol>
+<li>线性布局</li>
+<li>相对布局</li>
+<li>帧布局</li>
+<li>绝对布局</li>
+</ol>
+</blockquote>
+<p>针对不同的布局我们需要在不同的场景下使用</p>
+<ol>
+<li>相对布局  布局的子控件之间使用相对位置的方式排列，因为RelativeLayout讲究的是相对位置，即使屏幕的大小改变，视图之前的相对位置都不会变化，与屏幕大小无关，灵活性很强</li>
+<li>线性布局  通过多层嵌套LinearLayout和组合使”wrap_content”和”match_parent”已经可以构建出足够复杂的布局。但是LinearLayout无法准确地控制子视图之间的位置关系，只能简单的一个挨着一个地排列</li>
+</ol>
+<h4 id="最小宽度-Smallest-width-限定符"><a href="#最小宽度-Smallest-width-限定符" class="headerlink" title="最小宽度(Smallest-width)限定符"></a>最小宽度(Smallest-width)限定符</h4><ul>
+<li>定义: 通过制定某个最小宽度(以dp为单位)来精确定位屏幕从而家在不同的UI资源</li>
+<li>例子: 使用layout-sw 600dp的最小宽度限定符，即无论是宽度还是高度，只要大于600dp，就采用layout-sw 600dp目录中的布局文件</li>
+</ul>
+<p>代码展示:</p>
+<ul>
+<li>适配手机单面板(默认) 布局文件路径: res&#x2F;layout&#x2F;main.xml<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;vertical&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">fragment</span> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/headlines&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;fill_parent&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;com.example.android.newsreader.HeadlinesFragment&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span> /&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span><br></code></pre></td></tr></table></figure></li>
+<li>适配尺寸较大的平板电脑 布局路径: res&#x2F;layout-sw600dp&#x2F;main.xml<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs applescript">LinearLayout xmlns:android=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span><br>    android:layout_width=<span class="hljs-string">&quot;fill_parent&quot;</span><br>    android:layout_height=<span class="hljs-string">&quot;fill_parent&quot;</span><br>    android:orientation=<span class="hljs-string">&quot;horizontal&quot;</span>&gt;<br>    &lt;fragment android:<span class="hljs-built_in">id</span>=<span class="hljs-string">&quot;@+id/headlines&quot;</span><br>              android:layout_height=<span class="hljs-string">&quot;fill_parent&quot;</span><br>              android:<span class="hljs-built_in">name</span>=<span class="hljs-string">&quot;com.example.android.newsreader.HeadlinesFragment&quot;</span><br>              android:layout_width=<span class="hljs-string">&quot;400dp&quot;</span><br>              android:layout_marginRight=<span class="hljs-string">&quot;10dp&quot;</span>/&gt;<br>    &lt;fragment android:<span class="hljs-built_in">id</span>=<span class="hljs-string">&quot;@+id/article&quot;</span><br>              android:layout_height=<span class="hljs-string">&quot;fill_parent&quot;</span><br>              android:<span class="hljs-built_in">name</span>=<span class="hljs-string">&quot;com.example.android.newsreader.ArticleFragment&quot;</span><br>              android:layout_width=<span class="hljs-string">&quot;fill_parent&quot;</span> /&gt;<br>&lt;/LinearLayout&gt;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<p>当屏幕最小宽度大于或者等于600dp的设备，系统会自动加载layout-sw600dp、main.xml布局。否则系统就会选择默认布局</p>
+<blockquote>
+<p>注意，这里的最小宽度限定符仅用于android3.2以后的版本</p>
+</blockquote>
+<h4 id="使用布局别名"><a href="#使用布局别名" class="headerlink" title="使用布局别名"></a>使用布局别名</h4><p>像上面的例子中，我们已经拥有了两个不同的布局文件，那么为了能够能够适配不同尺寸，我们可以通过使用布局别名的方式</p>
+<ul>
+<li>适配手机单页面(比较小的尺寸)  res&#x2F;layout&#x2F;main.xml</li>
+<li>适配手机尺寸比较大的  res&#x2F;layout&#x2F;main_twopanes.xml</li>
+</ul>
+<p>然后加入以下的两个文件，</p>
+<ol>
+<li>res&#x2F;values-large&#x2F;layout.xml (默认)<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">resources</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;main&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;layout&quot;</span>&gt;</span>@layout/main_twopanes<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">resources</span>&gt;</span><br></code></pre></td></tr></table></figure></li>
+<li>res&#x2F;values-sw600dp&#x2F;layout.xml<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">resources</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;main&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;layout&quot;</span>&gt;</span>@layout/main_twopanes<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">resources</span>&gt;</span><br></code></pre></td></tr></table></figure></li>
+</ol>
+<p>a. 版本低于3.2的会自动匹配large的文件<br>b. 版本高于3.2的会自动匹配sw600dp的文件</p>
+<blockquote>
+<p>以上的两个layout.xml文件可以引入相同的文件,避免了重复定义布局文件的情况</p>
+</blockquote>
+<h4 id="屏幕方向限定符"><a href="#屏幕方向限定符" class="headerlink" title="屏幕方向限定符"></a>屏幕方向限定符</h4><p>使用场景: 根据屏幕方向进行布局调整</p>
+<blockquote>
+<p>小屏幕, 竖屏: 单面板<br>小屏幕, 横屏: 单面板<br>7 英寸平板电脑，纵向：单面板，带操作栏<br>7 英寸平板电脑，横向：双面板，宽，带操作栏<br>10 英寸平板电脑，纵向：双面板，窄，带操作栏<br>10 英寸平板电脑，横向：双面板，宽，带操作栏<br>电视，横向：双面板，宽，带操作栏</p>
+</blockquote>
+<p>方法是</p>
+<ol>
+<li>先定义类别: 单&#x2F;双面板,是否带操作栏，宽&#x2F;窄<blockquote>
+<p>定义在res&#x2F;layout&#x2F;目录下的某个XML文件中</p>
+</blockquote>
+</li>
+<li>在进行相应的匹配: 屏幕尺寸(小屏 7寸 10寸) 方向(横，纵)<blockquote>
+<p>使用布局别名进行匹配</p>
+</blockquote>
+</li>
+</ol>
+<p>步骤：</p>
+<ol>
+<li><p>在res&#x2F;layout&#x2F;目录下的某个XML文件中定义所需要的布局类型<br>res&#x2F;layout&#x2F;onepane.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span>  </span><br><span class="hljs-tag">    <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;vertical&quot;</span>  </span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span>  </span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span>&gt;</span>  <br>  <br>    <span class="hljs-tag">&lt;<span class="hljs-name">fragment</span> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/headlines&quot;</span>  </span><br><span class="hljs-tag">              <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;fill_parent&quot;</span>  </span><br><span class="hljs-tag">              <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;com.example.android.newsreader.HeadlinesFragment&quot;</span>  </span><br><span class="hljs-tag">              <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span> /&gt;</span>  <br><span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>res&#x2F;layout&#x2F;onepane_with_bar.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span>  </span><br><span class="hljs-tag">    <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;vertical&quot;</span>  </span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span>  </span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span>&gt;</span>  <br>    <span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span> <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span>   </span><br><span class="hljs-tag">                  <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/linearLayout1&quot;</span>    </span><br><span class="hljs-tag">                  <span class="hljs-attr">android:gravity</span>=<span class="hljs-string">&quot;center&quot;</span>  </span><br><span class="hljs-tag">                  <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;50dp&quot;</span>&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">ImageView</span> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/imageView1&quot;</span>   </span><br><span class="hljs-tag">                   <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span>  </span><br><span class="hljs-tag">                   <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span>  </span><br><span class="hljs-tag">                   <span class="hljs-attr">android:src</span>=<span class="hljs-string">&quot;@drawable/logo&quot;</span>  </span><br><span class="hljs-tag">                   <span class="hljs-attr">android:paddingRight</span>=<span class="hljs-string">&quot;30dp&quot;</span>  </span><br><span class="hljs-tag">                   <span class="hljs-attr">android:layout_gravity</span>=<span class="hljs-string">&quot;left&quot;</span>  </span><br><span class="hljs-tag">                   <span class="hljs-attr">android:layout_weight</span>=<span class="hljs-string">&quot;0&quot;</span> /&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">View</span> <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span>   </span><br><span class="hljs-tag">              <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/view1&quot;</span>  </span><br><span class="hljs-tag">              <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span>  </span><br><span class="hljs-tag">              <span class="hljs-attr">android:layout_weight</span>=<span class="hljs-string">&quot;1&quot;</span> /&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/categorybutton&quot;</span>  </span><br><span class="hljs-tag">                <span class="hljs-attr">android:background</span>=<span class="hljs-string">&quot;@drawable/button_bg&quot;</span>  </span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span>  </span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_weight</span>=<span class="hljs-string">&quot;0&quot;</span>  </span><br><span class="hljs-tag">                <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;120dp&quot;</span>  </span><br><span class="hljs-tag">                <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;@style/CategoryButtonStyle&quot;</span>/&gt;</span>  <br>    <span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span>  <br>  <br>    <span class="hljs-tag">&lt;<span class="hljs-name">fragment</span> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/headlines&quot;</span>   </span><br><span class="hljs-tag">              <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;fill_parent&quot;</span>  </span><br><span class="hljs-tag">              <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;com.example.android.newsreader.HeadlinesFragment&quot;</span>  </span><br><span class="hljs-tag">              <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span> /&gt;</span>  <br><span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>res&#x2F;layout&#x2F;twopanes.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;fill_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;fill_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;horizontal&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">fragment</span> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/headlines&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;fill_parent&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;com.example.android.newsreader.HeadlinesFragment&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;400dp&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">android:layout_marginRight</span>=<span class="hljs-string">&quot;10dp&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">fragment</span> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/article&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;fill_parent&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;com.example.android.newsreader.ArticleFragment&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;fill_parent&quot;</span> /&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>res&#x2F;layout&#x2F;twopanes_narrow.xml(双面板，窄布局)</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">LinearLayout</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;fill_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;fill_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:orientation</span>=<span class="hljs-string">&quot;horizontal&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">fragment</span> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/headlines&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;fill_parent&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;com.example.android.newsreader.HeadlinesFragment&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;200dp&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">android:layout_marginRight</span>=<span class="hljs-string">&quot;10dp&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">fragment</span> <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/article&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;fill_parent&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;com.example.android.newsreader.ArticleFragment&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;fill_parent&quot;</span> /&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">LinearLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>使用布局别名进行相应的匹配<br>res&#x2F;values&#x2F;layouts.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">resources</span>&gt;</span>  <br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;main_layout&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;layout&quot;</span>&gt;</span>@layout/onepane_with_bar<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span>  <br>    <span class="hljs-tag">&lt;<span class="hljs-name">bool</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;has_two_panes&quot;</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">bool</span>&gt;</span>  <br><span class="hljs-tag">&lt;/<span class="hljs-name">resources</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>可为resources设置bool，通过获取其值来动态判断目前已处在哪个适配布局</p>
+</blockquote>
+</li>
+</ol>
+<p>res&#x2F;values-sw600dp-land&#x2F;layouts.xml<br>大屏、横向、双面板、宽-Andorid 3.2版本后</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">resources</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;main_layout&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;layout&quot;</span>&gt;</span>@layout/twopanes<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">bool</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;has_two_panes&quot;</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">bool</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">resources</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>res&#x2F;values-sw600dp-port&#x2F;layouts.xml<br>（大屏、纵向、单面板带操作栏-Andorid 3.2版本后）</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">resources</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;main_layout&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;layout&quot;</span>&gt;</span>@layout/onepane<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">bool</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;has_two_panes&quot;</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">bool</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">resources</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>res&#x2F;values-large-land&#x2F;layouts.xml<br>（大屏、横向、双面板、宽-Andorid 3.2版本前）</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">resources</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;main_layout&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;layout&quot;</span>&gt;</span>@layout/twopanes<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">bool</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;has_two_panes&quot;</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">bool</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">resources</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>res&#x2F;values-large-port&#x2F;layouts.xml<br>（大屏、纵向、单面板带操作栏-Andorid 3.2版本前）</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">resources</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">item</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;main_layout&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;layout&quot;</span>&gt;</span>@layout/onepane<span class="hljs-tag">&lt;/<span class="hljs-name">item</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">bool</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;has_two_panes&quot;</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">bool</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">resources</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这里并没有写完，可自行补充</p>
+</blockquote>
+<h3 id="布局组件匹配"><a href="#布局组件匹配" class="headerlink" title="布局组件匹配"></a>布局组件匹配</h3><p>使得布局组件自适应屏幕尺寸<br>使用wrap_content,match_parent和weight来控制试图组件的宽度和高度</p>
+<blockquote>
+<p>关于weigth权重的问题，这边有个小哥哥，写的很好，可供参考<a target="_blank" rel="noopener" href="http://mobile.51cto.com/abased-375428.htm">androidweight权重</a></p>
+</blockquote>
+<h3 id="图片资源匹配"><a href="#图片资源匹配" class="headerlink" title="图片资源匹配"></a>图片资源匹配</h3><p>使得图片资源在不同屏幕密度上显示相同的像素效果</p>
+<ul>
+<li>使用自动拉伸位图:Nine-patch的图片类型<br>假设需要匹配不同屏幕大小，你的图片资源也必须自动适应各种屏幕尺寸<blockquote>
+<p>例如：一个按钮的背景图片必须随着按钮的大小改变而改变<br>解决方案: 使用自动拉伸位图,后缀名.9.png，它是一种被特殊处理过的png图片，设计师可以指定图片的拉伸区域和非拉伸区域，使用时，系统会根据空间大小自动的拉伸你想要拉伸的部分</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="创建不同的bitmap"><a href="#创建不同的bitmap" class="headerlink" title="创建不同的bitmap"></a>创建不同的bitmap</h3><p>我们应该为四种普通分辨率:高，中，低，超高精度，都提供相应设配的bitmap资源<br>要生成这些图像，应该从原始的矢量图像资源着手，然后根据下列尺寸比例，生成各种密度的图像</p>
+<ul>
+<li>xhdpi:2.0</li>
+<li>hdpi:1.5</li>
+<li>mdpi:1.0</li>
+<li>ldpi:0.75</li>
+</ul>
+<p>这也就意味着，如果针对xhdpi的设备生成了一张200x200的图像，那么应该为hdpi生成150x150,为mdpi生成100x100, 和为ldpi生成75x75的图片资源<br>然后在将这些文件放在相应的drawable资源目录中<br><a href="/assets/android/screen-1.png"></a></p>
+<p>任何时候，当引用@drawable&#x2F;ic_launch是系统就会自动使用恰当的bitmap</p>
+<h1 id="适配不同的系统版本"><a href="#适配不同的系统版本" class="headerlink" title="适配不同的系统版本"></a>适配不同的系统版本</h1><p>新的Android版本会为我们的app提供更棒的APIs，但我们的app仍应支持旧版本的Android，直到更多的设备升级到新版本为止<br>当我们通过AS创建一个应用时，有一些地方的数据信息对我们开发APP应用是有很大的帮助的<br><a href="/assets/android/androidversion-1.png"></a><br>所以，在一般情况下，在更新APP到最新版本的android时，最好保证新版本的APP可以支持90%</p>
+<h2 id="指定最小和目标API级别"><a href="#指定最小和目标API级别" class="headerlink" title="指定最小和目标API级别"></a>指定最小和目标API级别</h2><p>android的清单配置文件中描述了我们的APP的细节，以及APP支持哪些android版本。具体说<uses-sdk>元素中的minSdkVersion和targetSdkVersion属性，表明了在设计和测试APP是最低兼容API的级别和最高使用的API级别<br>当然现在这个属性设置在了gradle中</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">android</span> &#123;<br>    <span class="hljs-attribute">compileSdkVersion</span> <span class="hljs-number">26</span><br>    buildToolsVersion <span class="hljs-string">&quot;26.0.1&quot;</span><br>    defaultConfig &#123;<br>        <span class="hljs-attribute">applicationId</span> <span class="hljs-string">&quot;com.paul.android_demo_01&quot;</span><br>        minSdkVersion <span class="hljs-number">18</span><br>        targetSdkVersion <span class="hljs-number">26</span><br>        versionCode <span class="hljs-number">1</span><br>        versionName <span class="hljs-string">&quot;1.0&quot;</span><br>        testInstrumentationRunner <span class="hljs-string">&quot;android.support.test.runner.AndroidJUnitRunner&quot;</span><br>    &#125;<br>    buildTypes &#123;<br>        <span class="hljs-section">release</span> &#123;<br>            <span class="hljs-attribute">minifyEnabled</span> <span class="hljs-literal">false</span><br>            proguardFiles getDefaultProguardFile(<span class="hljs-string">&#x27;proguard-android.txt&#x27;</span>), <span class="hljs-string">&#x27;proguard-rules.pro&#x27;</span><br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>随着新版本Android的发布，一些风格和行为可能会改变，为了能使app能利用这些变化，而且能适配不同风格的用户的设备，我们应该将targetSdkVersion的值尽量的设置与最新可用的Android版本匹配</p>
+<h2 id="运行时检查系统版本"><a href="#运行时检查系统版本" class="headerlink" title="运行时检查系统版本"></a>运行时检查系统版本</h2><p>android在build常量类中提供了对每一个版本的唯一代号，在我们的APP中使用这些代号可以建立条件，保证依赖于高级别的API代码，只会在这些API在当前系统中可用</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setUpActionBar</span>()</span>&#123;<br>        <span class="hljs-comment">//确保我们当前运行的版本是大于等于Honeycomb版本(sdk11)</span><br>        <span class="hljs-keyword">if</span>(Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.HONEYCOMB)&#123;<br>            android.app.ActionBar actionBar = getActionBar();<br>            actionBar.setDisplayHomeAsUpEnabled(<span class="hljs-literal">true</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="使用平台风格和主题"><a href="#使用平台风格和主题" class="headerlink" title="使用平台风格和主题"></a>使用平台风格和主题</h3><p>Android提供了用户体验主题，为app提供基础操作系统的外观和体验。这些主题可以在manifest文件中被应用于app中。通过使用内置的风格和主题，我们的app自然地随着Android新版本的发布，自动适配最新的外观和体验.</p>
+<p>例如<br>使activity看起来像一个对话框:</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;activity android:<span class="hljs-attribute">theme</span>=<span class="hljs-string">&quot;@android:style/Theme.Dialog&quot;</span>&gt;<br></code></pre></td></tr></table></figure>
+<p>使Activity看起来透明的背景</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;activity android:<span class="hljs-attribute">theme</span>=<span class="hljs-string">&quot;@android:style/Theme.Translucent&quot;</span>&gt;<br></code></pre></td></tr></table></figure>
+<p>应用在&#x2F;res&#x2F;values&#x2F;styles.xml中定义的自定义主题:</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;activity android:<span class="hljs-attribute">theme</span>=<span class="hljs-string">&quot;@style/CustomTheme&quot;</span>&gt;<br></code></pre></td></tr></table></figure>
+<p>使整个app应用一个主题(全部activities)在元素中添加android:theme属性:</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;application android:<span class="hljs-attribute">theme</span>=<span class="hljs-string">&quot;@style/CustomTheme&quot;</span>&gt;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>未完待续···</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a target="_blank" rel="noopener" href="http://hukai.me/android-training-course-in-chinese/index.html">android官方培训课-胡凯大神翻译整理</a><br><a target="_blank" rel="noopener" href="http://blog.csdn.net/guolin_blog/article/details/8830286">stormzhang:android屏幕设配</a><br><a target="_blank" rel="noopener" href="http://blog.csdn.net/lmj623565791/article/details/45460089">鸿祥:android屏幕适配方案</a><br><a target="_blank" rel="noopener" href="http://blog.csdn.net/guolin_blog/article/details/8830286">郭霖大神:android官方提供的支持不同屏幕大小的方法</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>重拾android路(二) 手机适配</div>
+      <div>http://example.com/2016/01/09/Android-2-adaptation/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2016年1月9日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2016/02/19/Android-3-network/" title="重拾android路(三) 网络请求">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">重拾android路(三) 网络请求</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2015/12/07/Android-1-service/" title="重拾android路(一) 服务(Service)">
+                        <span class="hidden-mobile">重拾android路(一) 服务(Service)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

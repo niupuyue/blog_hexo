@@ -1,0 +1,656 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="ListView和RecyclerView机制分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="源码分析(八) ListView和RecyclerView机制">
+<meta property="og:url" content="http://example.com/2020/03/09/android-source-code-08/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="ListView和RecyclerView机制分析">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-03-09T14:09:13.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.106Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="源码分析">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>源码分析(八) ListView和RecyclerView机制 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="源码分析(八) ListView和RecyclerView机制"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-03-09 22:09" pubdate>
+          2020年3月9日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          22k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          180 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">源码分析(八) ListView和RecyclerView机制</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>ListView和RecyclerView机制分析</p>
+<span id="more"></span>
+
+<p>RecyclerBin机制<br>这个机制其实就是ListView的缓存复用机制，可以让我们在加载非常多的item时也不会OOM，这个机制主要是通过AbsListView中到的RecyclerBin类完成的，意思也就是说所有的AbsListView的子类都实现了这个机制，他的源码如下(部分内容作了一些删减)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * The RecycleBin facilitates reuse of views across layouts. The RecycleBin</span><br><span class="hljs-comment"> * has two levels of storage: ActiveViews and ScrapViews. ActiveViews are</span><br><span class="hljs-comment"> * those views which were onscreen at the start of a layout. By</span><br><span class="hljs-comment"> * construction, they are displaying current information. At the end of</span><br><span class="hljs-comment"> * layout, all views in ActiveViews are demoted to ScrapViews. ScrapViews</span><br><span class="hljs-comment"> * are old views that could potentially be used by the adapter to avoid</span><br><span class="hljs-comment"> * allocating views unnecessarily.</span><br><span class="hljs-comment"> * </span><br><span class="hljs-comment"> * <span class="hljs-doctag">@see</span> android.widget.AbsListView#setRecyclerListener(android.widget.AbsListView.RecyclerListener)</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@see</span> android.widget.AbsListView.RecyclerListener</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">RecycleBin</span> &#123;<br>	<span class="hljs-keyword">private</span> RecyclerListener mRecyclerListener;<br> <br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * The position of the first view stored in mActiveViews.</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-keyword">private</span> <span class="hljs-type">int</span> mFirstActivePosition;<br> <br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * Views that were on screen at the start of layout. This array is</span><br><span class="hljs-comment">	 * populated at the start of layout, and at the end of layout all view</span><br><span class="hljs-comment">	 * in mActiveViews are moved to mScrapViews. Views in mActiveViews</span><br><span class="hljs-comment">	 * represent a contiguous range of Views, with position of the first</span><br><span class="hljs-comment">	 * view store in mFirstActivePosition.</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-keyword">private</span> View[] mActiveViews = <span class="hljs-keyword">new</span> <span class="hljs-title class_">View</span>[<span class="hljs-number">0</span>];<br> <br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * Unsorted views that can be used by the adapter as a convert view.</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-keyword">private</span> ArrayList&lt;View&gt;[] mScrapViews;<br> <br>	<span class="hljs-keyword">private</span> <span class="hljs-type">int</span> mViewTypeCount;<br> <br>	<span class="hljs-keyword">private</span> ArrayList&lt;View&gt; mCurrentScrap;<br> <br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * Fill ActiveViews with all of the children of the AbsListView.</span><br><span class="hljs-comment">	 * </span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> childCount</span><br><span class="hljs-comment">	 *            The minimum number of views mActiveViews should hold</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> firstActivePosition</span><br><span class="hljs-comment">	 *            The position of the first view that will be stored in</span><br><span class="hljs-comment">	 *            mActiveViews</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-keyword">void</span> <span class="hljs-title function_">fillActiveViews</span><span class="hljs-params">(<span class="hljs-type">int</span> childCount, <span class="hljs-type">int</span> firstActivePosition)</span> &#123;<br>		<span class="hljs-keyword">if</span> (mActiveViews.length &lt; childCount) &#123;<br>			mActiveViews = <span class="hljs-keyword">new</span> <span class="hljs-title class_">View</span>[childCount];<br>		&#125;<br>		mFirstActivePosition = firstActivePosition;<br>		<span class="hljs-keyword">final</span> View[] activeViews = mActiveViews;<br>		<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; childCount; i++) &#123;<br>			<span class="hljs-type">View</span> <span class="hljs-variable">child</span> <span class="hljs-operator">=</span> getChildAt(i);<br>			AbsListView.<span class="hljs-type">LayoutParams</span> <span class="hljs-variable">lp</span> <span class="hljs-operator">=</span> (AbsListView.LayoutParams) child.getLayoutParams();<br>			<span class="hljs-comment">// Don&#x27;t put header or footer views into the scrap heap</span><br>			<span class="hljs-keyword">if</span> (lp != <span class="hljs-literal">null</span> &amp;&amp; lp.viewType != ITEM_VIEW_TYPE_HEADER_OR_FOOTER) &#123;<br>				<span class="hljs-comment">// Note: We do place AdapterView.ITEM_VIEW_TYPE_IGNORE in</span><br>				<span class="hljs-comment">// active views.</span><br>				<span class="hljs-comment">// However, we will NOT place them into scrap views.</span><br>				activeViews[i] = child;<br>			&#125;<br>		&#125;<br>	&#125;<br> <br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * Get the view corresponding to the specified position. The view will</span><br><span class="hljs-comment">	 * be removed from mActiveViews if it is found.</span><br><span class="hljs-comment">	 * </span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> position</span><br><span class="hljs-comment">	 *            The position to look up in mActiveViews</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@return</span> The view if it is found, null otherwise</span><br><span class="hljs-comment">	 */</span><br>	View <span class="hljs-title function_">getActiveView</span><span class="hljs-params">(<span class="hljs-type">int</span> position)</span> &#123;<br>		<span class="hljs-type">int</span> <span class="hljs-variable">index</span> <span class="hljs-operator">=</span> position - mFirstActivePosition;<br>		<span class="hljs-keyword">final</span> View[] activeViews = mActiveViews;<br>		<span class="hljs-keyword">if</span> (index &gt;= <span class="hljs-number">0</span> &amp;&amp; index &lt; activeViews.length) &#123;<br>			<span class="hljs-keyword">final</span> <span class="hljs-type">View</span> <span class="hljs-variable">match</span> <span class="hljs-operator">=</span> activeViews[index];<br>			activeViews[index] = <span class="hljs-literal">null</span>;<br>			<span class="hljs-keyword">return</span> match;<br>		&#125;<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>	&#125;<br> <br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * Put a view into the ScapViews list. These views are unordered.</span><br><span class="hljs-comment">	 * </span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> scrap</span><br><span class="hljs-comment">	 *            The view to add</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-keyword">void</span> <span class="hljs-title function_">addScrapView</span><span class="hljs-params">(View scrap)</span> &#123;<br>		AbsListView.<span class="hljs-type">LayoutParams</span> <span class="hljs-variable">lp</span> <span class="hljs-operator">=</span> (AbsListView.LayoutParams) scrap.getLayoutParams();<br>		<span class="hljs-keyword">if</span> (lp == <span class="hljs-literal">null</span>) &#123;<br>			<span class="hljs-keyword">return</span>;<br>		&#125;<br>		<span class="hljs-comment">// Don&#x27;t put header or footer views or views that should be ignored</span><br>		<span class="hljs-comment">// into the scrap heap</span><br>		<span class="hljs-type">int</span> <span class="hljs-variable">viewType</span> <span class="hljs-operator">=</span> lp.viewType;<br>		<span class="hljs-keyword">if</span> (!shouldRecycleViewType(viewType)) &#123;<br>			<span class="hljs-keyword">if</span> (viewType != ITEM_VIEW_TYPE_HEADER_OR_FOOTER) &#123;<br>				removeDetachedView(scrap, <span class="hljs-literal">false</span>);<br>			&#125;<br>			<span class="hljs-keyword">return</span>;<br>		&#125;<br>		<span class="hljs-keyword">if</span> (mViewTypeCount == <span class="hljs-number">1</span>) &#123;<br>			dispatchFinishTemporaryDetach(scrap);<br>			mCurrentScrap.add(scrap);<br>		&#125; <span class="hljs-keyword">else</span> &#123;<br>			dispatchFinishTemporaryDetach(scrap);<br>			mScrapViews[viewType].add(scrap);<br>		&#125;<br> <br>		<span class="hljs-keyword">if</span> (mRecyclerListener != <span class="hljs-literal">null</span>) &#123;<br>			mRecyclerListener.onMovedToScrapHeap(scrap);<br>		&#125;<br>	&#125;<br> <br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@return</span> A view from the ScrapViews collection. These are unordered.</span><br><span class="hljs-comment">	 */</span><br>	View <span class="hljs-title function_">getScrapView</span><span class="hljs-params">(<span class="hljs-type">int</span> position)</span> &#123;<br>		ArrayList&lt;View&gt; scrapViews;<br>		<span class="hljs-keyword">if</span> (mViewTypeCount == <span class="hljs-number">1</span>) &#123;<br>			scrapViews = mCurrentScrap;<br>			<span class="hljs-type">int</span> <span class="hljs-variable">size</span> <span class="hljs-operator">=</span> scrapViews.size();<br>			<span class="hljs-keyword">if</span> (size &gt; <span class="hljs-number">0</span>) &#123;<br>				<span class="hljs-keyword">return</span> scrapViews.remove(size - <span class="hljs-number">1</span>);<br>			&#125; <span class="hljs-keyword">else</span> &#123;<br>				<span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>			&#125;<br>		&#125; <span class="hljs-keyword">else</span> &#123;<br>			<span class="hljs-type">int</span> <span class="hljs-variable">whichScrap</span> <span class="hljs-operator">=</span> mAdapter.getItemViewType(position);<br>			<span class="hljs-keyword">if</span> (whichScrap &gt;= <span class="hljs-number">0</span> &amp;&amp; whichScrap &lt; mScrapViews.length) &#123;<br>				scrapViews = mScrapViews[whichScrap];<br>				<span class="hljs-type">int</span> <span class="hljs-variable">size</span> <span class="hljs-operator">=</span> scrapViews.size();<br>				<span class="hljs-keyword">if</span> (size &gt; <span class="hljs-number">0</span>) &#123;<br>					<span class="hljs-keyword">return</span> scrapViews.remove(size - <span class="hljs-number">1</span>);<br>				&#125;<br>			&#125;<br>		&#125;<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>	&#125;<br> <br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setViewTypeCount</span><span class="hljs-params">(<span class="hljs-type">int</span> viewTypeCount)</span> &#123;<br>		<span class="hljs-keyword">if</span> (viewTypeCount &lt; <span class="hljs-number">1</span>) &#123;<br>			<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalArgumentException</span>(<span class="hljs-string">&quot;Can&#x27;t have a viewTypeCount &lt; 1&quot;</span>);<br>		&#125;<br>		<span class="hljs-comment">// noinspection unchecked</span><br>		ArrayList&lt;View&gt;[] scrapViews = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>[viewTypeCount];<br>		<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; viewTypeCount; i++) &#123;<br>			scrapViews[i] = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;View&gt;();<br>		&#125;<br>		mViewTypeCount = viewTypeCount;<br>		mCurrentScrap = scrapViews[<span class="hljs-number">0</span>];<br>		mScrapViews = scrapViews;<br>	&#125;<br> <br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>里面的逻辑比较简单，这里只介绍几个比较重要的成员变量和方法</p>
+<ul>
+<li>mFirstActivePosition：第一个在mActiveViews存储的位置，其实可以这样理解，mActveViews表示的是当前可见的ListView的item对象，加入我们有100个数据，每次能够展示10个数据，那么第一次mFirstActivePosition的值就是0，如果我们滑动LstView，那么mFirstActivePosition可以变成1，2，3等数据</li>
+<li>mActiveViews：当前屏幕中可见的item集合，这个集合是从第一个可见的item开始到最后一个可见的item结束</li>
+<li>mScrapViews：从字面意思上来说是废弃的views，其实可以理解为当前不可见的view，需要通过adapter适配到convert view</li>
+<li>fillActiveView()：接受两个参数，第一个参数是可接收view的数量，第二参数表示ListView中第一个可见view的位置position，就像刚才所说，mActiveViews是用来存储当前可见的views，那么通过这个方法我们就会将指定item存储到mActiveViews数组中。</li>
+<li>getActiveView()：这个方法与fillActiveView()方法相呼应，用于从mActiveViews中获取数据，这个方法中会传递过来position参数，在方法中会将其转换成mActiveViews的下标。需要注意的是，一旦从mActiveViews中获取一个item对象，这个item对象就会从数组中移除，所以说mActiveViews不能重复利用</li>
+<li>addScrapView()：用于将一个废弃的view进行缓存，该方法接收一个view参数，当某个view被废除的时候(比如item滚出屏幕)通过该方法将view添加到mScrapViews集合中。</li>
+<li>setViewTypeCount()：我们在使用ListView时通过getViewTypeCout()来获取item的种类，那么在recyclerBin中，我们会为每种类型的数据单独启用一个RecyclerBin缓存机制，</li>
+</ul>
+<h1 id="ListView机制"><a href="#ListView机制" class="headerlink" title="ListView机制"></a>ListView机制</h1><p>不管怎么说，ListView还是继承自View的，所以其绘制流程与View的绘制流程总是有千丝万缕的联系。<br>其实View的绘制主要就是三步走：onMeasure(),onLayout(),onDraw()，其中onMeasure和onDraw这两个方法我们可以不用考虑，主要是看onLayout方法。而onlayout方法主要是设置子view也就是item的位置。所以我们先来看一下ListView中的onLayout方法是如何实现的。可是我们惊奇的发现没有这方法，没事，不慌，ListView没有这个方法，我们就去他的父类AbsListView中查找</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Subclasses should NOT override this method but</span><br><span class="hljs-comment"> *  &#123;@link #layoutChildren()&#125; instead.</span><br><span class="hljs-comment"> */</span><br>@Override<br>protected void on<span class="hljs-constructor">Layout(<span class="hljs-params">boolean</span> <span class="hljs-params">changed</span>, <span class="hljs-params">int</span> <span class="hljs-params">l</span>, <span class="hljs-params">int</span> <span class="hljs-params">t</span>, <span class="hljs-params">int</span> <span class="hljs-params">r</span>, <span class="hljs-params">int</span> <span class="hljs-params">b</span>)</span> &#123;<br>    super.on<span class="hljs-constructor">Layout(<span class="hljs-params">changed</span>, <span class="hljs-params">l</span>, <span class="hljs-params">t</span>, <span class="hljs-params">r</span>, <span class="hljs-params">b</span>)</span>;<br><br>    mInLayout = <span class="hljs-literal">true</span>;<br><br>    final <span class="hljs-built_in">int</span> childCount = get<span class="hljs-constructor">ChildCount()</span>;<br>    <span class="hljs-keyword">if</span> (changed) &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; childCount; i++) &#123;<br>            get<span class="hljs-constructor">ChildAt(<span class="hljs-params">i</span>)</span>.force<span class="hljs-constructor">Layout()</span>;<br>        &#125;<br>        mRecycler.mark<span class="hljs-constructor">ChildrenDirty()</span>;<br>    &#125;<br><br>    layout<span class="hljs-constructor">Children()</span>;<br><br>    mOverscrollMax = (b - t)<span class="hljs-operator"> / </span>OVERSCROLL_LIMIT_DIVISOR;<br><br>    <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> Move somewhere sane. This doesn&#x27;t belong in onLayout().</span><br>    <span class="hljs-keyword">if</span> (mFastScroll != null) &#123;<br>        mFastScroll.on<span class="hljs-constructor">ItemCountChanged(<span class="hljs-params">getChildCount</span>()</span>, mItemCount);<br>    &#125;<br>    mInLayout = <span class="hljs-literal">false</span>;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>在这个方法中，我们发现，主要做的事情就是ListView的大小和位置是否发生了改变，如果发生了改变，那么changed属性就会变成true，然后要求重新绘制所有的子View。除此之外，我们发现这里还调用了layoutChildren()方法，这个方法从字面意思上我们知道，他应该是排版子view的方法，所有我们需要进入到这个方法中看一下，但是这个方法在AbsListView中是空的，那么是不是就说明没有具体的实现呢？肯定不是，我们是在子类中实现的，这里我们看一下ListView中的layoutChildren方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">layoutChildren</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">boolean</span> <span class="hljs-variable">blockLayoutRequests</span> <span class="hljs-operator">=</span> mBlockLayoutRequests;<br>    <span class="hljs-keyword">if</span> (!blockLayoutRequests) &#123;<br>        mBlockLayoutRequests = <span class="hljs-literal">true</span>;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-built_in">super</span>.layoutChildren();<br>        invalidate();<br>        <span class="hljs-keyword">if</span> (mAdapter == <span class="hljs-literal">null</span>) &#123;<br>            resetList();<br>            invokeOnItemScrollListener();<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">childrenTop</span> <span class="hljs-operator">=</span> mListPadding.top;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">childrenBottom</span> <span class="hljs-operator">=</span> getBottom() - getTop() - mListPadding.bottom;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">childCount</span> <span class="hljs-operator">=</span> getChildCount();<br>        <span class="hljs-type">int</span> <span class="hljs-variable">index</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">delta</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        View sel;<br>        <span class="hljs-type">View</span> <span class="hljs-variable">oldSel</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>        <span class="hljs-type">View</span> <span class="hljs-variable">oldFirst</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>        <span class="hljs-type">View</span> <span class="hljs-variable">newSel</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>        <span class="hljs-type">View</span> <span class="hljs-variable">focusLayoutRestoreView</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>        <span class="hljs-comment">// Remember stuff we will need down below</span><br>        <span class="hljs-keyword">switch</span> (mLayoutMode) &#123;<br>        <span class="hljs-keyword">case</span> LAYOUT_SET_SELECTION:<br>            index = mNextSelectedPosition - mFirstPosition;<br>            <span class="hljs-keyword">if</span> (index &gt;= <span class="hljs-number">0</span> &amp;&amp; index &lt; childCount) &#123;<br>                newSel = getChildAt(index);<br>            &#125;<br>            <span class="hljs-keyword">break</span>;<br>        <span class="hljs-keyword">case</span> LAYOUT_FORCE_TOP:<br>        <span class="hljs-keyword">case</span> LAYOUT_FORCE_BOTTOM:<br>        <span class="hljs-keyword">case</span> LAYOUT_SPECIFIC:<br>        <span class="hljs-keyword">case</span> LAYOUT_SYNC:<br>            <span class="hljs-keyword">break</span>;<br>        <span class="hljs-keyword">case</span> LAYOUT_MOVE_SELECTION:<br>        <span class="hljs-keyword">default</span>:<br>            <span class="hljs-comment">// Remember the previously selected view</span><br>            index = mSelectedPosition - mFirstPosition;<br>            <span class="hljs-keyword">if</span> (index &gt;= <span class="hljs-number">0</span> &amp;&amp; index &lt; childCount) &#123;<br>                oldSel = getChildAt(index);<br>            &#125;<br>            <span class="hljs-comment">// Remember the previous first child</span><br>            oldFirst = getChildAt(<span class="hljs-number">0</span>);<br>            <span class="hljs-keyword">if</span> (mNextSelectedPosition &gt;= <span class="hljs-number">0</span>) &#123;<br>                delta = mNextSelectedPosition - mSelectedPosition;<br>            &#125;<br>            <span class="hljs-comment">// Caution: newSel might be null</span><br>            newSel = getChildAt(index + delta);<br>        &#125;<br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">dataChanged</span> <span class="hljs-operator">=</span> mDataChanged;<br>        <span class="hljs-keyword">if</span> (dataChanged) &#123;<br>            handleDataChanged();<br>        &#125;<br>        <span class="hljs-comment">// Handle the empty set by removing all views that are visible</span><br>        <span class="hljs-comment">// and calling it a day</span><br>        <span class="hljs-keyword">if</span> (mItemCount == <span class="hljs-number">0</span>) &#123;<br>            resetList();<br>            invokeOnItemScrollListener();<br>            <span class="hljs-keyword">return</span>;<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (mItemCount != mAdapter.getCount()) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalStateException</span>(<span class="hljs-string">&quot;The content of the adapter has changed but &quot;</span><br>                    + <span class="hljs-string">&quot;ListView did not receive a notification. Make sure the content of &quot;</span><br>                    + <span class="hljs-string">&quot;your adapter is not modified from a background thread, but only &quot;</span><br>                    + <span class="hljs-string">&quot;from the UI thread. [in ListView(&quot;</span> + getId() + <span class="hljs-string">&quot;, &quot;</span> + getClass() <br>                    + <span class="hljs-string">&quot;) with Adapter(&quot;</span> + mAdapter.getClass() + <span class="hljs-string">&quot;)]&quot;</span>);<br>        &#125;<br>        setSelectedPositionInt(mNextSelectedPosition);<br>        <span class="hljs-comment">// Pull all children into the RecycleBin.</span><br>        <span class="hljs-comment">// These views will be reused if possible</span><br>        <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">firstPosition</span> <span class="hljs-operator">=</span> mFirstPosition;<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">RecycleBin</span> <span class="hljs-variable">recycleBin</span> <span class="hljs-operator">=</span> mRecycler;<br>        <span class="hljs-comment">// reset the focus restoration</span><br>        <span class="hljs-type">View</span> <span class="hljs-variable">focusLayoutRestoreDirectChild</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>        <span class="hljs-comment">// Don&#x27;t put header or footer views into the Recycler. Those are</span><br>        <span class="hljs-comment">// already cached in mHeaderViews;</span><br>        <span class="hljs-keyword">if</span> (dataChanged) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; childCount; i++) &#123;<br>                recycleBin.addScrapView(getChildAt(i));<br>                <span class="hljs-keyword">if</span> (ViewDebug.TRACE_RECYCLER) &#123;<br>                    ViewDebug.trace(getChildAt(i),<br>                            ViewDebug.RecyclerTraceType.MOVE_TO_SCRAP_HEAP, index, i);<br>                &#125;<br>            &#125;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            recycleBin.fillActiveViews(childCount, firstPosition);<br>        &#125;<br>        <span class="hljs-comment">// take focus back to us temporarily to avoid the eventual</span><br>        <span class="hljs-comment">// call to clear focus when removing the focused child below</span><br>        <span class="hljs-comment">// from messing things up when ViewRoot assigns focus back</span><br>        <span class="hljs-comment">// to someone else</span><br>        <span class="hljs-keyword">final</span> <span class="hljs-type">View</span> <span class="hljs-variable">focusedChild</span> <span class="hljs-operator">=</span> getFocusedChild();<br>        <span class="hljs-keyword">if</span> (focusedChild != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> in some cases focusedChild.getParent() == null</span><br>            <span class="hljs-comment">// we can remember the focused view to restore after relayout if the</span><br>            <span class="hljs-comment">// data hasn&#x27;t changed, or if the focused position is a header or footer</span><br>            <span class="hljs-keyword">if</span> (!dataChanged || isDirectChildHeaderOrFooter(focusedChild)) &#123;<br>                focusLayoutRestoreDirectChild = focusedChild;<br>                <span class="hljs-comment">// remember the specific view that had focus</span><br>                focusLayoutRestoreView = findFocus();<br>                <span class="hljs-keyword">if</span> (focusLayoutRestoreView != <span class="hljs-literal">null</span>) &#123;<br>                    <span class="hljs-comment">// tell it we are going to mess with it</span><br>                    focusLayoutRestoreView.onStartTemporaryDetach();<br>                &#125;<br>            &#125;<br>            requestFocus();<br>        &#125;<br>        <span class="hljs-comment">// Clear out old views</span><br>        detachAllViewsFromParent();<br>        <span class="hljs-keyword">switch</span> (mLayoutMode) &#123;<br>        <span class="hljs-keyword">case</span> LAYOUT_SET_SELECTION:<br>            <span class="hljs-keyword">if</span> (newSel != <span class="hljs-literal">null</span>) &#123;<br>                sel = fillFromSelection(newSel.getTop(), childrenTop, childrenBottom);<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                sel = fillFromMiddle(childrenTop, childrenBottom);<br>            &#125;<br>            <span class="hljs-keyword">break</span>;<br>        <span class="hljs-keyword">case</span> LAYOUT_SYNC:<br>            sel = fillSpecific(mSyncPosition, mSpecificTop);<br>            <span class="hljs-keyword">break</span>;<br>        <span class="hljs-keyword">case</span> LAYOUT_FORCE_BOTTOM:<br>            sel = fillUp(mItemCount - <span class="hljs-number">1</span>, childrenBottom);<br>            adjustViewsUpOrDown();<br>            <span class="hljs-keyword">break</span>;<br>        <span class="hljs-keyword">case</span> LAYOUT_FORCE_TOP:<br>            mFirstPosition = <span class="hljs-number">0</span>;<br>            sel = fillFromTop(childrenTop);<br>            adjustViewsUpOrDown();<br>            <span class="hljs-keyword">break</span>;<br>        <span class="hljs-keyword">case</span> LAYOUT_SPECIFIC:<br>            sel = fillSpecific(reconcileSelectedPosition(), mSpecificTop);<br>            <span class="hljs-keyword">break</span>;<br>        <span class="hljs-keyword">case</span> LAYOUT_MOVE_SELECTION:<br>            sel = moveSelection(oldSel, newSel, delta, childrenTop, childrenBottom);<br>            <span class="hljs-keyword">break</span>;<br>        <span class="hljs-keyword">default</span>:<br>            <span class="hljs-keyword">if</span> (childCount == <span class="hljs-number">0</span>) &#123;<br>                <span class="hljs-keyword">if</span> (!mStackFromBottom) &#123;<br>                    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">position</span> <span class="hljs-operator">=</span> lookForSelectablePosition(<span class="hljs-number">0</span>, <span class="hljs-literal">true</span>);<br>                    setSelectedPositionInt(position);<br>                    sel = fillFromTop(childrenTop);<br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">position</span> <span class="hljs-operator">=</span> lookForSelectablePosition(mItemCount - <span class="hljs-number">1</span>, <span class="hljs-literal">false</span>);<br>                    setSelectedPositionInt(position);<br>                    sel = fillUp(mItemCount - <span class="hljs-number">1</span>, childrenBottom);<br>                &#125;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-keyword">if</span> (mSelectedPosition &gt;= <span class="hljs-number">0</span> &amp;&amp; mSelectedPosition &lt; mItemCount) &#123;<br>                    sel = fillSpecific(mSelectedPosition,<br>                            oldSel == <span class="hljs-literal">null</span> ? childrenTop : oldSel.getTop());<br>                &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (mFirstPosition &lt; mItemCount) &#123;<br>                    sel = fillSpecific(mFirstPosition,<br>                            oldFirst == <span class="hljs-literal">null</span> ? childrenTop : oldFirst.getTop());<br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    sel = fillSpecific(<span class="hljs-number">0</span>, childrenTop);<br>                &#125;<br>            &#125;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>        <span class="hljs-comment">// Flush any cached views that did not get reused above</span><br>        recycleBin.scrapActiveViews();<br>        <span class="hljs-keyword">if</span> (sel != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-comment">// the current selected item should get focus if items</span><br>            <span class="hljs-comment">// are focusable</span><br>            <span class="hljs-keyword">if</span> (mItemsCanFocus &amp;&amp; hasFocus() &amp;&amp; !sel.hasFocus()) &#123;<br>                <span class="hljs-keyword">final</span> <span class="hljs-type">boolean</span> <span class="hljs-variable">focusWasTaken</span> <span class="hljs-operator">=</span> (sel == focusLayoutRestoreDirectChild &amp;&amp;<br>                        focusLayoutRestoreView.requestFocus()) || sel.requestFocus();<br>                <span class="hljs-keyword">if</span> (!focusWasTaken) &#123;<br>                    <span class="hljs-comment">// selected item didn&#x27;t take focus, fine, but still want</span><br>                    <span class="hljs-comment">// to make sure something else outside of the selected view</span><br>                    <span class="hljs-comment">// has focus</span><br>                    <span class="hljs-keyword">final</span> <span class="hljs-type">View</span> <span class="hljs-variable">focused</span> <span class="hljs-operator">=</span> getFocusedChild();<br>                    <span class="hljs-keyword">if</span> (focused != <span class="hljs-literal">null</span>) &#123;<br>                        focused.clearFocus();<br>                    &#125;<br>                    positionSelector(sel);<br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    sel.setSelected(<span class="hljs-literal">false</span>);<br>                    mSelectorRect.setEmpty();<br>                &#125;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                positionSelector(sel);<br>            &#125;<br>            mSelectedTop = sel.getTop();<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">if</span> (mTouchMode &gt; TOUCH_MODE_DOWN &amp;&amp; mTouchMode &lt; TOUCH_MODE_SCROLL) &#123;<br>                <span class="hljs-type">View</span> <span class="hljs-variable">child</span> <span class="hljs-operator">=</span> getChildAt(mMotionPosition - mFirstPosition);<br>                <span class="hljs-keyword">if</span> (child != <span class="hljs-literal">null</span>) positionSelector(child);<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                mSelectedTop = <span class="hljs-number">0</span>;<br>                mSelectorRect.setEmpty();<br>            &#125;<br>            <span class="hljs-comment">// even if there is not selected position, we may need to restore</span><br>            <span class="hljs-comment">// focus (i.e. something focusable in touch mode)</span><br>            <span class="hljs-keyword">if</span> (hasFocus() &amp;&amp; focusLayoutRestoreView != <span class="hljs-literal">null</span>) &#123;<br>                focusLayoutRestoreView.requestFocus();<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">// tell focus view we are done mucking with it, if it is still in</span><br>        <span class="hljs-comment">// our view hierarchy.</span><br>        <span class="hljs-keyword">if</span> (focusLayoutRestoreView != <span class="hljs-literal">null</span><br>                &amp;&amp; focusLayoutRestoreView.getWindowToken() != <span class="hljs-literal">null</span>) &#123;<br>            focusLayoutRestoreView.onFinishTemporaryDetach();<br>        &#125;<br>        mLayoutMode = LAYOUT_NORMAL;<br>        mDataChanged = <span class="hljs-literal">false</span>;<br>        mNeedSync = <span class="hljs-literal">false</span>;<br>        setNextSelectedPositionInt(mSelectedPosition);<br>        updateScrollIndicators();<br>        <span class="hljs-keyword">if</span> (mItemCount &gt; <span class="hljs-number">0</span>) &#123;<br>            checkSelectionChanged();<br>        &#125;<br>        invokeOnItemScrollListener();<br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>        <span class="hljs-keyword">if</span> (!blockLayoutRequests) &#123;<br>            mBlockLayoutRequests = <span class="hljs-literal">false</span>;<br>        &#125;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>代码稍微多了一点，我们只看重点，首先我们可以确定的是，在第一次进入该方法的时候，我们的ListView中是没有数据的，为什么没有数据呢？我们可以这两理解，在我们初始化ListView之后，ListView中没有通过adapter设置数据，所以初始状态下ListView的数据是空的，而且刚才我们说到ListView通过adapter设置数据，其实也是通过adapter渲染数据item，所以这时候所对应的getChildCount也是0，后面代码也会运行RecyclerBin中的fillActiveViews方法，由于数据是空的，所以这行代码我们可以认为是没有做任何事情。紧接着我们会通过mLayoutMode设置布局模式，默认情况下是普通模式LAYOUT_NORMAL，然后我们会进入到fillFromTop方法，这个方法的实现如下所示</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Fills the list from top to bottom, starting with mFirstPosition</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * @param nextTop The location where the top of the first item should be</span><br><span class="hljs-comment"> *        drawn</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * @return The view that is currently selected</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">private</span> View fill<span class="hljs-constructor">FromTop(<span class="hljs-params">int</span> <span class="hljs-params">nextTop</span>)</span> &#123;<br>    mFirstPosition = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Math</span>.</span></span>min(mFirstPosition, mSelectedPosition);<br>    mFirstPosition = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Math</span>.</span></span>min(mFirstPosition, mItemCount - <span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">if</span> (mFirstPosition &lt; <span class="hljs-number">0</span>) &#123;<br>        mFirstPosition = <span class="hljs-number">0</span>;<br>    &#125;<br>    return fill<span class="hljs-constructor">Down(<span class="hljs-params">mFirstPosition</span>, <span class="hljs-params">nextTop</span>)</span>;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>从注释中我们知道，他会从mFirstPosition往下的填充ListView，主要就是判断mFirstPosition的合法性，然后通过fillDown方法，填充。由于最终我们返回的是一个View对象，我们可以大概的知道，填充的具体操作，应该是在fillDown方法中执行的。fillDown方法代码如下所示</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Fills the list from pos down to the end of the list view.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * @param pos The first position to put in the list</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * @param nextTop The location where the top of the item associated with pos</span><br><span class="hljs-comment"> *        should be drawn</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * @return The view that is currently selected, if it happens to be in the</span><br><span class="hljs-comment"> *         range that we draw.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">private</span> View fill<span class="hljs-constructor">Down(<span class="hljs-params">int</span> <span class="hljs-params">pos</span>, <span class="hljs-params">int</span> <span class="hljs-params">nextTop</span>)</span> &#123;<br>    View selectedView = null;<br>    <span class="hljs-built_in">int</span> <span class="hljs-keyword">end</span> = (get<span class="hljs-constructor">Bottom()</span> - get<span class="hljs-constructor">Top()</span>) - mListPadding.bottom;<br>    <span class="hljs-keyword">while</span> (nextTop &lt; <span class="hljs-keyword">end</span><span class="hljs-operator"> &amp;&amp; </span>pos &lt; mItemCount) &#123;<br>        <span class="hljs-comment">// is this the selected item?</span><br>        boolean selected = pos<span class="hljs-operator"> == </span>mSelectedPosition;<br>        View child = make<span class="hljs-constructor">AndAddView(<span class="hljs-params">pos</span>, <span class="hljs-params">nextTop</span>, <span class="hljs-params">true</span>, <span class="hljs-params">mListPadding</span>.<span class="hljs-params">left</span>, <span class="hljs-params">selected</span>)</span>;<br>        nextTop = child.get<span class="hljs-constructor">Bottom()</span> + mDividerHeight;<br>        <span class="hljs-keyword">if</span> (selected) &#123;<br>            selectedView = child;<br>        &#125;<br>        pos++;<br>    &#125;<br>    return selectedView;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>在fillDown方法中，通过while循环执行重复逻辑，一开始nextTop的值是第一个子元素顶部距离整个ListView顶部的像素值，pos则是刚刚传入的mFirstPosition的值，而end是ListView底部减去顶部所得的像素值，mItemCount则是Adapter中的元素数量。因此一开始的情况下nextTop必定是小于end值的，并且pos也是小于mItemCount值的。那么每执行一次while循环，pos的值都会加1，并且nextTop也会增加，当nextTop大于等于end时，也就是子元素已经超出当前屏幕了，或者pos大于等于mItemCount时，也就是所有Adapter中的元素都被遍历结束了，就会跳出while循环。而在while循环中通过makeAndAddView方法，将view添加到相应的位置</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs aspectj"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Obtain the view and add it to our list of children. The view can be made</span><br><span class="hljs-comment"> * fresh, converted from an unused view, or used as is if it was in the</span><br><span class="hljs-comment"> * recycle bin.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> position Logical position in the list</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> y Top or bottom edge of the view to add</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> flow If flow is true, align top edge to y. If false, align bottom</span><br><span class="hljs-comment"> *        edge to y.</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> childrenLeft Left edge where children should be positioned</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> selected Is this position selected?</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span> View that was added</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">private</span> <span class="hljs-function">View <span class="hljs-title">makeAndAddView</span><span class="hljs-params">(<span class="hljs-keyword">int</span> position, <span class="hljs-keyword">int</span> y, <span class="hljs-keyword">boolean</span> flow, <span class="hljs-keyword">int</span> childrenLeft,</span></span><br><span class="hljs-params"><span class="hljs-function">        <span class="hljs-keyword">boolean</span> selected)</span> </span>&#123;<br>    View child;<br>    <span class="hljs-keyword">if</span> (!mDataChanged) &#123;<br>        <span class="hljs-comment">// Try to use an exsiting view for this position</span><br>        child = mRecycler.getActiveView(position);<br>        <span class="hljs-keyword">if</span> (child != <span class="hljs-keyword">null</span>) &#123;<br>            <span class="hljs-comment">// Found it -- we&#x27;re using an existing child</span><br>            <span class="hljs-comment">// This just needs to be positioned</span><br>            setupChild(child, position, y, flow, childrenLeft, selected, <span class="hljs-keyword">true</span>);<br>            <span class="hljs-keyword">return</span> child;<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">// Make a new view for this position, or convert an unused view if possible</span><br>    child = obtainView(position, mIsScrap);<br>    <span class="hljs-comment">// This needs to be positioned and measured</span><br>    setupChild(child, position, y, flow, childrenLeft, selected, mIsScrap[<span class="hljs-number">0</span>]);<br>    <span class="hljs-keyword">return</span> child;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>在这个代码中我们通过RecyclerBin获取了一个activeView，并且通过setupChild方法将view设置到相应的位置，而此时view是null，所以会通过obtaionView方法设置一个view对象，保证child不为空</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Get a view and have it show the data associated with the specified</span><br><span class="hljs-comment"> * position. This is called when we have already discovered that the view is</span><br><span class="hljs-comment"> * not available for reuse in the recycle bin. The only choices left are</span><br><span class="hljs-comment"> * converting an old view or making a new one.</span><br><span class="hljs-comment"> * </span><br><span class="hljs-comment"> * @param position</span><br><span class="hljs-comment"> *            The position to display</span><br><span class="hljs-comment"> * @param isScrap</span><br><span class="hljs-comment"> *            Array of at least 1 boolean, the first entry will become true</span><br><span class="hljs-comment"> *            if the returned view was taken from the scrap heap, false if</span><br><span class="hljs-comment"> *            otherwise.</span><br><span class="hljs-comment"> * </span><br><span class="hljs-comment"> * @return A view displaying the data associated with the specified position</span><br><span class="hljs-comment"> */</span><br>View obtain<span class="hljs-constructor">View(<span class="hljs-params">int</span> <span class="hljs-params">position</span>, <span class="hljs-params">boolean</span>[] <span class="hljs-params">isScrap</span>)</span> &#123;<br>	isScrap<span class="hljs-literal">[<span class="hljs-number">0</span>]</span> = <span class="hljs-literal">false</span>;<br>	View scrapView;<br>	scrapView = mRecycler.get<span class="hljs-constructor">ScrapView(<span class="hljs-params">position</span>)</span>;<br>	View child;<br>	<span class="hljs-keyword">if</span> (scrapView != null) &#123;<br>		child = mAdapter.get<span class="hljs-constructor">View(<span class="hljs-params">position</span>, <span class="hljs-params">scrapView</span>, <span class="hljs-params">this</span>)</span>;<br>		<span class="hljs-keyword">if</span> (child != scrapView) &#123;<br>			mRecycler.add<span class="hljs-constructor">ScrapView(<span class="hljs-params">scrapView</span>)</span>;<br>			<span class="hljs-keyword">if</span> (mCacheColorHint != <span class="hljs-number">0</span>) &#123;<br>				child.set<span class="hljs-constructor">DrawingCacheBackgroundColor(<span class="hljs-params">mCacheColorHint</span>)</span>;<br>			&#125;<br>		&#125; <span class="hljs-keyword">else</span> &#123;<br>			isScrap<span class="hljs-literal">[<span class="hljs-number">0</span>]</span> = <span class="hljs-literal">true</span>;<br>			dispatch<span class="hljs-constructor">FinishTemporaryDetach(<span class="hljs-params">child</span>)</span>;<br>		&#125;<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		child = mAdapter.get<span class="hljs-constructor">View(<span class="hljs-params">position</span>, <span class="hljs-params">null</span>, <span class="hljs-params">this</span>)</span>;<br>		<span class="hljs-keyword">if</span> (mCacheColorHint != <span class="hljs-number">0</span>) &#123;<br>			child.set<span class="hljs-constructor">DrawingCacheBackgroundColor(<span class="hljs-params">mCacheColorHint</span>)</span>;<br>		&#125;<br>	&#125;<br>	return child;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>在obtainView方法中我们会发现，通过getScrapView方法尝试获取一个废弃缓存中的view，由于获取不到，getScrapView会返回一个null，这时候在通过mAdapter.getView来获取一个view对象，而这个mAdapter就是与ListView相关联的adapter，而getView方法就是平时我们经常写在自定义Adapter中的getView方法，并且这个方法会返回一个View视图，此时我们的getView中会传递三个参数，对应的也就是adapter中的三个参数，其中scrapView就是convertView，如果这个对象为null，表示当前没有convertView可以利用，然后我们就会通过inflate方法动态加载一个布局，并且返回。由于不管getActiveView还是obtainView，最终都会执行setupChild方法，所以我们来看一下这个内容是如何实现的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Add a view as a child and make sure it is measured (if necessary) and</span><br><span class="hljs-comment"> * positioned properly.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> child The view to add</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> position The position of this child</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> y The y position relative to which this view will be positioned</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> flowDown If true, align top edge to y. If false, align bottom</span><br><span class="hljs-comment"> *        edge to y.</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> childrenLeft Left edge where children should be positioned</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> selected Is this position selected?</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> recycled Has this view been pulled from the recycle bin? If so it</span><br><span class="hljs-comment"> *        does not need to be remeasured.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setupChild</span><span class="hljs-params">(View child, <span class="hljs-type">int</span> position, <span class="hljs-type">int</span> y, <span class="hljs-type">boolean</span> flowDown, <span class="hljs-type">int</span> childrenLeft,</span><br><span class="hljs-params">        <span class="hljs-type">boolean</span> selected, <span class="hljs-type">boolean</span> recycled)</span> &#123;<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">boolean</span> <span class="hljs-variable">isSelected</span> <span class="hljs-operator">=</span> selected &amp;&amp; shouldShowSelector();<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">boolean</span> <span class="hljs-variable">updateChildSelected</span> <span class="hljs-operator">=</span> isSelected != child.isSelected();<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">mode</span> <span class="hljs-operator">=</span> mTouchMode;<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">boolean</span> <span class="hljs-variable">isPressed</span> <span class="hljs-operator">=</span> mode &gt; TOUCH_MODE_DOWN &amp;&amp; mode &lt; TOUCH_MODE_SCROLL &amp;&amp;<br>            mMotionPosition == position;<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">boolean</span> <span class="hljs-variable">updateChildPressed</span> <span class="hljs-operator">=</span> isPressed != child.isPressed();<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">boolean</span> <span class="hljs-variable">needToMeasure</span> <span class="hljs-operator">=</span> !recycled || updateChildSelected || child.isLayoutRequested();<br>    <span class="hljs-comment">// Respect layout params that are already in the view. Otherwise make some up...</span><br>    <span class="hljs-comment">// noinspection unchecked</span><br>    AbsListView.<span class="hljs-type">LayoutParams</span> <span class="hljs-variable">p</span> <span class="hljs-operator">=</span> (AbsListView.LayoutParams) child.getLayoutParams();<br>    <span class="hljs-keyword">if</span> (p == <span class="hljs-literal">null</span>) &#123;<br>        p = <span class="hljs-keyword">new</span> <span class="hljs-title class_">AbsListView</span>.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,<br>                ViewGroup.LayoutParams.WRAP_CONTENT, <span class="hljs-number">0</span>);<br>    &#125;<br>    p.viewType = mAdapter.getItemViewType(position);<br>    <span class="hljs-keyword">if</span> ((recycled &amp;&amp; !p.forceAdd) || (p.recycledHeaderFooter &amp;&amp;<br>            p.viewType == AdapterView.ITEM_VIEW_TYPE_HEADER_OR_FOOTER)) &#123;<br>        attachViewToParent(child, flowDown ? -<span class="hljs-number">1</span> : <span class="hljs-number">0</span>, p);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        p.forceAdd = <span class="hljs-literal">false</span>;<br>        <span class="hljs-keyword">if</span> (p.viewType == AdapterView.ITEM_VIEW_TYPE_HEADER_OR_FOOTER) &#123;<br>            p.recycledHeaderFooter = <span class="hljs-literal">true</span>;<br>        &#125;<br>        addViewInLayout(child, flowDown ? -<span class="hljs-number">1</span> : <span class="hljs-number">0</span>, p, <span class="hljs-literal">true</span>);<br>    &#125;<br>    <span class="hljs-keyword">if</span> (updateChildSelected) &#123;<br>        child.setSelected(isSelected);<br>    &#125;<br>    <span class="hljs-keyword">if</span> (updateChildPressed) &#123;<br>        child.setPressed(isPressed);<br>    &#125;<br>    <span class="hljs-keyword">if</span> (needToMeasure) &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">childWidthSpec</span> <span class="hljs-operator">=</span> ViewGroup.getChildMeasureSpec(mWidthMeasureSpec,<br>                mListPadding.left + mListPadding.right, p.width);<br>        <span class="hljs-type">int</span> <span class="hljs-variable">lpHeight</span> <span class="hljs-operator">=</span> p.height;<br>        <span class="hljs-type">int</span> childHeightSpec;<br>        <span class="hljs-keyword">if</span> (lpHeight &gt; <span class="hljs-number">0</span>) &#123;<br>            childHeightSpec = MeasureSpec.makeMeasureSpec(lpHeight, MeasureSpec.EXACTLY);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            childHeightSpec = MeasureSpec.makeMeasureSpec(<span class="hljs-number">0</span>, MeasureSpec.UNSPECIFIED);<br>        &#125;<br>        child.measure(childWidthSpec, childHeightSpec);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        cleanupLayoutState(child);<br>    &#125;<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">w</span> <span class="hljs-operator">=</span> child.getMeasuredWidth();<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">h</span> <span class="hljs-operator">=</span> child.getMeasuredHeight();<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">childTop</span> <span class="hljs-operator">=</span> flowDown ? y : y - h;<br>    <span class="hljs-keyword">if</span> (needToMeasure) &#123;<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">childRight</span> <span class="hljs-operator">=</span> childrenLeft + w;<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">childBottom</span> <span class="hljs-operator">=</span> childTop + h;<br>        child.layout(childrenLeft, childTop, childRight, childBottom);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        child.offsetLeftAndRight(childrenLeft - child.getLeft());<br>        child.offsetTopAndBottom(childTop - child.getTop());<br>    &#125;<br>    <span class="hljs-keyword">if</span> (mCachingStarted &amp;&amp; !child.isDrawingCacheEnabled()) &#123;<br>        child.setDrawingCacheEnabled(<span class="hljs-literal">true</span>);<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>在这个里面，我们将对应的子view–child通过addViewInLayout方法添加到ListView中，并且通过刚才在fillDown方法中的while循环将所有到的view添加进来。<br>到目前为止，第一个layout已经完成，那么还有第二次Layout</p>
+<h1 id="RecyclerView"><a href="#RecyclerView" class="headerlink" title="RecyclerView"></a>RecyclerView</h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/guolin_blog/article/details/44996879">ListView工作原理完全解析</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">#源码分析</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>源码分析(八) ListView和RecyclerView机制</div>
+      <div>http://example.com/2020/03/09/android-source-code-08/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年3月9日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/03/10/android-source-code-09/" title="源码分析(九) Glide源码分析">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">源码分析(九) Glide源码分析</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/03/08/android-source-code-07/" title="源码分析(七) Android系统服务机制">
+                        <span class="hidden-mobile">源码分析(七) Android系统服务机制</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

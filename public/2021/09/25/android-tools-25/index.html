@@ -1,0 +1,683 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Kotlin，lambda表达式 在使用中的一些常见问题和解决方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android奇技淫巧 25 Kotlin和Lambda表达式 使用技巧">
+<meta property="og:url" content="http://example.com/2021/09/25/android-tools-25/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Kotlin，lambda表达式 在使用中的一些常见问题和解决方法">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/tools/tools-lambda-01.png">
+<meta property="og:image" content="http://example.com/assets/tools/tools-lambda-02.png">
+<meta property="article:published_time" content="2021-09-25T13:38:10.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.116Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/tools/tools-lambda-01.png">
+  
+  
+  
+  <title>android奇技淫巧 25 Kotlin和Lambda表达式 使用技巧 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="android奇技淫巧 25 Kotlin和Lambda表达式 使用技巧"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-09-25 21:38" pubdate>
+          2021年9月25日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          54 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">android奇技淫巧 25 Kotlin和Lambda表达式 使用技巧</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Kotlin，lambda表达式 在使用中的一些常见问题和解决方法</p>
+<span id="more"></span>
+
+<h3 id="尽量少使用toLowerCase和toUpperCase方法"><a href="#尽量少使用toLowerCase和toUpperCase方法" class="headerlink" title="尽量少使用toLowerCase和toUpperCase方法"></a>尽量少使用toLowerCase和toUpperCase方法</h3><p>当我们比较两个字符串，需要忽略大小写的时候，通常会调用<strong>toLowerCase</strong>方法或者<strong>toUpperCase</strong>方法转换成大写或小写，然后再进行比较，但是这样的话有一个不好的地方，每次调用<strong>toLowerCase</strong>方法或者<strong>toUpperCase</strong>方法的时候，会创建一个新的字符串，然后再进行比较</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">(args:<span class="hljs-type">Array</span>&lt;<span class="hljs-type">String</span>&gt;)</span></span>&#123;<br>  <span class="hljs-keyword">val</span> oldName = <span class="hljs-string">&quot;paulniu&quot;</span><br>  <span class="hljs-keyword">val</span> newName = <span class="hljs-string">&quot;PaulNiu&quot;</span><br>  <span class="hljs-keyword">val</span> result = oldName.toLowerCase() == newName.toLowerCase()<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>toLowerCase</strong>方法编译之后的Java代码<br><img src="/assets/tools/tools-lambda-01.png" srcset="/img/loading.gif" lazyload alt="编译之后的java代码"></p>
+<p>如上图所示首先会生成一个新的字符串，然后再进行字符串的比较</p>
+<p>如果我们想要忽略大小写比较字符串内容，可以通过下面的方式</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">(args:<span class="hljs-type">Array</span>&lt;<span class="hljs-type">String</span>&gt;)</span></span>&#123;<br>  <span class="hljs-keyword">val</span> oldName = <span class="hljs-string">&quot;paulniu&quot;</span><br>  <span class="hljs-keyword">val</span> newName = <span class="hljs-string">&quot;PaulNiu&quot;</span><br>  <span class="hljs-keyword">val</span> result = oldName.equals(newName,ignoreCase = <span class="hljs-literal">true</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这样equals编译之后的java代码如下所示<br><img src="/assets/tools/tools-lambda-02.png" srcset="/img/loading.gif" lazyload alt="equals编译之后的java代码"></p>
+<h3 id="Kotlin处理空字符串"><a href="#Kotlin处理空字符串" class="headerlink" title="Kotlin处理空字符串"></a>Kotlin处理空字符串</h3><p>当字符串为空字符串的时候，返回一个默认值，比如下面的写法</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs aspectj">val <span class="hljs-keyword">target</span> = <span class="hljs-string">&quot;&quot;</span><br>val name = <span class="hljs-keyword">if</span> (<span class="hljs-keyword">target</span>.isEmpty()) <span class="hljs-string">&quot;npl&quot;</span> <span class="hljs-keyword">else</span> <span class="hljs-keyword">target</span><br></code></pre></td></tr></table></figure>
+<p>其实我们可以通过另外一种方法</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs fsharp"><span class="hljs-keyword">val</span> name <span class="hljs-operator">=</span> target.<span class="hljs-keyword">ifEmpty</span>&#123; <span class="hljs-string">&quot;npl&quot;</span> &#125;<br></code></pre></td></tr></table></figure>
+<p>这个地方的原理跟我们使用<strong>if</strong>表达式是一样的，源码内容如下</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">public</span> <span class="hljs-keyword">inline</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;C, R&gt;</span> C.<span class="hljs-title">ifEmpty</span><span class="hljs-params">(defaultValue: () -&gt; <span class="hljs-type">R</span>)</span></span>: R <span class="hljs-keyword">where</span> C : CharSequence, C : R =<br>    <span class="hljs-keyword">if</span> (isEmpty()) defaultValue() <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span><br></code></pre></td></tr></table></figure>
+<p><strong>ifEmpty</strong>方法是一个扩展方法，接受一个lambda表达式<strong>defaultValue</strong>，如果是空字符串，则返回<strong>defaultValue</strong>，否则不为空，返回调用者本身<br>处理<strong>ifEmpty</strong>方法之后，kotlin库中还封装了很多其他有用的方法，如将字符串转换为数字</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">val</span> input = <span class="hljs-string">&quot;123&quot;</span><br><span class="hljs-keyword">val</span> number = input.<span class="hljs-keyword">to</span><span class="hljs-constructor">IntOrNull()</span>?:<span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="避免将解构声明和数据类一起使用"><a href="#避免将解构声明和数据类一起使用" class="headerlink" title="避免将解构声明和数据类一起使用"></a>避免将解构声明和数据类一起使用</h3><p>这个是Kotlin团队的一个建议：避免将解构声明和数据类一起使用，如果以后王数据类添加新的属性，很容易破坏戴梦得解构，我们看一个例子</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 数据类</span><br><span class="hljs-keyword">data</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">People</span>(<br>  <span class="hljs-keyword">val</span> name:String,<br>  <span class="hljs-keyword">val</span> city:String<br>)<br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">(args:<span class="hljs-type">Array</span>&lt;<span class="hljs-type">String</span>&gt;)</span></span>&#123;<br>  printlnPeople(People(<span class="hljs-string">&quot;paulniu&quot;</span>,<span class="hljs-string">&quot;beiJing&quot;</span>))<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">printlnPeople</span><span class="hljs-params">(people:<span class="hljs-type">People</span>)</span></span>&#123;<br>  <span class="hljs-comment">// 解构声明，获取name和city</span><br>  <span class="hljs-keyword">val</span> (name,city) = people<br>  println(<span class="hljs-string">&quot;name = <span class="hljs-subst">$&#123;name&#125;</span>&quot;</span>)<br>  println(<span class="hljs-string">&quot;city = <span class="hljs-subst">$&#123;city&#125;</span>&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>输出结果类似于：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">name</span> <span class="hljs-operator">=</span> paulniu<br><span class="hljs-attribute">city</span> <span class="hljs-operator">=</span> beiJing<br></code></pre></td></tr></table></figure>
+<p>这时我们想要给People类新增一个字段age，那么我们需要修改People数据类</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">data <span class="hljs-keyword">class</span> <span class="hljs-symbol">People</span>(<br>  <span class="hljs-symbol">val</span> <span class="hljs-symbol">name:<span class="hljs-symbol">String</span>,</span><br><span class="hljs-symbol">  <span class="hljs-symbol">val</span></span> <span class="hljs-symbol">age:<span class="hljs-symbol">Int</span>,</span><br><span class="hljs-symbol">  <span class="hljs-symbol">val</span></span> <span class="hljs-symbol">city:<span class="hljs-symbol">String</span></span><br>)<br><span class="hljs-symbol">fun</span> <span class="hljs-symbol">main</span>(<span class="hljs-symbol">args:<span class="hljs-symbol">Array</span></span>&lt;<span class="hljs-symbol">String</span>&gt;)&#123;<br>  printlnPeople(People(<span class="hljs-string">&quot;paulniu&quot;</span>,<span class="hljs-number">18</span>,<span class="hljs-string">&quot;beiJing&quot;</span>))<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>此时没有更改解构声明，也不会有任何错误，但是输出结果肯定不是我们想要的<br>数据结果可能类似于：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">name</span> <span class="hljs-operator">=</span> paulniu<br><span class="hljs-attribute">city</span> <span class="hljs-operator">=</span> <span class="hljs-number">18</span><br></code></pre></td></tr></table></figure>
+<p>因此这时我们需要修改解构声明，但如果代码中有多次解构声明，而我们只是增加了一个新属性，就有可能需要改动所有使用解构声明的地方。所以这种情况是非常不合理的，我们一定要避免将解构声明和数据类一起使用，当我们使用不规范的时候编译器也会给出警告</p>
+<h3 id="文件的扩展方法"><a href="#文件的扩展方法" class="headerlink" title="文件的扩展方法"></a>文件的扩展方法</h3><p>Kotlin提供了很多文件扩展方法：<strong>forEachLine</strong>,<strong>readLines</strong>,<strong>readText</strong>,<strong>useLines</strong>等，帮助我们简化文件的操作，而且完成使用之后，他们会自动关闭，如下</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">File</span><span class="hljs-params">(<span class="hljs-string">&quot;dhl.txt&quot;</span>)</span></span><span class="hljs-selector-class">.useLines</span> &#123; line -&gt;<br>    <span class="hljs-built_in">println</span>(line)<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>userLines</strong>是File的扩展方法，调用<strong>useLines</strong>会返回一个we你按中所有行的Sequence，当文件内容读取完毕之后，他会自动关闭</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">public</span> <span class="hljs-keyword">inline</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;T&gt;</span> File.<span class="hljs-title">useLines</span><span class="hljs-params">(charset: <span class="hljs-type">Charset</span> = Charsets.UTF_8, block: (<span class="hljs-type">Sequence</span>&lt;<span class="hljs-type">String</span>&gt;) -&gt; <span class="hljs-type">T</span>)</span></span>: T =<br>    bufferedReader(charset).use &#123; block(it.lineSequence()) &#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>useLines 是File的一个扩展方法</li>
+<li>useLines 接受一个Lambda表达式的block</li>
+<li>调用了BufferedReader读取文件内容，之后调用block返回文件中所有行的Sequence给调用者</li>
+</ul>
+<p><strong>useLines</strong>方法内部调用了<strong>use</strong>方法，<strong>use</strong>方法也是一个扩展方法，源码如下</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">public</span> <span class="hljs-keyword">inline</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;T : Closeable?, R&gt;</span> T.<span class="hljs-title">use</span><span class="hljs-params">(block: (<span class="hljs-type">T</span>) -&gt; <span class="hljs-type">R</span>)</span></span>: R &#123;<br>    <span class="hljs-keyword">var</span> exception: Throwable? = <span class="hljs-literal">null</span><br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">return</span> block(<span class="hljs-keyword">this</span>)<br>    &#125; <span class="hljs-keyword">catch</span> (e: Throwable) &#123;<br>        exception = e<br>        <span class="hljs-keyword">throw</span> e<br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>        <span class="hljs-keyword">when</span> &#123;<br>            apiVersionIsAtLeast(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>) -&gt; <span class="hljs-keyword">this</span>.closeFinally(exception)<br>            <span class="hljs-keyword">this</span> == <span class="hljs-literal">null</span> -&gt; &#123;&#125;<br>            exception == <span class="hljs-literal">null</span> -&gt; close()<br>            <span class="hljs-keyword">else</span> -&gt;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    close()<br>                &#125; <span class="hljs-keyword">catch</span> (closeException: Throwable) &#123;<br>                    <span class="hljs-comment">// cause.addSuppressed(closeException) // ignored here</span><br>                &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>其实就是调用了<strong>try…catch…finally</strong>最后在finally内部进行close</p>
+<h3 id="joinToString方法的使用"><a href="#joinToString方法的使用" class="headerlink" title="joinToString方法的使用"></a>joinToString方法的使用</h3><p><strong>joinToString</strong>方法提供了一组丰富的可选项(分隔符，前缀，后缀，数量限制等)可用于将可迭代对象转换为字符串</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs stylus">val data = <span class="hljs-built_in">listOf</span>(<span class="hljs-string">&quot;Java&quot;</span>, <span class="hljs-string">&quot;Kotlin&quot;</span>, <span class="hljs-string">&quot;C++&quot;</span>, <span class="hljs-string">&quot;Python&quot;</span>)<br>        <span class="hljs-selector-class">.joinToString</span>(<br>                separator = <span class="hljs-string">&quot; | &quot;</span>,<br>                prefix = <span class="hljs-string">&quot;&#123;&quot;</span>,<br>                postfix = <span class="hljs-string">&quot;&#125;&quot;</span><br>        ) &#123;<br>            it<span class="hljs-selector-class">.toUpperCase</span>()<br>        &#125;<br><br><span class="hljs-function"><span class="hljs-title">println</span><span class="hljs-params">(data)</span></span> <span class="hljs-comment">// &#123;JAVA | KOTLIN | C++ | PYTHON&#125;</span><br></code></pre></td></tr></table></figure>
+<p>这是种很常见的方法，将集合转换成字符串，高效利用便捷的<strong>joinToString</strong>方法，开发的时候能够事半功倍。同时Kotlin库函数提供了一些删除的方法，如下所示</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-selector-tag">var</span> data = <span class="hljs-string">&quot;**hi dhl**&quot;</span><br><br><span class="hljs-comment">// 移除前缀</span><br><span class="hljs-function"><span class="hljs-title">println</span><span class="hljs-params">(data.removePrefix(<span class="hljs-string">&quot;**&quot;</span>)</span></span>) <span class="hljs-comment">//  hi dhl**</span><br><span class="hljs-comment">// 移除后缀</span><br><span class="hljs-function"><span class="hljs-title">println</span><span class="hljs-params">(data.removeSuffix(<span class="hljs-string">&quot;**&quot;</span>)</span></span>) <span class="hljs-comment">//  **hi dhl</span><br><span class="hljs-comment">// 移除前缀和后缀</span><br><span class="hljs-function"><span class="hljs-title">println</span><span class="hljs-params">(data.removeSurrounding(<span class="hljs-string">&quot;**&quot;</span>)</span></span>) <span class="hljs-comment">// hi dhl</span><br><br><span class="hljs-comment">// 返回第一次出现分隔符后的字符串</span><br><span class="hljs-function"><span class="hljs-title">println</span><span class="hljs-params">(data.substringAfter(<span class="hljs-string">&quot;**&quot;</span>)</span></span>) <span class="hljs-comment">// hi dhl**</span><br><span class="hljs-comment">// 如果没有找到，返回原始字符串</span><br><span class="hljs-function"><span class="hljs-title">println</span><span class="hljs-params">(data.substringAfter(<span class="hljs-string">&quot;--&quot;</span>)</span></span>) <span class="hljs-comment">// **hi dhl**</span><br><span class="hljs-comment">// 如果没有找到，返回默认字符串 &quot;no match&quot;</span><br><span class="hljs-function"><span class="hljs-title">println</span><span class="hljs-params">(data.substringAfter(<span class="hljs-string">&quot;--&quot;</span>,<span class="hljs-string">&quot;no match&quot;</span>)</span></span>) <span class="hljs-comment">// no match</span><br><br>data = <span class="hljs-string">&quot;&#123;JAVA | KOTLIN | C++ | PYTHON&#125;&quot;</span><br><br><span class="hljs-comment">// 移除前缀和后缀</span><br><span class="hljs-function"><span class="hljs-title">println</span><span class="hljs-params">(data.removeSurrounding(<span class="hljs-string">&quot;&#123;&quot;</span>, <span class="hljs-string">&quot;&#125;&quot;</span>)</span></span>) <span class="hljs-comment">// JAVA | KOTLIN | C++ | PYTHON</span><br></code></pre></td></tr></table></figure>
+<p>有了这些Kotlin库函数，我们不需要再做<strong>startsWith</strong>和<strong>endsWith</strong>的检查，如果让我们自己实现，可能需要花一些功夫实现，但是源码实现的就比较有特点，我们可以学习一下</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public String substring(<span class="hljs-built_in">int</span> beginIndex, <span class="hljs-built_in">int</span> endIndex) &#123;<br>    <span class="hljs-keyword">if</span> (beginIndex &lt; <span class="hljs-number">0</span>) &#123;<br>        throw <span class="hljs-keyword">new</span> <span class="hljs-constructor">StringIndexOutOfBoundsException(<span class="hljs-params">beginIndex</span>)</span>;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (endIndex &gt; value.length) &#123;<br>        throw <span class="hljs-keyword">new</span> <span class="hljs-constructor">StringIndexOutOfBoundsException(<span class="hljs-params">endIndex</span>)</span>;<br>    &#125;<br>    <span class="hljs-built_in">int</span> subLen = endIndex - beginIndex;<br>    <span class="hljs-keyword">if</span> (subLen &lt; <span class="hljs-number">0</span>) &#123;<br>        throw <span class="hljs-keyword">new</span> <span class="hljs-constructor">StringIndexOutOfBoundsException(<span class="hljs-params">subLen</span>)</span>;<br>    &#125;<br>    return ((beginIndex<span class="hljs-operator"> == </span><span class="hljs-number">0</span>)<span class="hljs-operator"> &amp;&amp; </span>(endIndex<span class="hljs-operator"> == </span>value.length)) ? this<br>            : <span class="hljs-keyword">new</span> <span class="hljs-constructor">String(<span class="hljs-params">value</span>, <span class="hljs-params">beginIndex</span>, <span class="hljs-params">subLen</span>)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="plus操作符"><a href="#plus操作符" class="headerlink" title="plus操作符"></a>plus操作符</h3><p>我们在Java中的算术运算符只能应用于基本类型，+号运算符可以和String值一起使用，但是不能在集合中使用，在Kotlin中可以应用在任何类型。如下所示，利用plus和minus对map集合进行运算</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs stylus">fun <span class="hljs-selector-tag">main</span>() &#123;<br>    val numbersMap = <span class="hljs-built_in">mapOf</span>(<span class="hljs-string">&quot;one&quot;</span> to <span class="hljs-number">1</span>, <span class="hljs-string">&quot;two&quot;</span> to <span class="hljs-number">2</span>, <span class="hljs-string">&quot;three&quot;</span> to <span class="hljs-number">3</span>)<br><br>    <span class="hljs-comment">// plus (+)</span><br>    <span class="hljs-built_in">println</span>(numbersMap + <span class="hljs-built_in">Pair</span>(<span class="hljs-string">&quot;four&quot;</span>, <span class="hljs-number">4</span>)) <span class="hljs-comment">// &#123;one=1, two=2, three=3, four=4&#125;</span><br>    <span class="hljs-built_in">println</span>(numbersMap + <span class="hljs-built_in">Pair</span>(<span class="hljs-string">&quot;one&quot;</span>, <span class="hljs-number">10</span>)) <span class="hljs-comment">// &#123;one=10, two=2, three=3&#125;</span><br>    <span class="hljs-built_in">println</span>(numbersMap + <span class="hljs-built_in">Pair</span>(<span class="hljs-string">&quot;five&quot;</span>, <span class="hljs-number">5</span>) + <span class="hljs-built_in">Pair</span>(<span class="hljs-string">&quot;one&quot;</span>, <span class="hljs-number">11</span>)) <span class="hljs-comment">// &#123;one=11, two=2, three=3, five=5&#125;</span><br><br>    <span class="hljs-comment">// minus (-)</span><br>    <span class="hljs-built_in">println</span>(numbersMap - <span class="hljs-string">&quot;one&quot;</span>) <span class="hljs-comment">// &#123;two=2, three=3&#125;</span><br>    <span class="hljs-built_in">println</span>(numbersMap - <span class="hljs-built_in">listOf</span>(<span class="hljs-string">&quot;two&quot;</span>, <span class="hljs-string">&quot;four&quot;</span>)) <span class="hljs-comment">// &#123;one=1, three=3&#125;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>其实这里用到了运算符的重载，Kotlin在Maps.kt文件中，定义了一系列用关键字<strong>operator</strong>声明的Map的扩展函数<br>用<strong>operator</strong>关键字声明plus函数，可以直接使用+号来做运算，使用<strong>operator</strong>修饰符声明minus函数，可以直接使用-号来做运算</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">data</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Salary</span>(<span class="hljs-keyword">var</span> base: <span class="hljs-built_in">Int</span> = <span class="hljs-number">100</span>)&#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">toString</span><span class="hljs-params">()</span></span>: String = base.toString()<br>&#125;<br><br><span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> Salary.<span class="hljs-title">plus</span><span class="hljs-params">(other: <span class="hljs-type">Salary</span>)</span></span>: Salary = Salary(base + other.base)<br><span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> Salary.<span class="hljs-title">minus</span><span class="hljs-params">(other: <span class="hljs-type">Salary</span>)</span></span>: Salary = Salary(base - other.base)<br><br><span class="hljs-keyword">val</span> s1 = Salary(<span class="hljs-number">10</span>)<br><span class="hljs-keyword">val</span> s2 = Salary(<span class="hljs-number">20</span>)<br>println(s1 + s2) <span class="hljs-comment">// 30</span><br>println(s1 - s2) <span class="hljs-comment">// -10</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="Map集合的默认值"><a href="#Map集合的默认值" class="headerlink" title="Map集合的默认值"></a>Map集合的默认值</h3><p>在Map集合中，可以使用withDefault设置一个默认值，当键不在Map集合中，通过getValue返回默认值</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs stylus">val map = <span class="hljs-built_in">mapOf</span>(<br>        <span class="hljs-string">&quot;java&quot;</span> to <span class="hljs-number">1</span>,<br>        <span class="hljs-string">&quot;kotlin&quot;</span> to <span class="hljs-number">2</span>,<br>        <span class="hljs-string">&quot;python&quot;</span> to <span class="hljs-number">3</span><br>)<span class="hljs-selector-class">.withDefault</span> &#123; <span class="hljs-string">&quot;?&quot;</span> &#125;<br><br><span class="hljs-function"><span class="hljs-title">println</span><span class="hljs-params">(map.getValue(<span class="hljs-string">&quot;java&quot;</span>)</span></span>) <span class="hljs-comment">// 1</span><br><span class="hljs-function"><span class="hljs-title">println</span><span class="hljs-params">(map.getValue(<span class="hljs-string">&quot;kotlin&quot;</span>)</span></span>) <span class="hljs-comment">// 2</span><br><span class="hljs-function"><span class="hljs-title">println</span><span class="hljs-params">(map.getValue(<span class="hljs-string">&quot;c++&quot;</span>)</span></span>) <span class="hljs-comment">// ?</span><br></code></pre></td></tr></table></figure>
+<p>这里我们使用<strong>withDefault</strong>操作符，设置当Map中key对应的值为null的时候，可以返回一个null，源码如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">internal</span> <span class="hljs-keyword">inline</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;K, V&gt;</span> Map<span class="hljs-type">&lt;K, V&gt;</span>.<span class="hljs-title">getOrElseNullable</span><span class="hljs-params">(key: <span class="hljs-type">K</span>, defaultValue: () -&gt; <span class="hljs-type">V</span>)</span></span>: V &#123;<br>    <span class="hljs-keyword">val</span> value = <span class="hljs-keyword">get</span>(key)<br>    <span class="hljs-keyword">if</span> (value == <span class="hljs-literal">null</span> &amp;&amp; !containsKey(key)) &#123;<br>        <span class="hljs-keyword">return</span> defaultValue()<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-meta">@Suppress(<span class="hljs-string">&quot;UNCHECKED_CAST&quot;</span>)</span><br>        <span class="hljs-keyword">return</span> value <span class="hljs-keyword">as</span> V<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>android奇技淫巧 25 Kotlin和Lambda表达式 使用技巧</div>
+      <div>http://example.com/2021/09/25/android-tools-25/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年9月25日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/09/27/android-tools-26/" title="android奇技淫巧 26 View.post()获取控件高度">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">android奇技淫巧 26 View.post()获取控件高度</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/09/10/algorithm-01/" title="算法(一) 入门">
+                        <span class="hidden-mobile">算法(一) 入门</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

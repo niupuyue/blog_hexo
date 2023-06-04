@@ -1,0 +1,685 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="简介">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter (一)  Flutter基础介绍">
+<meta property="og:url" content="http://example.com/2019/07/02/flutter-01/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="简介">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/flutter_01/flutter01.png">
+<meta property="og:image" content="http://example.com/assets/flutter_01/flutter02.png">
+<meta property="og:image" content="http://example.com/assets/flutter_01/flutter03.png">
+<meta property="og:image" content="http://example.com/assets/flutter_01/flutter04.png">
+<meta property="og:image" content="http://example.com/assets/flutter_01/flutter05.png">
+<meta property="og:image" content="http://example.com/assets/flutter_01/flutter06.png">
+<meta property="og:image" content="http://example.com/assets/flutter_01/flutter07.png">
+<meta property="og:image" content="http://example.com/assets/flutter_01/flutter08.png">
+<meta property="og:image" content="http://example.com/assets/flutter_01/flutter09.png">
+<meta property="og:image" content="http://example.com/assets/flutter_01/flutter10.png">
+<meta property="og:image" content="http://example.com/assets/flutter_01/flutter11.png">
+<meta property="og:image" content="http://example.com/assets/flutter_01/flutter12.png">
+<meta property="og:image" content="http://example.com/assets/flutter_01/flutter13.png">
+<meta property="og:image" content="http://example.com/assets/flutter_01/flutter14.png">
+<meta property="article:published_time" content="2019-07-02T12:31:11.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.117Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="flutter">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/flutter_01/flutter01.png">
+  
+  
+  
+  <title>Flutter (一)  Flutter基础介绍 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Flutter (一)  Flutter基础介绍"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-07-02 20:31" pubdate>
+          2019年7月2日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          46 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Flutter (一)  Flutter基础介绍</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>简介</p>
+<span id="more"></span>
+<p>Flutter是谷歌的移动UI框架，可以快速在iOS和Android上构建高质量的原生用户界面。 Flutter可以与现有的代码一起工作。在全世界，Flutter正在被越来越多的开发者和组织使用，并且Flutter是完全免费、开源的<br><a target="_blank" rel="noopener" href="https://flutter.dev/">Flutter Dev</a></p>
+<h1 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h1><p>我使用的是Mac系统，其实不管是Windows系统还是Linux系统，配置环境都是比较简单的。可以在网上找到相关的教程，这里我就不再赘述。如果你也是Mac系统，可以参考博客<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b50a92afbef1">Flutter的环境配置</a></p>
+<p>当然还有另外一种方式，就是首先你的电脑里要安装Android studio，然后再插件中搜索Flutter，安装完成之后，重启Android Studio，你就会在主界面中发现有这么一个创建Flutter的选项，如图</p>
+<p><img src="/assets/flutter_01/flutter01.png" srcset="/img/loading.gif" lazyload></p>
+<p>选中这个选项，进入到如图所示的页面</p>
+<p><img src="/assets/flutter_01/flutter02.png" srcset="/img/loading.gif" lazyload alt="安装FlutterSDK"></p>
+<p>在这里我们因为没有安装过Flutter的SDK，所以直接选中安装按钮即可，系统会自动帮我们下载好SDK，并且配置好。下载的速度可能会有点慢，当然我们可以使用VPN，这个情况就因人而异了。我使用的是第一种方法，在官网下载好SDK的压缩文件，自己通过解压，配置环境变量，就可以使用了。</p>
+<p>安装并且配置好环境之后，在终端中输入: flutter -h 如果现实如下图所示的内容，就表示你的环境已经搭建好了</p>
+<p><img src="/assets/flutter_01/flutter03.png" srcset="/img/loading.gif" lazyload alt="检测FlutterSDK"></p>
+<p>这里的截图比较少，其实后面还有很多的内容，包括Flutter常用的一些命令，都会在这里显示出来。</p>
+<p>紧接着我们可以检查一下当前的环境，因为Flutter不仅可以满足Android开发，还可以同时满足IOS开发，那么我们有没有将相应的开发环境配置好呢？需要让Flutter帮我们检测一下，检测的命令就是：flutter doctor</p>
+<p><img src="/assets/flutter_01/flutter04.png" srcset="/img/loading.gif" lazyload alt="flutter doctor"></p>
+<p>这里我的电脑里还有一些配置没有安装完成 有！或者 x 符号的表示内容没有安装完成。</p>
+<p>首先运行这句：flutter doctor –android-licenses</p>
+<p><img src="/assets/flutter_01/flutter05.png" srcset="/img/loading.gif" lazyload alt="flutter doctor --android-licenses"></p>
+<p>这里面会有几个地方需要我们同意的，其实直接输入y，即可。</p>
+<p>最后的样式就是这样的</p>
+<p><img src="/assets/flutter_01/flutter06.png" srcset="/img/loading.gif" lazyload></p>
+<p>表示对于Android部分的内容是没问题的了。</p>
+<p>紧接着做其他的部分，可能根据每个人电脑的配置而进行修改。或者你可以直接根据提示进行修改如下图：</p>
+<p><img src="/assets/flutter_01/flutter07.png" srcset="/img/loading.gif" lazyload alt="需要修改的内容"></p>
+<p>这个过程可能会比较慢，请耐心等待，或者你可以在晚上的时候让他自己去下载，然后我们去休息。过程中如果出现什么错误，一般会给出修改的提示，然后按照提示修改即可，如果遇到一些比较难缠的问题，只能去google了。</p>
+<h1 id="配置编辑器"><a href="#配置编辑器" class="headerlink" title="配置编辑器"></a>配置编辑器</h1><p>使用android Studio进行开发比较简单，我这里介绍的是VSCode的方式</p>
+<h2 id="安装Flutter插件"><a href="#安装Flutter插件" class="headerlink" title="安装Flutter插件"></a>安装Flutter插件</h2><ol>
+<li>启动VSCode</li>
+<li>调用View&gt;Command Palette…</li>
+<li>输入 ‘install’, 然后选择 Extensions: Install Extension action</li>
+<li>在右侧输入框Flutter 选择其中的install安装即可</li>
+<li>重启VSCode</li>
+</ol>
+<p>通过Flutter Doctor验证设置</p>
+<p>调用 View&gt;Command Palette…<br>输入 ‘doctor’, 然后选择 ‘Flutter: Run Flutter Doctor’ action<br>查看“OUTPUT”窗口中的输出是否有问题</p>
+<h1 id="一个Demo"><a href="#一个Demo" class="headerlink" title="一个Demo"></a>一个Demo</h1><h2 id="创建Flutter-App"><a href="#创建Flutter-App" class="headerlink" title="创建Flutter App"></a>创建Flutter App</h2><p>创建一个简单的、基于模板的Flutter应用程序，这里我把它命名为Flutter_Demo<br><img src="/assets/flutter_01/flutter08.png" srcset="/img/loading.gif" lazyload alt="创建Flutter"></p>
+<p>下一步，选择Flutter Application<br><img src="/assets/flutter_01/flutter09.png" srcset="/img/loading.gif" lazyload></p>
+<p>下一步，设置项目名称和路径<br><img src="/assets/flutter_01/flutter10.png" srcset="/img/loading.gif" lazyload></p>
+<p>下一步，设置包名<br><img src="/assets/flutter_01/flutter11.png" srcset="/img/loading.gif" lazyload></p>
+<p>等待Android Studio帮我们生成好项目即可。项目结构如下所示：<br><img src="/assets/flutter_01/flutter12.png" srcset="/img/loading.gif" lazyload alt="Flutter项目结构"></p>
+<p>在这个项目中，我们有很多包，可能特别多的内容会导致我们在刚开始学习的时候，总是不知所措，所以，我们先看一些比较关键的部分，后面的内容，慢慢来。</p>
+<p>首先我们找到lib文件夹，这个文件夹就是我们在写项目的时候的主体功能文件夹，也就是说我们一般情况下所有的逻辑代码都会放在这里。<br><img src="/assets/flutter_01/flutter13.png" srcset="/img/loading.gif" lazyload alt="Flutter项目的lib"></p>
+<p>在这个lib文件夹中只有一个文件—main.dart,它里面的代码如下所示</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><code class="hljs scala"><span class="hljs-keyword">import</span> &#x27;<span class="hljs-keyword">package</span>:flutter/material.dart&#x27;;<br><br>void main() =&gt; runApp(<span class="hljs-type">MyApp</span>());<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyApp</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">StatelessWidget</span> </span>&#123;<br>  <span class="hljs-comment">// This widget is the root of your application.</span><br>  <span class="hljs-meta">@override</span><br>  <span class="hljs-type">Widget</span> build(<span class="hljs-type">BuildContext</span> context) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-type">MaterialApp</span>(<br>      title: &#x27;<span class="hljs-type">Flutter</span> <span class="hljs-type">Demo</span>&#x27;,<br>      theme: <span class="hljs-type">ThemeData</span>(<br>        <span class="hljs-comment">// This is the theme of your application.</span><br>        <span class="hljs-comment">//</span><br>        <span class="hljs-comment">// Try running your application with &quot;flutter run&quot;. You&#x27;ll see the</span><br>        <span class="hljs-comment">// application has a blue toolbar. Then, without quitting the app, try</span><br>        <span class="hljs-comment">// changing the primarySwatch below to Colors.green and then invoke</span><br>        <span class="hljs-comment">// &quot;hot reload&quot; (press &quot;r&quot; in the console where you ran &quot;flutter run&quot;,</span><br>        <span class="hljs-comment">// or simply save your changes to &quot;hot reload&quot; in a Flutter IDE).</span><br>        <span class="hljs-comment">// Notice that the counter didn&#x27;t reset back to zero; the application</span><br>        <span class="hljs-comment">// is not restarted.</span><br>        primarySwatch: <span class="hljs-type">Colors</span>.blue,<br>      ),<br>      home: <span class="hljs-type">MyHomePage</span>(title: &#x27;<span class="hljs-type">Flutter</span> <span class="hljs-type">Demo</span> <span class="hljs-type">Home</span> <span class="hljs-type">Page</span>&#x27;),<br>    );<br>  &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyHomePage</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">StatefulWidget</span> </span>&#123;<br>  <span class="hljs-type">MyHomePage</span>(&#123;<span class="hljs-type">Key</span> key, <span class="hljs-keyword">this</span>.title&#125;) : <span class="hljs-keyword">super</span>(key: key);<br><br>  <span class="hljs-comment">// This widget is the home page of your application. It is stateful, meaning</span><br>  <span class="hljs-comment">// that it has a State object (defined below) that contains fields that affect</span><br>  <span class="hljs-comment">// how it looks.</span><br><br>  <span class="hljs-comment">// This class is the configuration for the state. It holds the values (in this</span><br>  <span class="hljs-comment">// case the title) provided by the parent (in this case the App widget) and</span><br>  <span class="hljs-comment">// used by the build method of the State. Fields in a Widget subclass are</span><br>  <span class="hljs-comment">// always marked &quot;final&quot;.</span><br><br>  <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> title;<br><br>  <span class="hljs-meta">@override</span><br>  _MyHomePageState createState() =&gt; _MyHomePageState();<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">_MyHomePageState</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">State&lt;MyHomePage&gt;</span> </span>&#123;<br>  int _counter = <span class="hljs-number">0</span>;<br><br>  void _incrementCounter() &#123;<br>    setState(() &#123;<br>      <span class="hljs-comment">// This call to setState tells the Flutter framework that something has</span><br>      <span class="hljs-comment">// changed in this State, which causes it to rerun the build method below</span><br>      <span class="hljs-comment">// so that the display can reflect the updated values. If we changed</span><br>      <span class="hljs-comment">// _counter without calling setState(), then the build method would not be</span><br>      <span class="hljs-comment">// called again, and so nothing would appear to happen.</span><br>      _counter++;<br>    &#125;);<br>  &#125;<br><br>  <span class="hljs-meta">@override</span><br>  <span class="hljs-type">Widget</span> build(<span class="hljs-type">BuildContext</span> context) &#123;<br>    <span class="hljs-comment">// This method is rerun every time setState is called, for instance as done</span><br>    <span class="hljs-comment">// by the _incrementCounter method above.</span><br>    <span class="hljs-comment">//</span><br>    <span class="hljs-comment">// The Flutter framework has been optimized to make rerunning build methods</span><br>    <span class="hljs-comment">// fast, so that you can just rebuild anything that needs updating rather</span><br>    <span class="hljs-comment">// than having to individually change instances of widgets.</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-type">Scaffold</span>(<br>      appBar: <span class="hljs-type">AppBar</span>(<br>        <span class="hljs-comment">// Here we take the value from the MyHomePage object that was created by</span><br>        <span class="hljs-comment">// the App.build method, and use it to set our appbar title.</span><br>        title: <span class="hljs-type">Text</span>(widget.title),<br>      ),<br>      body: <span class="hljs-type">Center</span>(<br>        <span class="hljs-comment">// Center is a layout widget. It takes a single child and positions it</span><br>        <span class="hljs-comment">// in the middle of the parent.</span><br>        child: <span class="hljs-type">Column</span>(<br>          <span class="hljs-comment">// Column is also layout widget. It takes a list of children and</span><br>          <span class="hljs-comment">// arranges them vertically. By default, it sizes itself to fit its</span><br>          <span class="hljs-comment">// children horizontally, and tries to be as tall as its parent.</span><br>          <span class="hljs-comment">//</span><br>          <span class="hljs-comment">// Invoke &quot;debug painting&quot; (press &quot;p&quot; in the console, choose the</span><br>          <span class="hljs-comment">// &quot;Toggle Debug Paint&quot; action from the Flutter Inspector in Android</span><br>          <span class="hljs-comment">// Studio, or the &quot;Toggle Debug Paint&quot; command in Visual Studio Code)</span><br>          <span class="hljs-comment">// to see the wireframe for each widget.</span><br>          <span class="hljs-comment">//</span><br>          <span class="hljs-comment">// Column has various properties to control how it sizes itself and</span><br>          <span class="hljs-comment">// how it positions its children. Here we use mainAxisAlignment to</span><br>          <span class="hljs-comment">// center the children vertically; the main axis here is the vertical</span><br>          <span class="hljs-comment">// axis because Columns are vertical (the cross axis would be</span><br>          <span class="hljs-comment">// horizontal).</span><br>          mainAxisAlignment: <span class="hljs-type">MainAxisAlignment</span>.center,<br>          children: &lt;<span class="hljs-type">Widget</span>&gt;[<br>            <span class="hljs-type">Text</span>(<br>              &#x27;<span class="hljs-type">You</span> have pushed the button <span class="hljs-keyword">this</span> many times:&#x27;,<br>            ),<br>            <span class="hljs-type">Text</span>(<br>              &#x27;$_counter&#x27;,<br>              style: <span class="hljs-type">Theme</span>.of(context).textTheme.display1,<br>            ),<br>          ],<br>        ),<br>      ),<br>      floatingActionButton: <span class="hljs-type">FloatingActionButton</span>(<br>        onPressed: _incrementCounter,<br>        tooltip: &#x27;<span class="hljs-type">Increment</span>&#x27;,<br>        child: <span class="hljs-type">Icon</span>(<span class="hljs-type">Icons</span>.add),<br>      ), <span class="hljs-comment">// This trailing comma makes auto-formatting nicer for build methods.</span><br>    );<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>虽然内容很多，但是里面每个函数的意义和作用都在里面说明的很详细，所以这里我就介绍了。<br>值得注意的是，Flutter使用的是Dart语言开发的，这样我们就需要学习一门新的语言，但是Dart语言很简单，基本上两三天就能上手，抽空我会在去把Dart语言总结一下。<br>首先我们来运行一下这个应用程序。这里我使用的是Android虚拟机。运行之后的效果如下图所示</p>
+<p><img src="/assets/flutter_01/flutter14.png" srcset="/img/loading.gif" lazyload alt="Flutter运行结果"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/flutter/">#flutter</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Flutter (一)  Flutter基础介绍</div>
+      <div>http://example.com/2019/07/02/flutter-01/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年7月2日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/07/03/android-tools-06/" title="android奇技淫巧 06 Android 代码重构场景">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">android奇技淫巧 06 Android 代码重构场景</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/07/01/android-tools-05/" title="android奇技淫巧 05 Android targetSdkVersion 升级到 26 总结">
+                        <span class="hidden-mobile">android奇技淫巧 05 Android targetSdkVersion 升级到 26 总结</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

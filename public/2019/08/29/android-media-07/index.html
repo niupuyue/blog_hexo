@@ -1,0 +1,726 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="使用OpenGL ES绘制正方形(多边形)，圆形，并且给这些图形填充颜色">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android 音视频开发(七)">
+<meta property="og:url" content="http://example.com/2019/08/29/android-media-07/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="使用OpenGL ES绘制正方形(多边形)，圆形，并且给这些图形填充颜色">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/tools/tools-opengl-05.png">
+<meta property="og:image" content="http://example.com/assets/tools/tools-opengl-06.png">
+<meta property="og:image" content="http://example.com/assets/tools/tools-opengl-07.png">
+<meta property="og:image" content="http://example.com/assets/tools/tools-opengl-08.png">
+<meta property="article:published_time" content="2019-08-29T04:50:10.000Z">
+<meta property="article:modified_time" content="2023-06-04T11:59:43.101Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="android">
+<meta property="article:tag" content="音视频">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/assets/tools/tools-opengl-05.png">
+  
+  
+  
+  <title>android 音视频开发(七) - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="android 音视频开发(七)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-08-29 12:50" pubdate>
+          2019年8月29日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          15k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          129 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">android 音视频开发(七)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>使用OpenGL ES绘制正方形(多边形)，圆形，并且给这些图形填充颜色</p>
+<span id="more"></span>
+
+<p>先看效果图<br><img src="/assets/tools/tools-opengl-05.png" srcset="/img/loading.gif" lazyload alt="使用OpenGL ES绘制多边形"><br><img src="/assets/tools/tools-opengl-06.png" srcset="/img/loading.gif" lazyload alt="使用OpenGL ES绘制圆形"></p>
+<p>在开始绘制其他的形状之前，我们有这么几个名字&#x2F;知识点学要学习的。</p>
+<h4 id="矩阵"><a href="#矩阵" class="headerlink" title="矩阵"></a>矩阵</h4><p>在数学中，矩阵是一个按照长方阵列排列的复数和实数集合，最早来自于方程组的系数和常数所构成的方阵。</p>
+<p>矩阵常被用于图形处理，游戏开发，几何光学，量子态的线性组合以及电子学等。我们现在相当于在图形处理或者游戏开发的领域来使用矩阵。其实大学中我们很多人都学过高数，线性代码等课程，当时觉得没有用武之地，其实都是错误的，好后悔的说。在三维图形学中，一般使用的是四阶矩阵。在DirectX中使用的是行向量，如[xyzw]，所以与矩阵相乘是，向量在前矩阵在后。OpenGL中使用的是列向量，如[xyzw]T,所以与矩阵相乘时，矩阵在前向量在后。</p>
+<h4 id="相机"><a href="#相机" class="headerlink" title="相机"></a>相机</h4><p>和现实生活中的情况一样，随着我们相机的位置，姿态的不同，拍摄出来的画面也不一样。将相机对应到OpenGL的世界，决定相机拍摄的结果（也就是最终显示在屏幕上的内容），包括相机的位置，相机观察方向以及相机的UP方法</p>
+<p>这里有几个名字需要解释一下：</p>
+<ol>
+<li>相机位置：这个比较好理解，就是相机在3D空间里面的坐标点</li>
+<li>相机观察方法：相机的观察方法，表示的是相机镜头的朝向，我们可以朝前，朝后，总之任何方法都是可以的</li>
+<li>相机UP方法：相机的UP方法可以理解为相机顶端指向的方法，，例如我们把相机斜着拿，拍出来的照片就是斜着的。</li>
+</ol>
+<p>在OpenGL ES中我们可以使用下面的方法来设置相机</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">Matrix.setLookATM(<br>  <span class="hljs-built_in">float</span>[] rm, <span class="hljs-comment">// 接收相机变换矩阵</span><br>  <span class="hljs-built_in">int</span> rmOffset, <span class="hljs-comment">// 变换矩阵的起始位置(偏移量)</span><br>  <span class="hljs-built_in">float</span> eysX,<span class="hljs-built_in">float</span> eyeY,<span class="hljs-built_in">float</span> eyeZ,<span class="hljs-comment">// 相机的位置</span><br>  <span class="hljs-built_in">float</span> centerX,<span class="hljs-built_in">float</span> centerY,<span class="hljs-built_in">float</span> centerZ,<span class="hljs-comment">// 观测点的位置</span><br>  <span class="hljs-built_in">float</span> upX,<span class="hljs-built_in">float</span> upY,<span class="hljs-built_in">float</span> upZ<span class="hljs-comment">// up向量在xyz上的分量</span><br>)<br></code></pre></td></tr></table></figure>
+
+<h4 id="投影"><a href="#投影" class="headerlink" title="投影"></a>投影</h4><p>用相机看到的3D世界，最后还需要呈现在2D平面上，这就是投影。其实投影的意思就是说，我们可以通过一些颜色的变换，让2D图像看起来像是3D的。在OpenGL ES中投影分为两种，正交投影和透视投影</p>
+<ol>
+<li>正交投影：物体呈现出来的大小不会随着其距离视点的远近而发生变化，在Android中我们使用以下的方法来设置正交投影<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs scss">Matrix<span class="hljs-selector-class">.orthoM</span>(<br>  float[] m, // 接收正交投影的变换矩阵<br>  int mOffset, // 变换矩阵的起始位置(偏移量)<br>  <span class="hljs-attribute">float</span> <span class="hljs-attribute">left</span>, <span class="hljs-comment">// 相对观察点近面的左边距</span><br>  <span class="hljs-attribute">float</span> <span class="hljs-attribute">right</span>,<span class="hljs-comment">// 相对观察点近面的右边距</span><br>  <span class="hljs-attribute">float</span> <span class="hljs-attribute">bottom</span>,<span class="hljs-comment">// 相对于观察点近面的下边距</span><br>  <span class="hljs-attribute">float</span> <span class="hljs-attribute">top</span>,<span class="hljs-comment">// 相对于观察点的上边距</span><br>  <span class="hljs-attribute">float</span> near,<span class="hljs-comment">// 相对于观察点近面距离</span><br>  <span class="hljs-attribute">float</span> far <span class="hljs-comment">// 相对于观察点远面距离</span><br>)<br></code></pre></td></tr></table></figure></li>
+<li>透视投影：物体离视点越远，呈现出来的越小，离视点越大，呈现出来的越大。我们使用下面的方法来设置透视投影：<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs scss">Matrix<span class="hljs-selector-class">.frustumM</span>(<br>  float[] m,// 接收透视投影的变换矩阵<br>  int mOffset, // 变换矩阵的起始位置(偏移量)<br>  <span class="hljs-attribute">float</span> <span class="hljs-attribute">left</span>, <span class="hljs-comment">// 相对于观察点近面的左边距</span><br>  <span class="hljs-attribute">float</span> <span class="hljs-attribute">right</span>,<span class="hljs-comment">// 相对观察点近面的右边距</span><br>  <span class="hljs-attribute">float</span> <span class="hljs-attribute">bottom</span>,<span class="hljs-comment">// 相对观察点近面的下边距</span><br>  <span class="hljs-attribute">float</span> <span class="hljs-attribute">top</span>,<span class="hljs-comment">// 相对于观察点近面的上边距</span><br>  <span class="hljs-attribute">float</span> near,<span class="hljs-comment">// 相对观察点近面距离</span><br>  <span class="hljs-attribute">float</span> far <span class="hljs-comment">// 相对观察点远面距离</span><br>)<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="使用变换矩阵"><a href="#使用变换矩阵" class="headerlink" title="使用变换矩阵"></a>使用变换矩阵</h4><p>实际上相机设置和投影设置并不是真正的设置，而是通过设置参数，得到一个使用相机后顶点坐标的变换矩阵和投影下的顶点坐标变换矩阵，除此之外我们还要把矩阵传递给顶点着色器，在顶点着色器中用传入的矩阵乘以坐标的向量，得到时机展示的坐标向量。</p>
+<blockquote>
+<p>注意，是矩阵乘以坐标向量，不是坐标向量乘以矩阵。矩阵乘法是不满足交换律的</p>
+</blockquote>
+<p>通过上面的相机设置和投影设置，我们得到两个矩阵，为了方便，我们需要将相机矩阵和投影矩阵相乘，得到一个实际的变换矩阵，然后再传递给顶点着色器</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">Matrix.multiplyMM(<br>  <span class="hljs-built_in">float</span>[] result,<span class="hljs-comment">// 接收相乘结果</span><br>  <span class="hljs-built_in">int</span> resultOffset,<span class="hljs-comment">// 接收矩阵的起始位置(偏移量)</span><br>  <span class="hljs-built_in">float</span>[] lhs, <span class="hljs-comment">// 左矩阵</span><br>  <span class="hljs-built_in">int</span> lhsOffset,<span class="hljs-comment">// 左矩阵的起始位置(偏移量)</span><br>  <span class="hljs-built_in">float</span>[] rhs, <span class="hljs-comment">// 右矩阵</span><br>  <span class="hljs-built_in">int</span> rhsOffset <span class="hljs-comment">// 右矩阵的起始位置(偏移量)</span><br>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="绘制多边形"><a href="#绘制多边形" class="headerlink" title="绘制多边形"></a>绘制多边形</h3><p>其实在OpenGL ES中没有多边形和圆形，只有点，线，三角形。三角形就是OpenGL所提供的的最复杂的图元单位。所以我们如果想要绘制多边形和圆形，就要通过三角形来实现</p>
+<p>先来看一下代码</p>
+<p>GLSurfaceView部分代码</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs scala">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyOpenGLSurfaceViewWithSquare</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">GLSurfaceView</span> </span>&#123;<br>    public <span class="hljs-type">MyOpenGLSurfaceViewWithSquare</span>(<span class="hljs-type">Context</span> context) &#123;<br>        <span class="hljs-keyword">super</span>(context);<br>        setEGLContextClientVersion(<span class="hljs-number">2</span>);<br>        setRenderer(<span class="hljs-keyword">new</span> <span class="hljs-type">MyOpenGLRenderSquare</span>(context));<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这个部分的代码比较简单，就不多说了</p>
+<p>Render部分代码</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> MyOpenGLRenderSquare implements GLSurfaceView.Renderer &#123;<br><br>    <span class="hljs-keyword">private</span> Context context;<br>    <span class="hljs-keyword">private</span> FloatBuffer vertexBuffer;<br>    <span class="hljs-keyword">private</span> FloatBuffer colorBuffer;<br>    <span class="hljs-keyword">private</span> ShortBuffer indexBuffer;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> positionHandler;<br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> colorHandler;<br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> matrixHandler;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> program;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[]</span> projectMatrix = <span class="hljs-keyword">new</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[<span class="hljs-number">16</span>]</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[]</span> viewMatrix = <span class="hljs-keyword">new</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[<span class="hljs-number">16</span>]</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[]</span> mvpMatrix = <span class="hljs-keyword">new</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[<span class="hljs-number">16</span>]</span>;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[]</span> squareCoords = &#123;<br>            -<span class="hljs-number">0.3</span>f, <span class="hljs-number">0.28</span>f, <span class="hljs-number">0</span>f,<br>            -<span class="hljs-number">0.28</span>f, -<span class="hljs-number">0.35</span>f, <span class="hljs-number">0</span>f,<br>            <span class="hljs-number">0.28</span>f, -<span class="hljs-number">0.35</span>f, <span class="hljs-number">0</span>f,<br>            <span class="hljs-number">0.3</span>f, <span class="hljs-number">0.35</span>f, <span class="hljs-number">0</span>f,<br>            <span class="hljs-number">0</span>f, <span class="hljs-number">0.5</span>f, <span class="hljs-number">0</span>f<br>    &#125;;<br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[]</span> colorCoords = &#123;<br>            <span class="hljs-number">0.0</span>f, <span class="hljs-number">1.0</span>f, <span class="hljs-number">0.0</span>f, <span class="hljs-number">1.0</span>f,<br>            <span class="hljs-number">1.0</span>f, <span class="hljs-number">0.0</span>f, <span class="hljs-number">0.0</span>f, <span class="hljs-number">1.0</span>f,<br>            <span class="hljs-number">0.0</span>f, <span class="hljs-number">0.0</span>f, <span class="hljs-number">1.0</span>f, <span class="hljs-number">1.0</span>f<br>    &#125;;<br>    <span class="hljs-keyword">private</span> short<span class="hljs-literal">[]</span> indexCoords = &#123;<br>            <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">0</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span><br>    &#125;;<br><br>    public <span class="hljs-constructor">MyOpenGLRenderSquare(Context <span class="hljs-params">context</span>)</span> &#123;<br>        this.context = context;<br><br>        <span class="hljs-comment">// 设置顶点数据</span><br>        ByteBuffer bb = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ByteBuffer</span>.</span></span>allocate<span class="hljs-constructor">Direct(<span class="hljs-params">squareCoords</span>.<span class="hljs-params">length</span> <span class="hljs-operator">*</span> 4)</span>;<br>        bb.order(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ByteOrder</span>.</span></span>native<span class="hljs-constructor">Order()</span>);<br>        vertexBuffer = bb.<span class="hljs-keyword">as</span><span class="hljs-constructor">FloatBuffer()</span>;<br>        vertexBuffer.put(squareCoords);<br>        vertexBuffer.position(<span class="hljs-number">0</span>);<br><br>        <span class="hljs-comment">// 设置颜色</span><br>        ByteBuffer cc = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ByteBuffer</span>.</span></span>allocate<span class="hljs-constructor">Direct(<span class="hljs-params">colorCoords</span>.<span class="hljs-params">length</span> <span class="hljs-operator">*</span> 4)</span>;<br>        cc.order(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ByteOrder</span>.</span></span>native<span class="hljs-constructor">Order()</span>);<br>        colorBuffer = cc.<span class="hljs-keyword">as</span><span class="hljs-constructor">FloatBuffer()</span>;<br>        colorBuffer.put(colorCoords);<br>        colorBuffer.position(<span class="hljs-number">0</span>);<br><br>        <span class="hljs-comment">// 设置索引</span><br>        ByteBuffer dd = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ByteBuffer</span>.</span></span>allocate<span class="hljs-constructor">Direct(<span class="hljs-params">indexCoords</span>.<span class="hljs-params">length</span> <span class="hljs-operator">*</span> 2)</span>;<br>        dd.order(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ByteOrder</span>.</span></span>native<span class="hljs-constructor">Order()</span>);<br>        indexBuffer = dd.<span class="hljs-keyword">as</span><span class="hljs-constructor">ShortBuffer()</span>;<br>        indexBuffer.put(indexCoords);<br>        indexBuffer.position(<span class="hljs-number">0</span>);<br>    &#125;<br><br>    @Override<br>    public void on<span class="hljs-constructor">SurfaceCreated(GL10 <span class="hljs-params">gl10</span>, EGLConfig <span class="hljs-params">eglConfig</span>)</span> &#123;<br>        String vertexSource = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ShaderUtils</span>.</span></span>read<span class="hljs-constructor">RawText(<span class="hljs-params">context</span>, R.<span class="hljs-params">raw</span>.<span class="hljs-params">vertex_shader_5</span>)</span>;<br>        String fragmentSource = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ShaderUtils</span>.</span></span>read<span class="hljs-constructor">RawText(<span class="hljs-params">context</span>, R.<span class="hljs-params">raw</span>.<span class="hljs-params">fragment_shader_5</span>)</span>;<br>        program = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ShaderUtils</span>.</span></span>create<span class="hljs-constructor">Program(<span class="hljs-params">vertexSource</span>, <span class="hljs-params">fragmentSource</span>)</span>;<br>        <span class="hljs-keyword">if</span> (program &gt; <span class="hljs-number">0</span>) &#123;<br>            positionHandler = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">GetAttribLocation(<span class="hljs-params">program</span>, <span class="hljs-string">&quot;vPosition&quot;</span>)</span>;<br>            colorHandler = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">GetAttribLocation(<span class="hljs-params">program</span>, <span class="hljs-string">&quot;aColor&quot;</span>)</span>;<br>            matrixHandler = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">GetUniformLocation(<span class="hljs-params">program</span>, <span class="hljs-string">&quot;vMatrix&quot;</span>)</span>;<br>        &#125;<br>    &#125;<br><br>    @Override<br>    public void on<span class="hljs-constructor">SurfaceChanged(GL10 <span class="hljs-params">gl10</span>, <span class="hljs-params">int</span> <span class="hljs-params">width</span>, <span class="hljs-params">int</span> <span class="hljs-params">height</span>)</span> &#123;<br>        <span class="hljs-comment">// 计算宽高比</span><br>        <span class="hljs-built_in">float</span> ratio = (<span class="hljs-built_in">float</span>) width<span class="hljs-operator"> / </span>height;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Matrix</span>.</span></span>frustum<span class="hljs-constructor">M(<span class="hljs-params">projectMatrix</span>, 0, -<span class="hljs-params">ratio</span>, <span class="hljs-params">ratio</span>, -1, 1, 3, 7)</span>;<br>        <span class="hljs-comment">// 设置相机的位置</span><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Matrix</span>.</span></span>set<span class="hljs-constructor">LookAtM(<span class="hljs-params">viewMatrix</span>, 0, 0, 0, 7f, 0f, 0f, 0f, 0f, 1f, 0f)</span>;<br>        <span class="hljs-comment">// 计算变换矩阵</span><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Matrix</span>.</span></span>multiply<span class="hljs-constructor">MM(<span class="hljs-params">mvpMatrix</span>, 0, <span class="hljs-params">projectMatrix</span>, 0, <span class="hljs-params">viewMatrix</span>, 0)</span>;<br>    &#125;<br><br>    @Override<br>    public void on<span class="hljs-constructor">DrawFrame(GL10 <span class="hljs-params">gl10</span>)</span> &#123;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">Clear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">ClearColor(0.5f, 0.5f, 0.5f, 1f)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">UseProgram(<span class="hljs-params">program</span>)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">EnableVertexAttribArray(<span class="hljs-params">positionHandler</span>)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">VertexAttribPointer(<span class="hljs-params">positionHandler</span>, 3, GLES20.GL_FLOAT, <span class="hljs-params">false</span>, 12, <span class="hljs-params">vertexBuffer</span>)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">EnableVertexAttribArray(<span class="hljs-params">colorHandler</span>)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">VertexAttribPointer(<span class="hljs-params">colorHandler</span>, 4, GLES20.GL_FLOAT, <span class="hljs-params">false</span>, 0, <span class="hljs-params">colorBuffer</span>)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">UniformMatrix4fv(<span class="hljs-params">matrixHandler</span>, 1, <span class="hljs-params">false</span>, <span class="hljs-params">mvpMatrix</span>, 0)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">DrawElements(GLES20.GL_TRIANGLES, <span class="hljs-params">indexCoords</span>.<span class="hljs-params">length</span>, GLES20.GL_UNSIGNED_SHORT, <span class="hljs-params">indexBuffer</span>)</span>;<br><br><span class="hljs-comment">//        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>首先我们声明了三个数组，这三个数组分别是squareCoords,colorCoords,indexCoords。其中squareCoords表示的是多边形所对应的顶点的坐标。这里我们使用的是[xyz]的方式；colorCoords表示的是颜色数组，这里为了方便起见，我直接将三原色的数组拿了过来了，至于三个分别代表什么样的含义，后面会说；indexCoords表示的是顶点的索引</li>
+<li>构造方法：在构造方法中我们将Context的上下文对象传递给了全局变量。</li>
+</ol>
+<ul>
+<li>初始化顶点数据，初始化颜色设置，初始化索引设置</li>
+</ul>
+<ol start="3">
+<li>在onSurfaceCreated方法中创建生成program，顶点句柄，颜色句柄，投影句柄，这三个句柄需要后面去使用</li>
+<li>在onSurfaceChanged方法中初始化相机位置，初始化视图位置，计算变换矩阵</li>
+<li>在onDrawFrame方法中开始设置背景颜色，设置顶点着色器，片元着色器，设置变换矩阵</li>
+</ol>
+<h3 id="绘制圆形"><a href="#绘制圆形" class="headerlink" title="绘制圆形"></a>绘制圆形</h3><p>圆形的构架相对而言复杂一些，我们可以吧圆形看做一个正多边形，边越多，园就越平滑，如下图所示，正六边形，正八边形，正十六边形和正一百边形<br><img src="/assets/tools/tools-opengl-07.png" srcset="/img/loading.gif" lazyload alt="绘制圆形"></p>
+<p>我们一正六边形为例，由012,023,034,056,061六个三角形组成<br>利用简单的数学知识，我们可以知道，以多边形为中心简历的直角坐标系，得到n边形的顶点坐标可以使用下面的函数求出来</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 创建圆形图形的所有坐标点</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * @return</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span>[] <span class="hljs-title">createPositions</span>()</span> &#123;<br>        ArrayList&lt;Float&gt; datas = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();<br>        datas.<span class="hljs-keyword">add</span>(<span class="hljs-number">0.0f</span>);<br>        datas.<span class="hljs-keyword">add</span>(<span class="hljs-number">0.0f</span>);<br>        datas.<span class="hljs-keyword">add</span>(<span class="hljs-number">0.5f</span>);<br>        <span class="hljs-built_in">float</span> angleSpan = <span class="hljs-number">360f</span> / <span class="hljs-number">360</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">360</span> + angleSpan; i += angleSpan) &#123;<br>            datas.<span class="hljs-keyword">add</span>((<span class="hljs-built_in">float</span>) (<span class="hljs-number">1.0f</span> * Math.sin(i * Math.PI / <span class="hljs-number">180f</span>)));<br>            datas.<span class="hljs-keyword">add</span>((<span class="hljs-built_in">float</span>) (<span class="hljs-number">1.0f</span> * Math.cos(i * Math.PI / <span class="hljs-number">180f</span>)));<br>            datas.<span class="hljs-keyword">add</span>(<span class="hljs-number">0.5f</span>);<br>        &#125;<br>        <span class="hljs-built_in">float</span>[] res = <span class="hljs-keyword">new</span> <span class="hljs-built_in">float</span>[datas.size()];<br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; res.length; i++) &#123;<br>            res[i] = datas.<span class="hljs-keyword">get</span>(i);<br>        &#125;<br>        <span class="hljs-keyword">return</span> res;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>看一下源码<br>GLSurfaceView的代码比较简单，这里就不贴出来了</p>
+<p>render部分的代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyOpenGLRenderOval</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">GLSurfaceView</span>.Renderer &#123;<br><br>    <span class="hljs-keyword">private</span> Context context;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> positionHandler;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> colorHandler;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> matrixHandler;<br><br>    <span class="hljs-keyword">private</span> FloatBuffer vertexBuffer;<br>    <span class="hljs-keyword">private</span> FloatBuffer colorBuffer;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> program;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">float</span>[] projectMatrix = <span class="hljs-keyword">new</span> <span class="hljs-title class_">float</span>[<span class="hljs-number">16</span>];<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">float</span>[] viewMatrix = <span class="hljs-keyword">new</span> <span class="hljs-title class_">float</span>[<span class="hljs-number">16</span>];<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">float</span>[] mvpMatrix = <span class="hljs-keyword">new</span> <span class="hljs-title class_">float</span>[<span class="hljs-number">16</span>];<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">float</span>[] colorCoords = &#123;<br>            <span class="hljs-number">1.0f</span>, <span class="hljs-number">0f</span>, <span class="hljs-number">0f</span>, <span class="hljs-number">1f</span>,<br>            <span class="hljs-number">0f</span>, <span class="hljs-number">1f</span>, <span class="hljs-number">0f</span>, <span class="hljs-number">1f</span>,<br>            <span class="hljs-number">0f</span>, <span class="hljs-number">0f</span>, <span class="hljs-number">1f</span>, <span class="hljs-number">1f</span><br>    &#125;;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">float</span>[] vertexCoords ;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">MyOpenGLRenderOval</span><span class="hljs-params">(Context context)</span> &#123;<br>        <span class="hljs-built_in">this</span>.context = context;<br><br>        <span class="hljs-comment">// 设置顶点数据</span><br>        vertexCoords = createPositions();<br>        <span class="hljs-type">ByteBuffer</span> <span class="hljs-variable">bb</span> <span class="hljs-operator">=</span> ByteBuffer.allocateDirect(vertexCoords.length * <span class="hljs-number">4</span>);<br>        bb.order(ByteOrder.nativeOrder());<br>        vertexBuffer = bb.asFloatBuffer();<br>        vertexBuffer.put(vertexCoords);<br>        vertexBuffer.position(<span class="hljs-number">0</span>);<br><br>        <span class="hljs-comment">// 设置颜色</span><br>        <span class="hljs-type">ByteBuffer</span> <span class="hljs-variable">cc</span> <span class="hljs-operator">=</span> ByteBuffer.allocateDirect(colorCoords.length * <span class="hljs-number">4</span>);<br>        cc.order(ByteOrder.nativeOrder());<br>        colorBuffer = cc.asFloatBuffer();<br>        colorBuffer.put(colorCoords);<br>        colorBuffer.position(<span class="hljs-number">0</span>);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 创建圆形图形的所有坐标点</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">float</span>[] createPositions() &#123;<br>        ArrayList&lt;Float&gt; datas = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        datas.add(<span class="hljs-number">0.0f</span>);<br>        datas.add(<span class="hljs-number">0.0f</span>);<br>        datas.add(<span class="hljs-number">0.5f</span>);<br>        <span class="hljs-type">float</span> <span class="hljs-variable">angleSpan</span> <span class="hljs-operator">=</span> <span class="hljs-number">360f</span> / <span class="hljs-number">360</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">360</span> + angleSpan; i += angleSpan) &#123;<br>            datas.add((<span class="hljs-type">float</span>) (<span class="hljs-number">1.0f</span> * Math.sin(i * Math.PI / <span class="hljs-number">180f</span>)));<br>            datas.add((<span class="hljs-type">float</span>) (<span class="hljs-number">1.0f</span> * Math.cos(i * Math.PI / <span class="hljs-number">180f</span>)));<br>            datas.add(<span class="hljs-number">0.5f</span>);<br>        &#125;<br>        <span class="hljs-type">float</span>[] res = <span class="hljs-keyword">new</span> <span class="hljs-title class_">float</span>[datas.size()];<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; res.length; i++) &#123;<br>            res[i] = datas.get(i);<br>        &#125;<br>        <span class="hljs-keyword">return</span> res;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onSurfaceCreated</span><span class="hljs-params">(GL10 gl10, EGLConfig eglConfig)</span> &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">vertexSource</span> <span class="hljs-operator">=</span> ShaderUtils.readRawText(context, R.raw.vertex_shader_6);<br>        <span class="hljs-type">String</span> <span class="hljs-variable">fragmentSource</span> <span class="hljs-operator">=</span> ShaderUtils.readRawText(context,R.raw.fragment_shader_6);<br>        program = ShaderUtils.createProgram(vertexSource,fragmentSource);<br>        <span class="hljs-keyword">if</span> (program &gt; <span class="hljs-number">0</span>)&#123;<br>            positionHandler = GLES20.glGetAttribLocation(program,<span class="hljs-string">&quot;position&quot;</span>);<br>            matrixHandler = GLES20.glGetUniformLocation(program,<span class="hljs-string">&quot;matrix&quot;</span>);<br>            colorHandler = GLES20.glGetAttribLocation(program,<span class="hljs-string">&quot;color&quot;</span>);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onSurfaceChanged</span><span class="hljs-params">(GL10 gl10, <span class="hljs-type">int</span> i, <span class="hljs-type">int</span> i1)</span> &#123;<br>        <span class="hljs-type">float</span> <span class="hljs-variable">ratio</span> <span class="hljs-operator">=</span> (<span class="hljs-type">float</span>) i / i1;<br>        Matrix.frustumM(projectMatrix,<span class="hljs-number">0</span>,-ratio,ratio,-<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">7</span>);<br>        Matrix.setLookAtM(viewMatrix,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">7f</span>,<span class="hljs-number">0f</span>,<span class="hljs-number">0f</span>,<span class="hljs-number">0f</span>,<span class="hljs-number">0f</span>,<span class="hljs-number">1f</span>,<span class="hljs-number">0f</span>);<br>        Matrix.multiplyMM(mvpMatrix,<span class="hljs-number">0</span>,projectMatrix,<span class="hljs-number">0</span>,viewMatrix,<span class="hljs-number">0</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onDrawFrame</span><span class="hljs-params">(GL10 gl10)</span> &#123;<br>        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);<br>        GLES20.glClearColor(<span class="hljs-number">0.5f</span>,<span class="hljs-number">0.5f</span>,<span class="hljs-number">0.5f</span>,<span class="hljs-number">1f</span>);<br><br>        GLES20.glUseProgram(program);<br><br>        GLES20.glEnableVertexAttribArray(positionHandler);<br>        GLES20.glVertexAttribPointer(positionHandler,<span class="hljs-number">3</span>,GLES20.GL_FLOAT,<span class="hljs-literal">false</span>,<span class="hljs-number">0</span>,vertexBuffer);<br><br>        GLES20.glEnableVertexAttribArray(colorHandler);<br>        GLES20.glVertexAttribPointer(colorHandler,<span class="hljs-number">4</span>,GLES20.GL_FLOAT,<span class="hljs-literal">false</span>,<span class="hljs-number">0</span>,colorBuffer);<br><br>        GLES20.glUniformMatrix4fv(matrixHandler,<span class="hljs-number">1</span>,<span class="hljs-literal">false</span>,mvpMatrix,<span class="hljs-number">0</span>);<br><br>        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN,<span class="hljs-number">0</span>,vertexCoords.length / <span class="hljs-number">3</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在这段代码中有几个部分需要我们注意，首先我们将</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">GLES20</span>.glDrawArrays(GLES20.GL_TRIANGLES,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>);<br></code></pre></td></tr></table></figure>
+<p>改成了</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">DrawArrays(GLES20.GL_TRIANGLE_FAN,0,<span class="hljs-params">vertexCoords</span>.<span class="hljs-params">length</span><span class="hljs-operator">/</span>3)</span>;<br></code></pre></td></tr></table></figure>
+<p>这里面第一个参数表示要绘制的方式，第二个参数表示绘制的偏移量，第三个参数表示顶点的个数</p>
+<blockquote>
+<p>绘制的方式有以下几种<br>int GL_POINTS:将传入的顶点坐标作为单独的点绘制<br>int GL_LINES:将传入的坐标作为单独的线条绘制，ABCDEFG六个顶点，会绘制AB，CD，EF三条线<br>int GL_LINE_STRIP:将传入的顶点作为折现绘制，ABCD四个顶点，绘制AB，BC，CD三条线<br>int GL_LINE_LOOP:将传入的顶点作为闭合折现绘制，ABCD四个顶点，绘制AB，BC，CD，DA四条线段<br>int GL_TRIANGLES:将传入的顶点作为单独的三角形绘制，ABCDEF绘制ABC，DEF两个三角形<br>int GL_TRIANGLE_FAN:将传入的顶点作为扇面绘制，ABCDEF绘制ABC，ACD，ADE，AEF四个三角形<br>int GL_TRIANGLE_STRIP:将传入的顶点作为三角条带绘制，ABCDEF绘制ABC，BCD，CDE，DEF四个三角形</p>
+</blockquote>
+<p>其实我们可以这样理解，GLTRIANGLE_STRIP的方式绘制连续三角形，比直接用GL_TRIANGLES的方式绘制三角形稍好多个点，绘制的效率会更高。另外GL_TRIANGLE_STRIP并不是只能绘制连续三角形构成的物体，我们只需要将不需要重复绘制的点重复绘制两次即可。比如我们传入ABCDEFFGH坐标，就会得到ABC，BCD，CDE以及FGH四个三角形</p>
+<p>GL_TRIANGLE_FAN：扇面绘制是以第一个零点进行绘制，通常我们绘制圆形，圆锥的锥面都会使用到，值得注意的是，最后一个点的左边应当与第二个点重合，在计算的时候，起点角度为0度，终点角度应包含360度</p>
+<h3 id="绘制彩色"><a href="#绘制彩色" class="headerlink" title="绘制彩色"></a>绘制彩色</h3><p>前几篇blog中设置的都是单一颜色，如果我们想要设置彩色的该怎么去实现？其实这个彩色很难看，只不过是为了多去了解如何设置不同的颜色而已。</p>
+<p>先来看一下，我们在绘制一个简单的三角形时所使用的代码</p>
+<p>首先我们通过onSurfaceCreated方法获取到了raw中的名为af_Color的颜色数值，这个颜色数值是需要我们自己去赋值的。代码如下</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public void on<span class="hljs-constructor">SurfaceCreated(GL10 <span class="hljs-params">unused</span>, EGLConfig <span class="hljs-params">config</span>)</span> &#123;<br>        String vertexSource = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ShaderUtils</span>.</span></span>read<span class="hljs-constructor">RawText(<span class="hljs-params">context</span>, R.<span class="hljs-params">raw</span>.<span class="hljs-params">vertex_shader</span>)</span>;<br>        String fragmentSource = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ShaderUtils</span>.</span></span>read<span class="hljs-constructor">RawText(<span class="hljs-params">context</span>, R.<span class="hljs-params">raw</span>.<span class="hljs-params">fragment_shader</span>)</span>;<br>        program = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ShaderUtils</span>.</span></span>create<span class="hljs-constructor">Program(<span class="hljs-params">vertexSource</span>, <span class="hljs-params">fragmentSource</span>)</span>;<br>        <span class="hljs-keyword">if</span> (program &gt; <span class="hljs-number">0</span>) &#123;<br>            position = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">GetAttribLocation(<span class="hljs-params">program</span>, <span class="hljs-string">&quot;av_Position&quot;</span>)</span>;<br>            color = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">GetUniformLocation(<span class="hljs-params">program</span>, <span class="hljs-string">&quot;af_Color&quot;</span>)</span>;<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+<p>其中R.raw.vertex_shader和R.raw.fragment_shader表示的是我们需要引入的文件，这个文件时glsl结尾的文件，之前我们有介绍过。然后我们在onDrawFrame中通过<p style="color:red">GLES20.glUniform4f</p>方法设置三角形的颜色。这时候我们设置颜色的代码是</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public void on<span class="hljs-constructor">DrawFrame(GL10 <span class="hljs-params">unused</span>)</span> &#123;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">Clear(GLES20.GL_COLOR_BUFFER_BIT)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">ClearColor(1.0f, 1.0f, 1.0f, 1.0f)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">UseProgram(<span class="hljs-params">program</span>)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">Uniform4f(<span class="hljs-params">color</span>, 1f, 0f, 0f, 1f)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">EnableVertexAttribArray(<span class="hljs-params">position</span>)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">VertexAttribPointer(<span class="hljs-params">position</span>, 2, GLES20.GL_FLOAT, <span class="hljs-params">false</span>, 8, <span class="hljs-params">vertexBuffer</span>)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">DrawArrays(GLES20.GL_TRIANGLES, 0, 3)</span>;<br>    &#125;<br></code></pre></td></tr></table></figure>
+<p>因为我们只使用了单一颜色，所以三角形呈现的是红色。</p>
+<p>那么当我们想要实现多种不同的颜色的时候，就需要使用float类型的数组来为我们展示多种颜色<br>如下所示，我们这里想要绘制一个彩色的三角形，那么需要声明一个float类型的数组</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span>[] colorCoords = &#123;<br>            <span class="hljs-number">0.0f</span>, <span class="hljs-number">1.0f</span>, <span class="hljs-number">0.0f</span>, <span class="hljs-number">1.0f</span>,<br>            <span class="hljs-number">1.0f</span>, <span class="hljs-number">0.0f</span>, <span class="hljs-number">0.0f</span>, <span class="hljs-number">1.0f</span>,<br>            <span class="hljs-number">0.0f</span>, <span class="hljs-number">0.0f</span>, <span class="hljs-number">1.0f</span>, <span class="hljs-number">1.0f</span><br>    &#125;;<br></code></pre></td></tr></table></figure>
+<p>设置完成数组之后，我们需要将这个数组在底层的内存空间中申请内存地址,我们把这段代码放在了构造方法中</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">// 设置颜色数据</span><br>        ByteBuffer color = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ByteBuffer</span>.</span></span>allocate<span class="hljs-constructor">Direct(<span class="hljs-params">colorCoords</span>.<span class="hljs-params">length</span> <span class="hljs-operator">*</span> 4)</span>;<br>        color.order(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ByteOrder</span>.</span></span>native<span class="hljs-constructor">Order()</span>);<br>        colorBuffer = color.<span class="hljs-keyword">as</span><span class="hljs-constructor">FloatBuffer()</span>;<br>        colorBuffer.put(colorCoords);<br>        colorBuffer.position(<span class="hljs-number">0</span>);<br></code></pre></td></tr></table></figure>
+<p>因为我们这里使用的是FloatBuffer对象，所以在设置三角形颜色的时候也不能再使用上面的那种方式了。使用的方式如下(我第一次看这部分的时候，是想着应该跟vertexBuffer一样，就照着去写，结果一次就成功了)</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">@Override<br>    public void on<span class="hljs-constructor">DrawFrame(GL10 <span class="hljs-params">gl10</span>)</span> &#123;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">Clear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">ClearColor(0.5f, 0.5f, 0.5f, 1f)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">UseProgram(<span class="hljs-params">program</span>)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">EnableVertexAttribArray(<span class="hljs-params">colorHandler</span>)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">VertexAttribPointer(<span class="hljs-params">colorHandler</span>, 4, GLES20.GL_FLOAT, <span class="hljs-params">false</span>, 0, <span class="hljs-params">colorBuffer</span>)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">EnableVertexAttribArray(<span class="hljs-params">positionHandler</span>)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">VertexAttribPointer(<span class="hljs-params">positionHandler</span>, 3, GLES20.GL_FLOAT, <span class="hljs-params">false</span>, 12, <span class="hljs-params">vertexBuffer</span>)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">UniformMatrix4fv(<span class="hljs-params">matrixHandler</span>, 1, <span class="hljs-params">false</span>, <span class="hljs-params">mvpMatrix</span>, 0)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">DrawArrays(GLES20.GL_TRIANGLES, 0, 3)</span>;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>完整的代码如下：</p>
+<p>Render部分的代码：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> MyOpenGLRenderViewColors implements GLSurfaceView.Renderer &#123;<br><br>    <span class="hljs-keyword">private</span> Context context;<br>    <span class="hljs-keyword">private</span> FloatBuffer vertexBuffer;<br>    <span class="hljs-keyword">private</span> FloatBuffer colorBuffer;<br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> positionHandler;<br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> colorHandler;<br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> matrixHandler;<br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> program;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[]</span> triangleCoords = &#123;<br>            <span class="hljs-number">0.5</span>f, <span class="hljs-number">0.5</span>f, <span class="hljs-number">0.0</span>f, <span class="hljs-comment">// top</span><br>            -<span class="hljs-number">0.5</span>f, -<span class="hljs-number">0.5</span>f, <span class="hljs-number">0.0</span>f, <span class="hljs-comment">// bottom left</span><br>            <span class="hljs-number">0.5</span>f, -<span class="hljs-number">0.5</span>f, <span class="hljs-number">0.0</span>f  <span class="hljs-comment">// bottom right</span><br>    &#125;;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[]</span> colorCoords = &#123;<br>            <span class="hljs-number">0.0</span>f, <span class="hljs-number">1.0</span>f, <span class="hljs-number">0.0</span>f, <span class="hljs-number">1.0</span>f,<br>            <span class="hljs-number">1.0</span>f, <span class="hljs-number">0.0</span>f, <span class="hljs-number">0.0</span>f, <span class="hljs-number">1.0</span>f,<br>            <span class="hljs-number">0.0</span>f, <span class="hljs-number">0.0</span>f, <span class="hljs-number">1.0</span>f, <span class="hljs-number">1.0</span>f<br>    &#125;;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[]</span> projectMatrix = <span class="hljs-keyword">new</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[<span class="hljs-number">16</span>]</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[]</span> viewMatrix = <span class="hljs-keyword">new</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[<span class="hljs-number">16</span>]</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[]</span> mvpMatrix = <span class="hljs-keyword">new</span> <span class="hljs-built_in">float</span><span class="hljs-literal">[<span class="hljs-number">16</span>]</span>;<br><br>    public <span class="hljs-constructor">MyOpenGLRenderViewColors(Context <span class="hljs-params">context</span>)</span> &#123;<br>        this.context = context;<br>        <span class="hljs-comment">// 设置顶点数据</span><br>        ByteBuffer vertex = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ByteBuffer</span>.</span></span>allocate<span class="hljs-constructor">Direct(<span class="hljs-params">triangleCoords</span>.<span class="hljs-params">length</span> <span class="hljs-operator">*</span> 4)</span>;<br>        vertex.order(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ByteOrder</span>.</span></span>native<span class="hljs-constructor">Order()</span>);<br>        vertexBuffer = vertex.<span class="hljs-keyword">as</span><span class="hljs-constructor">FloatBuffer()</span>;<br>        vertexBuffer.put(triangleCoords);<br>        vertexBuffer.position(<span class="hljs-number">0</span>);<br><br>        <span class="hljs-comment">// 设置颜色数据</span><br>        ByteBuffer color = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ByteBuffer</span>.</span></span>allocate<span class="hljs-constructor">Direct(<span class="hljs-params">colorCoords</span>.<span class="hljs-params">length</span> <span class="hljs-operator">*</span> 4)</span>;<br>        color.order(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ByteOrder</span>.</span></span>native<span class="hljs-constructor">Order()</span>);<br>        colorBuffer = color.<span class="hljs-keyword">as</span><span class="hljs-constructor">FloatBuffer()</span>;<br>        colorBuffer.put(colorCoords);<br>        colorBuffer.position(<span class="hljs-number">0</span>);<br>    &#125;<br><br>    @Override<br>    public void on<span class="hljs-constructor">SurfaceCreated(GL10 <span class="hljs-params">gl10</span>, EGLConfig <span class="hljs-params">eglConfig</span>)</span> &#123;<br>        String vertexSource = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ShaderUtils</span>.</span></span>read<span class="hljs-constructor">RawText(<span class="hljs-params">context</span>, R.<span class="hljs-params">raw</span>.<span class="hljs-params">vertex_shader_4</span>)</span>;<br>        String fragmentSource = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ShaderUtils</span>.</span></span>read<span class="hljs-constructor">RawText(<span class="hljs-params">context</span>, R.<span class="hljs-params">raw</span>.<span class="hljs-params">fragment_shader_4</span>)</span>;<br>        program = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ShaderUtils</span>.</span></span>create<span class="hljs-constructor">Program(<span class="hljs-params">vertexSource</span>, <span class="hljs-params">fragmentSource</span>)</span>;<br>        <span class="hljs-keyword">if</span> (program &gt; <span class="hljs-number">0</span>) &#123;<br>            positionHandler = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">GetAttribLocation(<span class="hljs-params">program</span>, <span class="hljs-string">&quot;vPosition&quot;</span>)</span>;<br>            colorHandler = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">GetAttribLocation(<span class="hljs-params">program</span>, <span class="hljs-string">&quot;aColor&quot;</span>)</span>;<br>            matrixHandler = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">GetUniformLocation(<span class="hljs-params">program</span>, <span class="hljs-string">&quot;vMatrix&quot;</span>)</span>;<br>        &#125;<br>    &#125;<br><br>    @Override<br>    public void on<span class="hljs-constructor">SurfaceChanged(GL10 <span class="hljs-params">gl10</span>, <span class="hljs-params">int</span> <span class="hljs-params">width</span>, <span class="hljs-params">int</span> <span class="hljs-params">height</span>)</span> &#123;<br>        <span class="hljs-comment">// 计算宽高比</span><br>        <span class="hljs-built_in">float</span> ratio = (<span class="hljs-built_in">float</span>) width<span class="hljs-operator"> / </span>height;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Matrix</span>.</span></span>frustum<span class="hljs-constructor">M(<span class="hljs-params">projectMatrix</span>, 0, -<span class="hljs-params">ratio</span>, <span class="hljs-params">ratio</span>, -1, 1, 3, 7)</span>;<br>        <span class="hljs-comment">// 设置相机的位置</span><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Matrix</span>.</span></span>set<span class="hljs-constructor">LookAtM(<span class="hljs-params">viewMatrix</span>, 0, 0, 0, 7f, 0f, 0f, 0f, 0f, 1f, 0f)</span>;<br>        <span class="hljs-comment">// 计算变换矩阵</span><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Matrix</span>.</span></span>multiply<span class="hljs-constructor">MM(<span class="hljs-params">mvpMatrix</span>, 0, <span class="hljs-params">projectMatrix</span>, 0, <span class="hljs-params">viewMatrix</span>, 0)</span>;<br>    &#125;<br><br>    @Override<br>    public void on<span class="hljs-constructor">DrawFrame(GL10 <span class="hljs-params">gl10</span>)</span> &#123;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">Clear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">ClearColor(0.5f, 0.5f, 0.5f, 1f)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">UseProgram(<span class="hljs-params">program</span>)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">EnableVertexAttribArray(<span class="hljs-params">colorHandler</span>)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">VertexAttribPointer(<span class="hljs-params">colorHandler</span>, 4, GLES20.GL_FLOAT, <span class="hljs-params">false</span>, 0, <span class="hljs-params">colorBuffer</span>)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">EnableVertexAttribArray(<span class="hljs-params">positionHandler</span>)</span>;<br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">VertexAttribPointer(<span class="hljs-params">positionHandler</span>, 3, GLES20.GL_FLOAT, <span class="hljs-params">false</span>, 12, <span class="hljs-params">vertexBuffer</span>)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">UniformMatrix4fv(<span class="hljs-params">matrixHandler</span>, 1, <span class="hljs-params">false</span>, <span class="hljs-params">mvpMatrix</span>, 0)</span>;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">GLES20</span>.</span></span>gl<span class="hljs-constructor">DrawArrays(GLES20.GL_TRIANGLES, 0, 3)</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>其中vertex_shader_4的代码如下：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs glsl"><span class="hljs-keyword">attribute</span> <span class="hljs-type">vec4</span> vPosition;<br><span class="hljs-keyword">uniform</span> <span class="hljs-type">mat4</span> vMatrix;<br><span class="hljs-keyword">varying</span> <span class="hljs-type">vec4</span> vColor;<br><span class="hljs-keyword">attribute</span> <span class="hljs-type">vec4</span> aColor;<br><span class="hljs-type">void</span> main()&#123;<br>    <span class="hljs-built_in">gl_Position</span> = vMatrix * vPosition;<br>    vColor = aColor;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>fragment_shader_4的代码如下：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs glsl"><span class="hljs-comment">// 设置我们使用中等精确度</span><br><span class="hljs-keyword">precision</span> <span class="hljs-keyword">mediump</span> <span class="hljs-type">float</span>;<br><span class="hljs-comment">// 声明变量用于传递颜色数值</span><br><span class="hljs-keyword">varying</span> <span class="hljs-type">vec4</span> vColor;<br><span class="hljs-type">void</span> main() &#123;<br>    <span class="hljs-comment">// 将af_Color的颜色属性值赋值给gl_FragColor的内置变量</span><br>    <span class="hljs-built_in">gl_FragColor</span> = vColor;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>最终的效果如下图所示<br><img src="/assets/tools/tools-opengl-08.png" srcset="/img/loading.gif" lazyload alt="绘制圆形"></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/xiaoniudadi/android-media-demo/tree/master/06-android-media-opengl">demo地址github</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/android/">#android</a>
+      
+        <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/">#音视频</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>android 音视频开发(七)</div>
+      <div>http://example.com/2019/08/29/android-media-07/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年8月29日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/08/31/android-media-08/" title="android 音视频开发(八)">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">android 音视频开发(八)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/08/26/android-media-06/" title="android 音视频开发(六)">
+                        <span class="hidden-mobile">android 音视频开发(六)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
